@@ -99,6 +99,8 @@ class TestDatasets(unittest.TestCase):
         self.assertEqual(np.sum(subset.ratings_mat==-1), np.sum(folds[:,2]==-1))
         sparsity = np.sum(subset.ratings_mat!=0)/np.prod(subset.ratings_mat.shape)
         self.assertEqual(sparsity, np.sum(folds[:,2]!=0)/((nitems)*(nusers)))
+        with self.assertRaises(ValueError):
+            subset = dataset.get_folds(np.array([])) # no dataset should be created, and a warning should be sent
 
 if __name__ == '__main__':
     unittest.main()
