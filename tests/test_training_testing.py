@@ -13,7 +13,7 @@ class TestTrainingTesting(unittest.TestCase):
         data_args = stanscofi.datasets.generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std)
         dataset = stanscofi.datasets.Dataset(**data_args)
         nitems, nusers = [x//3+1 for x in dataset.ratings_mat.shape]
-        folds = np.array([[i,j,dataset.ratings_mat[i,j]] for i in range(nitems) for j in range(nusers)])
+        folds = np.array([[i,j,int(dataset.ratings_mat[i,j])] for i in range(nitems) for j in range(nusers)])
         subset = dataset.get_folds(folds)
         return dataset, folds, subset
 

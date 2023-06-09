@@ -151,7 +151,7 @@ def traintest_validation_split(dataset, test_size, early_stop=None, metric="cosi
             dists = pd.DataFrame([[get_dist(c1,c2) for c1 in sets] for c2 in sets], index=cols, columns=cols)
             print(dists)
 
-        return train_set, test_set, np.array([]), np.array([])
+        return train_set.astype(int), test_set.astype(int), np.array([]), np.array([])
 
     user_cluster = np.array([np.sum(np.unique(item_cluster[ratings[ratings[:,0]==x,1].flatten().tolist()])) for x in ratings[:,0].flatten().tolist()])
     train_set = ratings[user_cluster==1,:]
@@ -208,7 +208,7 @@ def traintest_validation_split(dataset, test_size, early_stop=None, metric="cosi
     ## are all ratings classified?
     #assert sum([X.shape[0] for X in [train_set, test_set, val1_set, val2_set] if (len(X)>0)])==ratings.shape[0]
 
-    return train_set, test_set, val1_set, val2_set
+    return train_set.astype(int), test_set.astype(int), val1_set.astype(int), val2_set.astype(int)
 
 ##############################
 # Common training procedure  #
