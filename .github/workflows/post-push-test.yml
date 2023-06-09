@@ -1,6 +1,6 @@
 name: stanscofi post-pushing testing
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -16,18 +16,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }} using Miniconda
-        uses: conda-incubator/setup-miniconda@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-          miniforge-version: latest
-          use-mamba: true
-          mamba-version: "*"
       - name: Install dependencies and build stanscofi
         run: |
-          conda activate test
-          python -m pip install --upgrade pip
-          pip install -r recipes/pip/requirements.txt
-          pip install --use-pep517 -e . 
+          python -m pip install -r recipes/pip/requirements.txt
+          python -m pip install .
+      - name: Test import
+        run: |
           python -c "import stanscofi; import stanscofi.datasets; import stanscofi.utils; import stanscofi.validation; import stanscofi.models; import stanscofi.training_testing; import stanscofi.preprocessing; print('stanscofi has been successfully installed and importable in Python.')"
       - name: Test datasets module
         run: |
