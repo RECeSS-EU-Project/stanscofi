@@ -59,19 +59,19 @@ class TestPreprocessing(unittest.TestCase):
 
     ## Generate example
     def generate_dataset(self, same_item_user_features=False, sep_feature="--", ntype_feature=2):
-        assert ntype_feature%2==0
         npositive, nnegative,mean, std = 4, 4, 0.5, 1
         nfeatures = (npositive+nnegative)*ntype_feature
         data_args = stanscofi.datasets.generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std)
         if (len(sep_feature)!=0):
-            data_args["users"].index = ["feature%d%s%s" % (f, sep_feature, u) for f in [1,2] for u in data_args["users"].columns]
-            data_args["items"].index = ["feature%d%s%s" % (f, sep_feature, i) for f in [1,2] for i in data_args["items"].columns]
+            assert ntype_feature%2==0
+            data_args["users"].index = ["feature%d%s%s" % (f, sep_feature, u) for f in range(1,ntype_feature+1) for u in data_args["users"].columns]
+            data_args["items"].index = ["feature%d%s%s" % (f, sep_feature, i) for f in range(1,ntype_feature+1) for i in data_args["items"].columns]
         data_args.setdefault("same_item_user_features", same_item_user_features)
         dataset = stanscofi.datasets.Dataset(**data_args)
         return dataset
 
     def test_meanimputation_standardize(self):
-        dataset = self.generate_dataset()
+        dataset = self.generate_dataset(ntype_feature=2)
         X, y = stanscofi.preprocessing.meanimputation_standardize(dataset, subset=None, scalerS=None, scalerP=None, inf=int(1e1), verbose=False)
         self.assertEqual(y.shape[0], X.shape[0])
         self.assertEqual(y.shape[0], np.prod(dataset.ratings_mat.shape))
@@ -100,7 +100,7 @@ class TestPreprocessing(unittest.TestCase):
         dataset.visualize(X=X, y=y, withzeros=False)
 
     def test_same_feature_preprocessing(self):
-        dataset = self.generate_dataset(same_item_user_features=True)
+        dataset = self.generate_dataset(same_item_user_features=True,ntype_feature=2)
         X, y = stanscofi.preprocessing.same_feature_preprocessing(dataset)
         self.assertEqual(y.shape[0], X.shape[0])
         self.assertEqual(y.shape[0], np.prod(dataset.ratings_mat.shape))
