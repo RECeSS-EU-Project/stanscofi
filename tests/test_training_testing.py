@@ -9,7 +9,7 @@ class TestTrainingTesting(unittest.TestCase):
 
     ## Generate example
     def generate_dataset_folds(self):
-        npositive, nnegative, nfeatures, mean, std = 20, 10, 5, 0.5, 1
+        npositive, nnegative, nfeatures, mean, std = 20, 10, 6, 0.5, 1
         data_args = stanscofi.datasets.generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std)
         dataset = stanscofi.datasets.Dataset(**data_args)
         nitems, nusers = [x//3+1 for x in dataset.ratings_mat.shape]

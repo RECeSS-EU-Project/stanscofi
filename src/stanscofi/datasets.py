@@ -44,6 +44,7 @@ def generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std):
     items : array-like of shape (n_user_features, n_users)
         a list of the item feature names in the order of column indices in ratings_mat
     '''
+    assert nfeatures%2==0
     ## Generate feature matrices
     nusers = nitems = npositive+nnegative
     positive = np.random.normal(mean,std,size=(nfeatures,npositive))
