@@ -1,0 +1,44 @@
+{% set name = "stanscofi" %}
+{% set version = "9999" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  url: "../dist/{{ name }}-{{ version }}.tar.gz"
+
+build:
+  script: python -m pip install --no-deps --ignore-installed .
+  noarch: python
+
+requirements:
+  host:
+    - pip
+    - python
+
+  run:
+    - pandas >=1.1.4
+    - numpy >=1.19.4
+    - scikit-learn >=0.24.0
+    - scipy >=1.5.4
+    - matplotlib >=3.3.2
+    - threadpoolctl >=3.1.0
+    - joblib >=1.0.1
+    - tqdm >=4.58.0
+    - codecarbon >=2.2.3
+    - seaborn >=0.11.0
+
+test:
+  imports:
+    - stanscofi
+
+about:
+  home: https://github.com/RECeSS-EU-Project/stanscofi
+  license: MIT
+  license-file: LICENSE
+  summary: "Package for STANdard drug Screening by COllaborative FIltering. Performs benchmarks against datasets and SotA algorithms, and implements training, validation and testing procedures."
+
+extra:
+  recipe-maintainers:
+    - RECeSS-EU-Project
