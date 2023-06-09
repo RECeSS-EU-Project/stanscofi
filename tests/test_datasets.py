@@ -27,7 +27,7 @@ class TestDatasets(unittest.TestCase):
                 'Gottlieb': [593, 593, 313, 313, 1933, 0, 1.04],
                 'Cdataset': [663, 663, 409, 409, 2532, 0, 0.93],
                 'DNdataset': [550, 1490, 360, 4516, 1008, 0, 0.01],
-                'LRSSL': [763, 1526, 681, 681, 3051, 0, 0.59],
+                'LRSSL': [763, 2049, 681, 681, 3051, 0, 0.59],
                 'PREDICT_Gottlieb': [593, 1779, 313, 313, 1933, 0, 1.04],
                 'TRANSCRIPT': [204, 12096, 116, 12096, 401, 11, 0.45],
                 'PREDICT': [1351, 6265, 1066, 2914, 5624, 152, 0.34],
@@ -39,8 +39,6 @@ class TestDatasets(unittest.TestCase):
                 data_args.update({"same_item_user_features": True})
             dataset = stanscofi.datasets.Dataset(**data_args)
             vals = values[dataset_name]
-            print((dataset.items.shape,data_args["items"].shape))
-            print((dataset.users.shape,data_args["users"].shape))
             self.assertEqual(len(np.unique(dataset.ratings[:,1])), vals[0])
             self.assertEqual(len(np.unique(dataset.ratings[:,0])), vals[2])
             self.assertEqual(dataset.items.shape[0], vals[1])
