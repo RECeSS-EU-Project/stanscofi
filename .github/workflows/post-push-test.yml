@@ -30,6 +30,10 @@ jobs:
         working-directory: ./tests/
         run: |
           python -m test_datasets
+      - name: Test preprocessing module
+        working-directory: ./tests/
+        run: |
+          python -m test_preprocessing
       - name: Test validation module
         working-directory: ./tests/
         run: |
@@ -42,7 +46,3 @@ jobs:
         working-directory: ./tests/
         run: |
           python -m test_training_testing
-      - name: Test preprocessing module
-        working-directory: ./tests/
-        run: |
-          python -m test_preprocessing
