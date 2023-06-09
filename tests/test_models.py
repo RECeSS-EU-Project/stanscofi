@@ -22,8 +22,8 @@ class TestModels(unittest.TestCase):
         ratings = stanscofi.models.scores2ratings(scores)
         self.assertEqual(ratings.shape[1], 3)
         self.assertEqual(ratings.shape[0], np.prod(scores.shape))
-        self.assertEqual(ratings[0,2], scores[0,0])
-        self.assertEqual(ratings[-1,2], scores[-1,-1])
+        self.assertEqual(ratings.values[0,2], scores.values[0,0])
+        self.assertEqual(ratings.values[-1,2], scores.values[-1,-1])
 
     def test_NMF(self):
         dataset = self.generate_dataset()
