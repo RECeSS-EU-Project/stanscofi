@@ -39,6 +39,8 @@ class TestDatasets(unittest.TestCase):
                 data_args.update({"same_item_user_features": True})
             dataset = stanscofi.datasets.Dataset(**data_args)
             vals = values[dataset_name]
+            print(dataset.items.shape)
+            print(dataset.users.shape)
             self.assertEqual(dataset.items.shape[1], vals[0])
             self.assertEqual(dataset.items.shape[0], vals[1])
             self.assertEqual(dataset.users.shape[1], vals[2])
@@ -89,15 +91,15 @@ class TestDatasets(unittest.TestCase):
         nitems, nusers = [x//3+1 for x in dataset.ratings_mat.shape]
         folds = np.array([[i,j,dataset.ratings_mat[i,j]] for i in range(nitems) for j in range(nusers)])
         subset = dataset.get_folds(folds)
-        self.assertEqual(dataset.items.shape[0], nfeatures//2)
-        self.assertEqual(dataset.items.shape[1], nitems+1)
-        self.assertEqual(dataset.users.shape[0], nfeatures//2)
-        self.assertEqual(dataset.users.shape[1], nusers+1)
-        self.assertEqual(dataset.ratings_mat.shape[1], nusers+1)
-        self.assertEqual(dataset.ratings_mat.shape[0], nitems+1)
-        self.assertEqual(np.sum(dataset.ratings_mat==1), np.sum(folds[:,2]==1))
-        self.assertEqual(np.sum(dataset.ratings_mat==-1), np.sum(folds[:,2]==-1))
-        sparsity = np.sum(dataset.ratings_mat!=0)/np.prod(dataset.ratings_mat.shape)
+        self.assertEqual(subset.items.shape[0], nfeatures//2)
+        self.assertEqual(subset.items.shape[1], nitems+1)
+        self.assertEqual(subset.users.shape[0], nfeatures//2)
+        self.assertEqual(subset.users.shape[1], nusers+1)
+        self.assertEqual(subset.ratings_mat.shape[1], nusers+1)
+        self.assertEqual(subset.ratings_mat.shape[0], nitems+1)
+        self.assertEqual(np.sum(subset.ratings_mat==1), np.sum(folds[:,2]==1))
+        self.assertEqual(np.sum(subset.ratings_mat==-1), np.sum(folds[:,2]==-1))
+        sparsity = np.sum(subset.ratings_mat!=0)/np.prod(subset.ratings_mat.shape)
         self.assertEqual(sparsity, np.sum(folds[:,2]!=0)/((nitems+1)*(nusers+1)))
 
 if __name__ == '__main__':
