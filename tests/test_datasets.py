@@ -22,6 +22,7 @@ class TestDatasets(unittest.TestCase):
         self.assertTrue(all([x in [-1,0,1] for x in np.unique(data_args["ratings_mat"].values)]))
 
     def test_existing_dataset(self):
+        ## For PREDICT, considering the publicly (partial) dataset on Zenodo
         available_datasets = ["Gottlieb", "Cdataset", "DNdataset", "LRSSL", "PREDICT_Gottlieb", "TRANSCRIPT", "PREDICT"]
         values = {
                 'Gottlieb': [593, 593, 313, 313, 1933, 0, 1.04],
@@ -30,7 +31,8 @@ class TestDatasets(unittest.TestCase):
                 'LRSSL': [763, 2049, 681, 681, 3051, 0, 0.59],
                 'PREDICT_Gottlieb': [593, 1779, 313, 313, 1933, 0, 1.04],
                 'TRANSCRIPT': [204, 12096, 116, 12096, 401, 11, 0.45],
-                'PREDICT': [1351, 6265, 1066, 2914, 5624, 152, 0.34],
+                #'PREDICT': [1351, 6265, 1066, 2914, 5624, 152, 0.34], ##private version
+                'PREDICT': [1014, 1642, 941, 1490, 4627, 132, 0.40], ##public version
         }
         for dataset_name in available_datasets:
             data_args = stanscofi.utils.load_dataset(dataset_name, save_folder="./")
