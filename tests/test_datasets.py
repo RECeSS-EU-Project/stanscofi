@@ -7,7 +7,7 @@ class TestDatasets(unittest.TestCase):
 
     def test_dummy_dataset(self):
         npositive, nnegative, nfeatures, mean, std = 200, 100, 50, 0.5, 1
-        data_args = generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std)
+        data_args = stanscofi.datasets.generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std)
         self.assertTrue("ratings_mat" in data_args)
         self.assertTrue("users" in data_args)
         self.assertTrue("items" in data_args)
@@ -52,7 +52,7 @@ class TestDatasets(unittest.TestCase):
 
     def test_new_dataset(self):
         npositive, nnegative, nfeatures, mean, std = 200, 100, 50, 0.5, 1
-        data_args = generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std)
+        data_args = stanscofi.datasets.generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std)
         dataset = stanscofi.datasets.Dataset(ratings_mat=data_args["ratings_mat"], users=data_args["users"], items=data_args["items"])
         self.assertEqual(dataset.items.shape[1], nfeatures//2)
         self.assertEqual(dataset.items.shape[0], npositive+nnegative)
@@ -67,7 +67,7 @@ class TestDatasets(unittest.TestCase):
 
     def test_visualize(self):
         npositive, nnegative, nfeatures, mean, std = 200, 100, 50, 0.5, 1
-        data_args = generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std)
+        data_args = stanscofi.datasets.generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std)
         dataset = stanscofi.datasets.Dataset(**data_args)
         dataset.visualize(withzeros=False)
         dataset.visualize(withzeros=True)
@@ -84,7 +84,7 @@ class TestDatasets(unittest.TestCase):
 
     def test_get_folds(self):
         npositive, nnegative, nfeatures, mean, std = 200, 100, 50, 0.5, 1
-        data_args = generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std)
+        data_args = stanscofi.datasets.generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std)
         dataset = stanscofi.datasets.Dataset(**data_args)
         nitems, nusers = [x//3+1 for x in dataset.ratings_mat.shape]
         folds = np.array([[i,j,dataset.ratings_mat[i,j]] for i in range(nitems) for j in range(nusers)])
