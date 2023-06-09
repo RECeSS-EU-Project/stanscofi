@@ -59,8 +59,8 @@ class TestPreprocessing(unittest.TestCase):
 
     ## Generate example
     def generate_dataset(self, same_item_user_features=False, sep_feature="--", ntype_feature=2):
-        npositive, nnegative,mean, std = 4, 4, 0.5, 1
-        nfeatures = (npositive+nnegative)*ntype_feature
+        npositive, nnegative, mean, std = 4, 4, 0.5, 1
+        nfeatures = (npositive+nnegative)*ntype_feature*2
         data_args = stanscofi.datasets.generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std)
         if (len(sep_feature)!=0):
             assert ntype_feature%2==0
