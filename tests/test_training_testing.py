@@ -58,8 +58,9 @@ class TestTrainingTesting(unittest.TestCase):
         with self.assertRaises(ValueError):
             stanscofi.training_testing.print_folds(val1_set, dataset, fold_name="Val1")
             _ = dataset.get_folds(val1_set)
-        stanscofi.training_testing.print_folds(val2_set, dataset, fold_name="Val2")
-        _ = dataset.get_folds(val2_set)
+        with self.assertRaises(ValueError):
+            stanscofi.training_testing.print_folds(val2_set, dataset, fold_name="Val2")
+            _ = dataset.get_folds(val2_set)
         print("Done (disjoint_users=True)")
 
     def test_cv_training(self):
