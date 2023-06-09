@@ -85,7 +85,7 @@ class TestPreprocessing(unittest.TestCase):
         self.assertTrue(all([x in [-1,0,1] for x in np.unique(y)]))
         ## subset=None
         self.assertEqual(X.shape[1], dataset.items.shape[0]+dataset.users.shape[0])
-        X, y, _, _ = stanscofi.preprocessing.meanimputation_standardize(dataset, subset=None, scalerS=scalerS, scalerP=scalerP, inf=int(1e1), verbose=False)
+        X2, y2, _, _ = stanscofi.preprocessing.meanimputation_standardize(dataset, subset=None, scalerS=scalerS, scalerP=scalerP, inf=int(1e1), verbose=False)
         self.assertEqual(y.shape[0], X.shape[0])
         self.assertEqual(y.shape[0], np.prod(dataset.ratings_mat.shape))
         ## imputation
@@ -97,8 +97,10 @@ class TestPreprocessing(unittest.TestCase):
         self.assertTrue(all([x in [-1,0,1] for x in np.unique(y)]))
         ## subset=None
         self.assertEqual(X.shape[1], dataset.items.shape[0]+dataset.users.shape[0])
+        self.assertTrue((y2==y).all())
+        self.assertTrue((X2==X).all())
         subset=2
-        X, y = stanscofi.preprocessing.meanimputation_standardize(dataset, subset=subset, scalerS=None, scalerP=None, inf=int(1e1), verbose=False)
+        X, y, _, _ = stanscofi.preprocessing.meanimputation_standardize(dataset, subset=subset, scalerS=None, scalerP=None, inf=int(1e1), verbose=False)
         self.assertEqual(y.shape[0], X.shape[0])
         self.assertEqual(y.shape[0], np.prod(dataset.ratings_mat.shape))
         ## imputation
