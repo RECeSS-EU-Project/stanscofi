@@ -2,6 +2,7 @@ import unittest
 import numpy as np
 
 import stanscofi.datasets
+import stanscofi.models
 import stanscofi.training_testing
 
 class TestTrainingTesting(unittest.TestCase):
@@ -53,10 +54,10 @@ class TestTrainingTesting(unittest.TestCase):
         template = stanscofi.models.NMF
         ## no parallel
         best_estimator_no_parallel = stanscofi.training_testing.cv_training(template, params, dataset, metric="AUC", beta=1, njobs=1, nsplits=5, random_state=1234, show_plots=True, verbose=False)
-        auc_test, auc_train, model_params, cv_folds = [best_estimator_no_parallel[x] for x in ["test_AUC", "train_AUC", "model_params", "cv_folds"]
+        auc_test, auc_train, model_params, cv_folds = [best_estimator_no_parallel[x] for x in ["test_AUC", "train_AUC", "model_params", "cv_folds"]]
         ## parallel
         best_estimator_parallel = stanscofi.training_testing.cv_training(template, params, dataset, metric="AUC", beta=1, njobs=4, nsplits=5, random_state=1234, show_plots=True, verbose=False)
-        auc_test_, auc_train_, model_params_, cv_folds_ = [best_estimator_parallel[x] for x in ["test_AUC", "train_AUC", "model_params", "cv_folds"]
+        auc_test_, auc_train_, model_params_, cv_folds_ = [best_estimator_parallel[x] for x in ["test_AUC", "train_AUC", "model_params", "cv_folds"]]
         self.assertEqual(np.round(auc_test,1), np.round(auc_test_,1))
         self.assertEqual(np.round(auc_train,1), np.round(auc_train_,1))
 
@@ -69,10 +70,10 @@ class TestTrainingTesting(unittest.TestCase):
         template = stanscofi.models.NMF
         ## no parallel
         best_params_no_parallel, best_estimator_no_parallel = stanscofi.training_testing.grid_search(search_params, template, params, dataset, metric="AUC", njobs=1, nsplits=5, random_state=1234, show_plots=True, verbose=False)
-        auc_test, auc_train, model_params, cv_folds = [best_estimator_no_parallel[x] for x in ["test_AUC", "train_AUC", "model_params", "cv_folds"]
+        auc_test, auc_train, model_params, cv_folds = [best_estimator_no_parallel[x] for x in ["test_AUC", "train_AUC", "model_params", "cv_folds"]]
         ## parallel
         best_params_parallel, best_estimator_parallel = stanscofi.training_testing.grid_search(search_params, template, params, dataset, metric="AUC", njobs=4, nsplits=5, random_state=1234, show_plots=True, verbose=False)
-        auc_test_, auc_train_, model_params_, cv_folds_ = [best_estimator_parallel[x] for x in ["test_AUC", "train_AUC", "model_params", "cv_folds"]
+        auc_test_, auc_train_, model_params_, cv_folds_ = [best_estimator_parallel[x] for x in ["test_AUC", "train_AUC", "model_params", "cv_folds"]]
         self.assertEqual(np.round(auc_test,1), np.round(auc_test_,1))
         self.assertEqual(np.round(auc_train,1), np.round(auc_train_,1))
         for p in best_params_no_parallel:
