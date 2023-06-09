@@ -27,17 +27,22 @@ jobs:
         run: |
           python -c "import stanscofi; import stanscofi.datasets; import stanscofi.utils; import stanscofi.validation; import stanscofi.models; import stanscofi.training_testing; import stanscofi.preprocessing; print('stanscofi has been successfully installed and importable in Python.')"
       - name: Test datasets module
+        working-directory: ./tests/
         run: |
-          python tests/tests_datasets.py
+          python tests_datasets.py
       - name: Test training_testing module
+        working-directory: ./tests/
         run: |
-          python tests/tests_training_testing.py
+          python tests_training_testing.py
       - name: Test preprocessing module
+        working-directory: ./tests/
         run: |
-          python tests/tests_preprocessing.py
+          python tests_preprocessing.py
       - name: Test models module
+        working-directory: ./tests/
         run: |
-          python tests/tests_models.py
+          python tests_models.py
       - name: Test validation module
+        working-directory: ./tests/
         run: |
-          python tests/tests_validation.py
+          python tests_validation.py
