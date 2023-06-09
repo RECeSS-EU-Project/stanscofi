@@ -1,5 +1,4 @@
 import unittest
-from subprocess import Popen
 import numpy as np
 
 import stanscofi.datasets
@@ -23,7 +22,6 @@ class TestDatasets(unittest.TestCase):
         self.assertTrue(all([x in [-1,0,1] for x in np.unique(data_args["ratings_mat"].values)]))
 
     def test_existing_dataset(self):
-        Popen("mkdir -p datasets/".split(" "))
         available_datasets = ["Gottlieb", "Cdataset", "DNdataset", "LRSSL", "PREDICT_Gottlieb", "TRANSCRIPT", "PREDICT"]
         values = {
                 'Gottlieb': [593, 593, 313, 313, 1933, 0, 1.04],
@@ -35,7 +33,7 @@ class TestDatasets(unittest.TestCase):
                 'PREDICT': [1351, 6265, 1066, 2914, 5624, 152, 0.34],
         }
         for dataset_name in available_datasets:
-            data_args = stanscofi.utils.load_dataset(dataset_name, save_folder="datasets/")
+            data_args = stanscofi.utils.load_dataset(dataset_name, save_folder="./")
             data_args.update({"name": dataset_name})
             if (dataset_name=="TRANSCRIPT"):
                 data_args.update({"same_item_user_features": True})
@@ -50,7 +48,7 @@ class TestDatasets(unittest.TestCase):
             self.assertEqual(np.sum(dataset.ratings_mat==1), vals[4])
             self.assertEqual(np.sum(dataset.ratings_mat==-1), vals[5])
             sparsity = np.sum(dataset.ratings_mat!=0)*100/np.prod(dataset.ratings_mat.shape)
-            self.assertEqual(np.round(sparsity*100,2), vals[5])
+            self.assertEqual(np.round(sparsity,2), vals[6])
 
     def test_new_dataset(self):
         npositive, nnegative, nfeatures, mean, std = 200, 100, 50, 0.5, 1
@@ -64,8 +62,8 @@ class TestDatasets(unittest.TestCase):
         self.assertEqual(dataset.ratings_mat.shape[0], npositive+nnegative)
         self.assertEqual(np.sum(dataset.ratings_mat==1), npositive**2)
         self.assertEqual(np.sum(dataset.ratings_mat==-1), nnegative**2)
-        sparsity = np.sum(dataset.ratings_mat!=0)*100/np.prod(dataset.ratings_mat.shape)
-        self.assertEqual(sparsity*100, (npositive**2+nnegative**2)*100/(npositive+nnegative)**2)
+        sparsity = np.sum(dataset.ratings_mat!=0)/np.prod(dataset.ratings_mat.shape)
+        self.assertEqual(sparsity, (npositive**2+nnegative**2)/(npositive+nnegative)**2)
 
     def test_visualize(self):
         npositive, nnegative, nfeatures, mean, std = 200, 100, 50, 0.5, 1
@@ -91,16 +89,16 @@ class TestDatasets(unittest.TestCase):
         nitems, nusers = [x//3+1 for x in dataset.ratings_mat.shape]
         folds = np.array([[i,j,dataset.ratings_mat[i,j]] for i in range(nitems) for j in range(nusers)])
         subset = dataset.get_folds(folds)
-        self.assertEqual(dataset.items.shape[1], nfeatures//2)
-        self.assertEqual(dataset.items.shape[0], nusers+1)
-        self.assertEqual(dataset.users.shape[1], nfeatures//2)
-        self.assertEqual(dataset.users.shape[0], nitems+1)
+        self.assertEqual(dataset.items.shape[0], nfeatures//2)
+        self.assertEqual(dataset.items.shape[1], nusers+1)
+        self.assertEqual(dataset.users.shape[0], nfeatures//2)
+        self.assertEqual(dataset.users.shape[1], nitems+1)
         self.assertEqual(dataset.ratings_mat.shape[1], nusers+1)
         self.assertEqual(dataset.ratings_mat.shape[0], nitems+1)
         self.assertEqual(np.sum(dataset.ratings_mat==1), np.sum(folds[:,2]==1))
         self.assertEqual(np.sum(dataset.ratings_mat==-1), np.sum(folds[:,2]==-1))
-        sparsity = np.sum(dataset.ratings_mat!=0)*100/np.prod(dataset.ratings_mat.shape)
-        self.assertEqual(sparsity*100, np.sum(folds[:,2]!=0)*100/((nitems+1)*(nusers+1)))
+        sparsity = np.sum(dataset.ratings_mat!=0)/np.prod(dataset.ratings_mat.shape)
+        self.assertEqual(sparsity, np.sum(folds[:,2]!=0)/((nitems+1)*(nusers+1)))
 
 if __name__ == '__main__':
     unittest.main()
