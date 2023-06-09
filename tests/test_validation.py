@@ -13,6 +13,7 @@ class TestValidation(unittest.TestCase):
         data_args = stanscofi.datasets.generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std)
         dataset = stanscofi.datasets.Dataset(**data_args)
         ## Generate random class scores
+        np.random.seed(1223435)
         pi=1/16
         npoints = dataset.ratings_mat.shape[0]*dataset.ratings_mat.shape[1]
         scores = np.zeros((npoints, 3))

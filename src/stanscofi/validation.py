@@ -4,7 +4,6 @@ from sklearn.metrics import roc_auc_score as AUC
 from sklearn.metrics import fbeta_score
 from sklearn.metrics import precision_recall_curve as PRC
 from sklearn.metrics import roc_curve as ROC
-from scipy import interp
 
 import numpy as np
 import pandas as pd
@@ -73,10 +72,10 @@ def compute_metrics(scores, predictions, test_dataset, beta=1, ignore_zeroes=Fal
             pres, rec, _ = PRC(user_truth.flatten(), user_pred.flatten())
             aucs.append(AUC(user_truth.flatten(), user_pred.flatten()))
             fscores.append(fbeta_score(user_truth.flatten(), user_pred.flatten(), beta=beta))
-            tpr = interp(base_fpr, fpr, tpr)
+            tpr = np.interp(base_fpr, fpr, tpr)
             tpr[0] = 0.0
             tprs.append(tpr)
-            rec = interp(base_pres, pres, rec)
+            rec = np.interp(base_pres, pres, rec)
             recs.append(rec)
         else:
             n_ignored += 1
