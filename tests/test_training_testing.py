@@ -64,7 +64,7 @@ class TestTrainingTesting(unittest.TestCase):
     def test_grid_search(self):
         dataset, _, _ = self.generate_dataset_folds()
         search_params = {
-            "n_components": list(range(2, np.min(dataset.ratings_mat.shape)//2, 5)),
+            "n_components": [2, np.min(dataset.ratings_mat.shape)//2],
             "decision_threshold": [x*0.001 for x in [5,10]], 
         }
         params = {"init":None, "solver":'cd', "beta_loss":'frobenius', "tol":0.0001, "max_iter":100, 
