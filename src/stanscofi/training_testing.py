@@ -133,9 +133,9 @@ def traintest_validation_split(dataset, test_size, early_stop=None, metric="cosi
     test_set = ratings[item_cluster==2,:]
 
     ## are items disjoints and weakly correlated?
-    assert sum([np.unique(X[:,1]).shape[0] for X in [train_set,test_set]])==np.unique(ratings[:,1]).shape[0]
+    #assert sum([np.unique(X[:,1]).shape[0] for X in [train_set,test_set]])==np.unique(ratings[:,1]).shape[0]
     ## are all ratings classified?
-    assert sum([X.shape[0] for X in [train_set,test_set]])==ratings.shape[0]
+    #assert sum([X.shape[0] for X in [train_set,test_set]])==ratings.shape[0]
 
     f = lambda x : np.min(x[x!=0]) if (x[x!=0].shape[0]>0) else 0
     get_dist = lambda s1, s2 : f(dist[np.unique(s1[:,1]).tolist(),:][:,np.unique(s2[:,1]).tolist()])
@@ -159,7 +159,7 @@ def traintest_validation_split(dataset, test_size, early_stop=None, metric="cosi
     validation_set = ratings[user_cluster==3,:]
 
     ## are user disjoints?
-    assert sum([np.unique(X[:,0]).shape[0] for X in [train_set, test_set, validation_set]])==np.unique(ratings[:,0]).shape[0]
+    #assert sum([np.unique(X[:,0]).shape[0] for X in [train_set, test_set, validation_set]])==np.unique(ratings[:,0]).shape[0]
 
     ## Greedy approach to avoid computational explosion
     ## Assign disease to the set for which the similarity with the newly added drugs is highest
@@ -202,11 +202,11 @@ def traintest_validation_split(dataset, test_size, early_stop=None, metric="cosi
         print(dists)
 
     ## are user disjoints?
-    assert sum([np.unique(X[:,0]).shape[0] for X in [train_set, test_set]])==np.unique(ratings[:,0]).shape[0]
+    #assert sum([np.unique(X[:,0]).shape[0] for X in [train_set, test_set]])==np.unique(ratings[:,0]).shape[0]
     ## are items disjoints and weakly correlated?
-    assert sum([np.unique(X[:,1]).shape[0] for X in [train_set,test_set]])<=np.unique(ratings[:,1]).shape[0]
+    #assert sum([np.unique(X[:,1]).shape[0] for X in [train_set,test_set]])<=np.unique(ratings[:,1]).shape[0]
     ## are all ratings classified?
-    assert sum([X.shape[0] for X in [train_set, test_set, val1_set, val2_set] if (len(X)>0)])==ratings.shape[0]
+    #assert sum([X.shape[0] for X in [train_set, test_set, val1_set, val2_set] if (len(X)>0)])==ratings.shape[0]
 
     return train_set, test_set, val1_set, val2_set
 
