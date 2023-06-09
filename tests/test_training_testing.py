@@ -63,10 +63,13 @@ class TestTrainingTesting(unittest.TestCase):
 
     def test_grid_search(self):
         dataset, _, _ = self.generate_dataset_folds()
-        search_params = {"n_components": range(2, np.min(dataset.ratings_mat.shape)//2, 5)}
+        search_params = {
+            "n_components": list(range(2, np.min(dataset.ratings_mat.shape)//2, 5)),
+            "decision_threshold": [x*0.001 for x in [5,10]], 
+        }
         params = {"init":None, "solver":'cd', "beta_loss":'frobenius', "tol":0.0001, "max_iter":100, 
           "random_state":12345, "alpha_W":0.0, "alpha_H":'same', "l1_ratio":0.0, "verbose":0, 
-          "shuffle":False, "n_components": np.min(dataset.ratings_mat.shape)//2+1, "decision_threshold": 0.005}
+          "shuffle":False}
         template = stanscofi.models.NMF
         ## no parallel
         best_params_no_parallel, best_estimator_no_parallel = stanscofi.training_testing.grid_search(search_params, template, params, dataset, metric="AUC", njobs=1, nsplits=5, random_state=1234, show_plots=True, verbose=False)

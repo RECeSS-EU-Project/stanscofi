@@ -24,7 +24,7 @@ jobs:
           pip install --upgrade pip
           python -m pip install -r recipes/pip/requirements.txt
           python -m pip install .
-      - name: Test import
+      - name: Test import stanscofi
         run: |
           python -c "import stanscofi; import stanscofi.datasets; import stanscofi.utils; import stanscofi.validation; import stanscofi.models; import stanscofi.training_testing; import stanscofi.preprocessing; print('stanscofi has been successfully installed and is importable in Python.')"
       - name: Test datasets module
