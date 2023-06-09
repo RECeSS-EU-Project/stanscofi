@@ -2,6 +2,7 @@
 
 import unittest
 import numpy as np
+from tqdm import tqdm
 
 import stanscofi.datasets
 import stanscofi.preprocessing
@@ -72,7 +73,19 @@ class TestPreprocessing(unittest.TestCase):
 
     def test_meanimputation_standardize(self):
         dataset = self.generate_dataset(ntype_feature=2)
-        X, y = stanscofi.preprocessing.meanimputation_standardize(dataset, subset=None, scalerS=None, scalerP=None, inf=int(1e1), verbose=False)
+        X, y, scalerS, scalerP = stanscofi.preprocessing.meanimputation_standardize(dataset, subset=None, scalerS=None, scalerP=None, inf=int(1e1), verbose=False)
+        self.assertEqual(y.shape[0], X.shape[0])
+        self.assertEqual(y.shape[0], np.prod(dataset.ratings_mat.shape))
+        ## imputation
+        self.assertTrue((np.isfinite(X)).all())
+        self.assertTrue((~np.isnan(X)).all())
+        ## standard
+        self.assertTrue((np.isclose(np.var(X, axis=0),1)).all())
+        self.assertTrue((np.isclose(np.mean(X, axis=0),0)).all())
+        self.assertTrue(all([x in [-1,0,1] for x in np.unique(y)]))
+        ## subset=None
+        self.assertEqual(X.shape[1], dataset.items.shape[0]+dataset.users.shape[0])
+        X, y, _, _ = stanscofi.preprocessing.meanimputation_standardize(dataset, subset=None, scalerS=scalerS, scalerP=scalerP, inf=int(1e1), verbose=False)
         self.assertEqual(y.shape[0], X.shape[0])
         self.assertEqual(y.shape[0], np.prod(dataset.ratings_mat.shape))
         ## imputation
