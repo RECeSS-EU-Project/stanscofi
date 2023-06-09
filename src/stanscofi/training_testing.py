@@ -153,7 +153,7 @@ def traintest_validation_split(dataset, test_size, early_stop=None, metric="cosi
 
         return train_set.astype(int), test_set.astype(int), np.array([]), np.array([])
 
-    user_cluster = np.array([np.sum(np.unique(item_cluster[ratings[ratings[:,0]==x,1].flatten().tolist()])) for x in ratings[:,0].flatten().tolist()])
+    user_cluster = np.array([np.sum(np.unique(item_cluster[ratings[ratings[:,0]==x,1].astype(int).tolist()])) for x in ratings[:,0].astype(int).tolist()])
     train_set = ratings[user_cluster==1,:]
     test_set = ratings[user_cluster==2,:]
     validation_set = ratings[user_cluster==3,:]
