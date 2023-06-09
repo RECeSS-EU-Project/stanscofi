@@ -35,11 +35,11 @@ class TestTrainingTesting(unittest.TestCase):
         self.assertTrue(int(test_size*dataset.ratings.shape[0])>=test_set.shape[0])
         self.assertEqual(len(v1), 0)
         self.assertEqual(len(v2), 0)
-        _ = dataset.get_folds(train_set)
         stanscofi.training_testing.print_folds(train_set, dataset, fold_name="Train")
-        _ = dataset.get_folds(test_set)
+        _ = dataset.get_folds(train_set)
         stanscofi.training_testing.print_folds(test_set, dataset, fold_name="Test")
-        print("Done")
+        _ = dataset.get_folds(test_set)
+        print("Done (disjoint_users=False)")
         ##### disjoint_users=True
         train_set, test_set, val1_set, val2_set = stanscofi.training_testing.traintest_validation_split(dataset, test_size, early_stop=None, metric="cityblock", disjoint_users=True, random_state=1234, verbose=False, print_dists=False)
         ## are user disjoints?
@@ -50,14 +50,16 @@ class TestTrainingTesting(unittest.TestCase):
         self.assertEqual(sum([X.shape[0] for X in [train_set, test_set, val1_set, val2_set] if (len(X)>0)]), dataset.ratings.shape[0])
         ## test size is respected
         self.assertTrue(int(test_size*dataset.ratings.shape[0])>=test_set.shape[0])
-        _ = dataset.get_folds(train_set)
         stanscofi.training_testing.print_folds(train_set, dataset, fold_name="Train")
-        _ = dataset.get_folds(test_set)
+        _ = dataset.get_folds(train_set)
         stanscofi.training_testing.print_folds(test_set, dataset, fold_name="Test")
-        _ = dataset.get_folds(val1_set)
-        stanscofi.training_testing.print_folds(test_set, dataset, fold_name="Val1")
+        _ = dataset.get_folds(test_set)
+        with self.assertRaises(ValueError):
+            stanscofi.training_testing.print_folds(val1_set, dataset, fold_name="Val1")
+            _ = dataset.get_folds(val1_set)
+        stanscofi.training_testing.print_folds(val2_set, dataset, fold_name="Val2")
         _ = dataset.get_folds(val2_set)
-        stanscofi.training_testing.print_folds(test_set, dataset, fold_name="Val2")
+        print("Done (disjoint_users=True)")
 
     def test_cv_training(self):
         dataset, _, _ = self.generate_dataset_folds()
