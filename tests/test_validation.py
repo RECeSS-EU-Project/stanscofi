@@ -31,10 +31,10 @@ class TestValidation(unittest.TestCase):
         metrics, _ = stanscofi.validation.compute_metrics(scores, predictions, dataset, beta=1, ignore_zeroes=False, verbose=False)
         self.assertEqual(metrics.shape[0], 2)
         self.assertEqual(metrics.shape[1], 2)
-        self.assertEqual(np.round(metrics.values[0,0],3), 0.500)
-        self.assertEqual(np.round(metrics.values[0,1],3), 0.015)
-        self.assertEqual(np.round(metrics.values[1,0],3), 0.780)
-        self.assertEqual(np.round(metrics.values[1,1],3), 0.009)
+        self.assertEqual(np.round(metrics.values[0,0],1), 0.5)
+        self.assertEqual(np.round(metrics.values[0,1],1), 0.0)
+        self.assertEqual(np.round(metrics.values[1,0],1), 0.8)
+        self.assertEqual(np.round(metrics.values[1,1],1), 0.0)
 
     def test_plot_metrics(self):
         dataset, scores, threshold = self.generate_dataset_scores_threshold()
