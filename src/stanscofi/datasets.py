@@ -385,9 +385,9 @@ class Dataset(object):
             dataset corresponding to the folds in input
         ----------
         '''
-        assert folds.shape[1]==3
         if (len(folds)==0):
             raise ValueError("Fold is empty!")
+        assert folds.shape[1]==3
         assert np.max(folds[:,0])<=self.ratings_mat.shape[1]
         assert np.max(folds[:,1])<=self.ratings_mat.shape[0]
         assert ((folds[:,-1]==1)|(folds[:,-1]==-1)|(folds[:,-1]==0)).all()
