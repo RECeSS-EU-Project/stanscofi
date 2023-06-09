@@ -162,7 +162,6 @@ class Dataset(object):
         assert all([a in items.columns for a in self.ratings[:,1]])
         self.ratings[:,0] = [self.user_list.index(x) for x in self.ratings[:,0]] 
         self.ratings[:,1] = [self.item_list.index(x) for x in self.ratings[:,1]] 
-        self.true_values = pd.DataFrame(self.ratings[:,2],index=[(i,j) for i,j in self.ratings[:,:2].tolist()]).to_dict()[0]
         self.users = users.values
         self.items = items.values
         self.name = name
