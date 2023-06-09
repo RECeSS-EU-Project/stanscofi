@@ -9,7 +9,7 @@ class TestTrainingTesting(unittest.TestCase):
 
     ## Generate example
     def generate_dataset_folds(self):
-        npositive, nnegative, nfeatures, mean, std = 20, 10, 6, 0.5, 1
+        npositive, nnegative, nfeatures, mean, std = 200, 100, 10, 0.5, 1
         data_args = stanscofi.datasets.generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std)
         dataset = stanscofi.datasets.Dataset(**data_args)
         nitems, nusers = [x//3+1 for x in dataset.ratings_mat.shape]
@@ -26,7 +26,7 @@ class TestTrainingTesting(unittest.TestCase):
         ##### disjoint_users=False
         dataset, folds, subset = self.generate_dataset_folds()
         test_size = 0.1
-        train_set, test_set, v1, v2  = stanscofi.training_testing.traintest_validation_split(dataset, test_size, early_stop=None, metric="cityblock", disjoint_users=False, random_state=1234, verbose=False, print_dists=False)
+        train_set, test_set, v1, v2  = stanscofi.training_testing.traintest_validation_split(dataset, test_size, early_stop=None, metric="cosine", disjoint_users=False, random_state=1234, verbose=False, print_dists=False)
         ## are items disjoints and weakly correlated?
         self.assertEqual(sum([np.unique(X[:,1]).shape[0] for X in [train_set,test_set]]), np.unique(dataset.ratings[:,1]).shape[0])
         ## are all ratings classified?
