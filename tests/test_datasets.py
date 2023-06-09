@@ -41,12 +41,10 @@ class TestDatasets(unittest.TestCase):
             vals = values[dataset_name]
             print((dataset.items.shape,data_args["items"].shape))
             print((dataset.users.shape,data_args["users"].shape))
-            self.assertEqual(dataset.items.shape[1], vals[0])
+            self.assertEqual(len(np.unique(dataset.ratings[:,1])), vals[0])
+            self.assertEqual(len(np.unique(dataset.ratings[:,0])), vals[2])
             self.assertEqual(dataset.items.shape[0], vals[1])
-            self.assertEqual(dataset.users.shape[1], vals[2])
             self.assertEqual(dataset.users.shape[0], vals[3])
-            self.assertEqual(dataset.ratings_mat.shape[1], vals[2])
-            self.assertEqual(dataset.ratings_mat.shape[0], vals[0])
             self.assertEqual(np.sum(dataset.ratings_mat==1), vals[4])
             self.assertEqual(np.sum(dataset.ratings_mat==-1), vals[5])
             sparsity = np.sum(dataset.ratings_mat!=0)*100/np.prod(dataset.ratings_mat.shape)
@@ -100,7 +98,7 @@ class TestDatasets(unittest.TestCase):
         self.assertEqual(np.sum(subset.ratings_mat==1), np.sum(folds[:,2]==1))
         self.assertEqual(np.sum(subset.ratings_mat==-1), np.sum(folds[:,2]==-1))
         sparsity = np.sum(subset.ratings_mat!=0)/np.prod(subset.ratings_mat.shape)
-        self.assertEqual(sparsity, np.sum(folds[:,2]!=0)/((nitems+1)*(nusers+1)))
+        self.assertEqual(sparsity, np.sum(folds[:,2]!=0)/((nitems)*(nusers)))
 
 if __name__ == '__main__':
     unittest.main()
