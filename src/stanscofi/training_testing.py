@@ -128,7 +128,7 @@ def traintest_validation_split(dataset, test_size, early_stop=None, metric="cosi
     #select_nc, cluster_size = 2, 0 ## reproduce an old behavior which did not take into account the test_size parameter
     item_labels = (fcluster(Z, select_nc, criterion='maxclust', depth=2, R=None, monocrit=None)>cluster_size+1).astype(int)+1
 
-    item_cluster = np.array([item_labels[item] for item in ratings[:,1].tolist().astype(int)])
+    item_cluster = np.array([item_labels[item] for item in ratings[:,1].astype(int).tolist()])
     train_set = ratings[item_cluster==1,:]
     test_set = ratings[item_cluster==2,:]
 
