@@ -68,11 +68,11 @@ The complete list of dependencies for *stanscofi* can be found at [requirements.
 
 ## Licence
 
-These datasets and code are under an [OSI-approved](https://opensource.org/licenses/) [MIT license](https://raw.githubusercontent.com/RECeSS-EU-Project/stanscofi/master/LICENSE). 
+This repository is under an [OSI-approved](https://opensource.org/licenses/) [MIT license](https://raw.githubusercontent.com/RECeSS-EU-Project/stanscofi/master/LICENSE). 
 
 ## Citation
 
-If you use **stanscofi** in academic research, please cite as follows
+If you use **stanscofi** in academic research, please cite it as follows
 
 ```
 Clémence Réda. (2023). 
