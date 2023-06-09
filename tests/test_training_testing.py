@@ -35,6 +35,8 @@ class TestTrainingTesting(unittest.TestCase):
         self.assertTrue(int(test_size*dataset.ratings.shape[0])>=test_set.shape[0])
         self.assertEqual(len(v1), 0)
         self.assertEqual(len(v2), 0)
+        _ = dataset.get_folds(train_set)
+        _ = dataset.get_folds(test_set)
         ##### disjoint_users=True
         train_set, test_set, val1_set, val2_set = stanscofi.training_testing.traintest_validation_split(dataset, test_size, early_stop=None, metric="cityblock", disjoint_users=True, random_state=1234, verbose=False, print_dists=False)
         ## are user disjoints?
@@ -45,6 +47,10 @@ class TestTrainingTesting(unittest.TestCase):
         self.assertEqual(sum([X.shape[0] for X in [train_set, test_set, val1_set, val2_set] if (len(X)>0)]), dataset.ratings.shape[0])
         ## test size is respected
         self.assertTrue(int(test_size*dataset.ratings.shape[0])>=test_set.shape[0])
+        _ = dataset.get_folds(train_set)
+        _ = dataset.get_folds(test_set)
+        _ = dataset.get_folds(val1_set)
+        _ = dataset.get_folds(val2_set)
 
     def test_cv_training(self):
         dataset, _, _ = self.generate_dataset_folds()
