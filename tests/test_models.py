@@ -1,4 +1,5 @@
 import unittest
+import numpy as np
 import pandas as pd
 
 import stanscofi.datasets
@@ -41,7 +42,7 @@ class TestModels(unittest.TestCase):
           "intercept_scaling":1., "random_state":12345, "max_iter":100, "tol": 1e-4, 
           "multi_class":'multinomial', "n_jobs": 1, "l1_ratio":1, "solver": "saga", 
           ## parameter subset allows to only consider Top-N features in terms of cross-sample variance for speed-up 
-          "preprocessing": "same_feature_preprocessing", "subset": 5, "decision_threshold": 0.75}
+          "preprocessing": "meanimputation_standardize", "subset": 5, "decision_threshold": 0.75}
         model = stanscofi.models.LogisticRegression(params)
         model.fit(dataset)
         scores = model.predict(dataset)
