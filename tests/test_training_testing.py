@@ -52,8 +52,9 @@ class TestTrainingTesting(unittest.TestCase):
         self.assertTrue(int(test_size*dataset.ratings.shape[0])>=test_set.shape[0])
         stanscofi.training_testing.print_folds(train_set, dataset, fold_name="Train")
         _ = dataset.get_folds(train_set)
-        stanscofi.training_testing.print_folds(test_set, dataset, fold_name="Test")
-        _ = dataset.get_folds(test_set)
+        with self.assertRaises(ValueError):
+            stanscofi.training_testing.print_folds(test_set, dataset, fold_name="Test")
+            _ = dataset.get_folds(test_set)
         with self.assertRaises(ValueError):
             stanscofi.training_testing.print_folds(val1_set, dataset, fold_name="Val1")
             _ = dataset.get_folds(val1_set)
