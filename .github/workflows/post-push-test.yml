@@ -29,21 +29,20 @@ jobs:
       - name: Test datasets module
         working-directory: ./tests/
         run: |
-          ls
-          python -m tests_datasets
+          python -m test_datasets
       - name: Test training_testing module
         working-directory: ./tests/
         run: |
-          python -m tests_training_testing
+          python -m test_training_testing
       - name: Test preprocessing module
         working-directory: ./tests/
         run: |
-          python -m tests_preprocessing
+          python -m test_preprocessing
       - name: Test models module
         working-directory: ./tests/
         run: |
-          python -m tests_models
+          python -m test_models
       - name: Test validation module
         working-directory: ./tests/
         run: |
-          python -m tests_validation
+          python -m test_validation
