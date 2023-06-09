@@ -258,7 +258,7 @@ class Dataset(object):
         markers = np.argwhere(np.ones(self.ratings_mat.shape))
         ## True (known and unknown) ratings for all items and users in the dataset
         ## item i, user u, rating r
-        markers = np.concatenate((markers, np.matrix(y).T), axis=1)
+        markers = np.concatenate((markers, y.reshape(-1,1)), axis=1)
         if ((use_ratings) and (not use_inputX)):
             predictions = markers
         ## 1. predictions=None: Plots datapoints according to ground truth annotations

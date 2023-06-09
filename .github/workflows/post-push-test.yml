@@ -30,6 +30,10 @@ jobs:
         working-directory: ./tests/
         run: |
           python -m test_datasets
+      - name: Test validation module
+        working-directory: ./tests/
+        run: |
+          python -m test_validation
       - name: Test training_testing module
         working-directory: ./tests/
         run: |
@@ -42,7 +46,3 @@ jobs:
         working-directory: ./tests/
         run: |
           python -m test_models
-      - name: Test validation module
-        working-directory: ./tests/
-        run: |
-          python -m test_validation
