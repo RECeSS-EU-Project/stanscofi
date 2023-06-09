@@ -69,7 +69,7 @@ class TestTrainingTesting(unittest.TestCase):
         }
         params = {"init":None, "solver":'cd', "beta_loss":'frobenius', "tol":0.0001, "max_iter":100, 
           "random_state":12345, "alpha_W":0.0, "alpha_H":'same', "l1_ratio":0.0, "verbose":0, 
-          "shuffle":False}
+          "shuffle":False, "decision_threshold": 0.05, "n_components": np.min(dataset.ratings_mat.shape)//3}
         template = stanscofi.models.NMF
         ## no parallel
         best_params_no_parallel, best_estimator_no_parallel = stanscofi.training_testing.grid_search(search_params, template, params, dataset, metric="AUC", njobs=1, nsplits=5, random_state=1234, show_plots=True, verbose=False)

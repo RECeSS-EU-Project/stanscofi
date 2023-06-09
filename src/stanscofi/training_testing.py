@@ -106,7 +106,7 @@ def traintest_validation_split(dataset, test_size, early_stop=None, metric="cosi
     while (l_nc<u_nc):
         nc = (l_nc+u_nc)//2
         clusters = fcluster(Z, nc, criterion='maxclust', depth=2, R=None, monocrit=None)
-        nratings_train = {ratings[np.vectorize(lambda x : clusters[x]<=c)(ratings[:,1]),:].shape[0]:c for c in range(1,len(np.unique(clusters))+1)}
+        nratings_train = {ratings[np.vectorize(lambda x : clusters[x]<=c)(ratings[:,1]).astype(bool),:].shape[0]:c for c in range(1,len(np.unique(clusters))+1)}
         select_clust = np.max([k if (k<=train_nset) else -1 for k in nratings_train])
         cluster_size = nratings_train.get(select_clust, -1)
         if (verbose):
