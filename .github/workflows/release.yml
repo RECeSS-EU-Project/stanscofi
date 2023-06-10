@@ -1,17 +1,15 @@
 name: stancofi release
 
-#on:
-#  release:
-#    types: [published]
-on: [push, pull_request]
+on:
+  release:
+    types: [published]
 
 jobs:
   pypi-publish:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    #- run: sed -i "s:9999:${VERSION//*v/}:" setup.py recipes/conda/meta.yaml
-    - run: sed -i "s:9999:1.0.1:" setup.py recipes/conda/meta.yaml
+    - run: sed -i "s:9999:${VERSION//*v/}:" setup.py recipes/conda/meta.yaml
       env:
           VERSION: ${{ github.ref }}
     - uses: actions/setup-python@v1
@@ -30,8 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    #- run: sed -i "s:9999:${VERSION//*v/}:" setup.py recipes/conda/meta.yaml
-    - run: sed -i "s:9999:1.0.1:" setup.py recipes/conda/meta.yaml
+    - run: sed -i "s:9999:${VERSION//*v/}:" setup.py recipes/conda/meta.yaml
       env:
           VERSION: ${{ github.ref }}
     - uses: s-weigand/setup-conda@v1
