@@ -14,7 +14,7 @@ from sklearn.preprocessing import StandardScaler
 import stanscofi.utils
 import stanscofi.preprocessing
 
-def generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std):
+def generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std, random_state=12454):
     '''
     Creates a dummy dataset where the positive and negative (item, user) pairs are arbitrarily similar. 
 
@@ -45,6 +45,7 @@ def generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std):
         a list of the item feature names in the order of column indices in ratings_mat
     '''
     assert nfeatures%2==0
+    np.random.seed(random_state)
     ## Generate feature matrices
     nusers = nitems = npositive+nnegative
     positive = np.random.normal(mean,std,size=(nfeatures,npositive))
