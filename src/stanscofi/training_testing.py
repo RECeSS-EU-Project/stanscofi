@@ -33,6 +33,7 @@ def print_folds(folds, dataset, fold_name="Fold"):
         name given to the fold
     '''
     if (len(folds)==0):
+        print("<training_testing.print_folds> Fold is empty.")
         return None
     assert folds.shape[1]==3
     assert np.max(folds[:,0])<=dataset.ratings_mat.shape[1]
