@@ -3,7 +3,7 @@ on:
     types: [published]
 
 jobs:
-  paper:
+  paper: 
     runs-on: ubuntu-latest
     name: Generation of stanscofi paper
     steps:
