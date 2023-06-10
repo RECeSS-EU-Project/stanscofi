@@ -1,8 +1,9 @@
 name: stancofi release
 
-on:
-  release:
-    types: [published]
+#on:
+#  release:
+#    types: [published]
+on: [push, pull_request]
 
 jobs:
   pypi-publish:
