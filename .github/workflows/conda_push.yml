@@ -15,14 +15,15 @@ jobs:
       run: |
         python setup.py sdist bdist_wheel
         conda install -y anaconda-client conda-build conda-verify
+        conda update conda
         conda config --set channel_priority strict
         conda config --set anaconda_upload yes
+        conda config --add channels conda-forge
+        conda config --set ssl_verify false
+        conda config --show
     - name: build
       run: |
         cd recipes/conda/
-        conda config --set anaconda_upload no
-        conda build --override-channels -c conda-forge .
-        ls
-#        conda build --user recess --token $ANACONDA_TOKEN --override-channels -c conda-forge .
+        conda build --user recess --token $ANACONDA_TOKEN .
       env:
         ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
