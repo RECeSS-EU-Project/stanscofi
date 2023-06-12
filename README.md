@@ -2,11 +2,7 @@
 
 This repository is a part of the EU-funded [RECeSS project](https://recess-eu-project.github.io) (#101102016), and hosts the code for the open-source Python package *stanscofi* for the development of collaborative filtering-based drug repurposing algorithms.
 
-[![Anaconda version](https://anaconda.org/recess/stanscofi/badges/version.svg)](https://anaconda.org/recess/stanscofi) 
-
-[![PyPI version](https://badge.fury.io/py/stanscofi.svg)](https://badge.fury.io/py/stanscofi)
-
-[![Zenodo version](https://zenodo.org/badge/DOI/10.5281/zenodo.8020432.svg)](https://doi.org/10.5281/zenodo.8020432)
+[![Anaconda version](https://anaconda.org/recess/stanscofi/badges/version.svg)](https://anaconda.org/recess/stanscofi) [![PyPI version](https://badge.fury.io/py/stanscofi.svg)](https://badge.fury.io/py/stanscofi) [![Zenodo version](https://zenodo.org/badge/DOI/10.5281/zenodo.8020432.svg)](https://doi.org/10.5281/zenodo.8020432)
 
 ## Statement of need
 
