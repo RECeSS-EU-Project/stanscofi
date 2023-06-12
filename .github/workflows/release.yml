@@ -40,8 +40,6 @@ jobs:
         conda config --set channel_priority strict
         conda config --set anaconda_upload yes
         conda config --add channels conda-forge
-        conda config --set ssl_verify false
-        conda config --set verbosity 1
     - name: build
       run: |
         cd conda/
