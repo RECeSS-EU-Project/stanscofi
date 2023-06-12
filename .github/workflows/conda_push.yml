@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.3.5
-    - run: sed -i "s:9999:1.0.1:" setup.py recipes/conda/meta.yaml
+    - run: sed -i "s:9999:1.0.1:" setup.py conda/meta.yaml
       env:
           VERSION: ${{ github.ref }}
     - uses: s-weigand/setup-conda@v1
@@ -15,15 +15,15 @@ jobs:
       run: |
         python setup.py sdist bdist_wheel
         conda install -y anaconda-client conda-build conda-verify
-        conda update conda
+        conda update conda -y
         conda config --set channel_priority strict
         conda config --set anaconda_upload yes
         conda config --add channels conda-forge
         conda config --set ssl_verify false
-        conda config --show
+        conda config --set verbosity 1
     - name: build
       run: |
-        cd recipes/conda/
+        cd conda/
         conda build --user recess --token $ANACONDA_TOKEN .
       env:
         ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
