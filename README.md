@@ -64,7 +64,7 @@ conda activate stanscofi_env
 cd docs/ && jupyter notebook
 ```
 
-The complete list of dependencies for *stanscofi* can be found at [requirements.txt](https://raw.githubusercontent.com/RECeSS-EU-Project/stanscofi/master/recipes/pip/requirements.txt) (pip) or [meta.yaml](https://raw.githubusercontent.com/RECeSS-EU-Project/stanscofi/master/recipes/conda/meta.yaml) (conda).
+The complete list of dependencies for *stanscofi* can be found at [requirements.txt](https://raw.githubusercontent.com/RECeSS-EU-Project/stanscofi/master/pip/requirements.txt) (pip) or [meta.yaml](https://raw.githubusercontent.com/RECeSS-EU-Project/stanscofi/master/conda/meta.yaml) (conda).
 
 ## Licence
 
