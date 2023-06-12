@@ -1,12 +1,12 @@
 name: conda 
 
-on: [push, pull_request] 
+on: [push, pull_request]
 
 jobs:
   conda-publish:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v2.3.5
     - run: sed -i "s:9999:1.0.1:" setup.py recipes/conda/meta.yaml
       env:
           VERSION: ${{ github.ref }}
@@ -20,6 +20,13 @@ jobs:
     - name: build
       run: |
         cd recipes/conda/
-        conda build --user recess --token $ANACONDA_TOKEN --override-channels -c conda-forge .
+        conda config --set anaconda_upload no
+        conda build --override-channels -c conda-forge .
+        ls
+#        conda build --user recess --token $ANACONDA_TOKEN --override-channels -c conda-forge .
       env:
         ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+    - uses: actions/upload-artifact@v3
+      with:
+      name: my-artifact
+      path: path/to/artifact/world.txt
