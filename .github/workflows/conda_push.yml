@@ -26,7 +26,3 @@ jobs:
 #        conda build --user recess --token $ANACONDA_TOKEN --override-channels -c conda-forge .
       env:
         ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
-    - uses: actions/upload-artifact@v3
-      with:
-      name: my-artifact
-      path: path/to/artifact/world.txt
