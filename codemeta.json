@@ -1,0 +1,74 @@
+{
+    "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+    "@type": "SoftwareSourceCode",
+    "license": "https://spdx.org/licenses/MIT",
+    "codeRepository": "git+https://github.com/RECeSS-EU-Project/stanscofi.git",
+    "dateCreated": "2023-06-09",
+    "datePublished": "2023-06-10",
+    "dateModified": "2023-06-14",
+    "downloadUrl": "https://github.com/RECeSS-EU-Project/stanscofi/archive/refs/heads/master.zip",
+    "issueTracker": "https://github.com/RECeSS-EU-Project/stanscofi/issues",
+    "name": "stanscofi",
+    "version": "1.0.2",
+    "identifier": "10.5281/zenodo.8038847",
+    "description": "Package for STANdard drug Screening by COllaborative FIltering. Performs benchmarks against datasets and SotA algorithms, and implements training, validation and testing procedures.",
+    "applicationCategory": "Drug development",
+    "releaseNotes": "This version passes all automated tests, and is automatically uploaded to Anaconda, PyPI, and Zenodo.",
+    "funding": "RECeSS - Robust Explainable Controllable Standard for drug Screening (101102016)",
+    "developmentStatus": "active",
+    "isPartOf": "https://recess-eu-project.github.io/",
+    "readme": "https://github.com/RECeSS-EU-Project/stanscofi/blob/master/README.md",
+    "softwareVersion": "1.0.2",
+    "funder": {
+        "@type": "Organization",
+        "name": "European Union's Horizon 2020 research and innovation programme"
+    },
+    "keywords": [
+        "Python",
+        "collaborative filtering",
+        "open science",
+        "drug repurposing",
+        "science reproducibility"
+    ],
+    "programmingLanguage": [
+        "Python 3"
+    ],
+    "softwareRequirements": [
+        "pandas>=1.1.4",
+        "numpy>=1.19.4",
+        "scikit-learn>=0.24.0",
+        "scipy>=1.5.4",
+        "matplotlib>=3.3.2",
+        "threadpoolctl>=3.1.0",
+        "joblib>=1.0.1",
+        "tqdm>=4.58.0",
+        "codecarbon>=2.2.2",
+        "seaborn>=0.11.0"
+    ],
+    "author": [
+        {
+            "@type": "Person",
+            "@id": "https://orcid.org/0000-0003-3238-0258",
+            "givenName": "Clémence",
+            "familyName": "Réda",
+            "email": "clemence.reda@uni-rostock.de",
+            "affiliation": {
+                "@type": "Organization",
+                "name": "Systems Biology and Informatics, University of Rostock, Rostock, Germany"
+            }
+        }
+    ],
+    "maintainer": [
+        {
+            "@type": "Person",
+            "@id": "https://orcid.org/0000-0003-3238-0258",
+            "givenName": "Clémence",
+            "familyName": "Réda",
+            "email": "clemence.reda@uni-rostock.de",
+            "affiliation": {
+                "@type": "Organization",
+                "name": "Systems Biology and Informatics, University of Rostock, Rostock, Germany"
+            }
+        }
+    ]
+}
