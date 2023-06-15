@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 NAME = "stanscofi"
-VERSION = "1.0.1"
+VERSION = "9999"
 
 setup(name=NAME,
     version=VERSION,
