@@ -6,7 +6,7 @@ This repository is a part of the EU-funded [RECeSS project](https://recess-eu-pr
 
 [![Anaconda version](https://anaconda.org/recess/stanscofi/badges/version.svg)](https://anaconda.org/recess/stanscofi) [![PyPI version](https://badge.fury.io/py/stanscofi.svg)](https://badge.fury.io/py/stanscofi) [![Zenodo version](https://zenodo.org/badge/DOI/10.5281/zenodo.8038847.svg)](https://doi.org/10.5281/zenodo.8038847)
 
-## Statement of need
+## Statement of need 
 
 As of 2022, current drug development pipelines last around 10 years, costing $2billion in average, while drug commercialization failure rates go up to 90%. These issues can be mitigated by drug repurposing, where chemical compounds are screened for new therapeutic indications in a systematic fashion. In prior works, this approach has been implemented through collaborative filtering. This semi-supervised learning framework leverages known drug-disease matchings in order to recommend new ones.
 
