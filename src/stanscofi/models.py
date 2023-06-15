@@ -33,7 +33,7 @@ def scores2ratings(df, user_col="user", item_col="item", rating_col="rating"):
     Returns
     ----------
     ratings : pandas.DataFrame of shape (n_ratings, 3)
-        the list of scores where the first column correspond to users, second to items, third to ratings
+        the list of scores where the first column correspond to users, second to items, third to scores
     '''
     grid = np.argwhere(np.ones(df.shape))
     res_df = pd.DataFrame([], index=range(grid.shape[0]))
@@ -156,8 +156,8 @@ class BasicModel(object):
 
         Returns
         ----------
-        scores : stanscofi.Dataset
-            dataset on which predictions should be made
+        scores : array-like of shape (n_ratings, 3)
+            the list of scores where the first column correspond to users, second to items, third to scores
         '''
         preds = self.model_predict(test_dataset)
         if (preds.shape==test_dataset.ratings_mat.shape):
@@ -171,29 +171,106 @@ class BasicModel(object):
         return scores
 
     def classify(self, scores):
+        '''
+        Outputs class labels based on the scores, using the following formula
+            prediction = -1 if (score<self.decision_threshold) else 1
+
+        ...
+
+        Parameters
+        ----------
+        scores : array-like of shape (n_ratings, 3)
+            the list of scores where the first column correspond to users, second to items, third to scores
+
+        Returns
+        ----------
+        predictions : array-like of shape (n_ratings, 3)
+            the list of scores where the first column correspond to users, second to items, third to ratings
+        '''
         predictions = scores.copy()
         predictions[:,2] = (-1)**(predictions[:,2]<self.decision_threshold)
         return predictions.astype(int)
 
     def print_scores(self, scores):
+        '''
+        Prints out information about the scores
+
+        ...
+
+        Parameters
+        ----------
+        scores : array-like of shape (n_ratings, 3)
+            the list of scores where the first column correspond to users, second to items, third to scores
+        '''
         Nitems, Nusers = len(np.unique(scores[:, 1].tolist())), len(np.unique(scores[:, 0].tolist()))
         print("* Scores")
         print("%d unique items, %d unique users" % (Nitems, Nusers))
         print("Scores: Min: %f\tMean: %f\tMedian: %f\tMax: %f\tStd: %f\n" % tuple([f(scores[:, 2]) for f in [np.min,np.mean,np.median,np.max,np.std]]))
 
     def print_classification(self, predictions):
+        '''
+        Prints out information about the predicted classes
+
+        ...
+
+        Parameters
+        ----------
+        predictions : array-like of shape (n_ratings, 3)
+            the list of scores where the first column correspond to users, second to items, third to ratings
+        '''
         Nitems, Nusers = len(np.unique(predictions[:, 1].tolist())), len(np.unique(predictions[:, 0].tolist()))
         print("* Classification")
         print("%d unique items, %d unique users" % (Nitems, Nusers))
         print("Positive class: %d, Negative class: %d\n" % (np.sum(predictions[:,2]==1), np.sum(predictions[:,2]==-1)))
 
     def preprocessing(self, train_dataset):
+        '''
+        Preprocessing step, which converts elements of a dataset (ratings matrix, user feature matrix, item feature matrix) into appropriate inputs to the classifier (e.g., X feature matrix for each (user, item) pair, y response vector).
+
+        Not implemented in the BasicModel class.
+
+        ...
+
+        Parameters
+        ----------
+        dataset : stanscofi.Dataset
+            dataset to convert
+
+        Returns
+        ----------
+        ... : ...
+            appropriate inputs to the classifier (vary across algorithms)
+        '''
         raise NotImplemented
 
     def fit(self, train_dataset):
+        '''
+        Fitting the model on the training dataset.
+
+        Not implemented in the BasicModel class.
+
+        ...
+
+        Parameters
+        ----------
+        train_dataset : stanscofi.Dataset
+            training dataset on which the model should fit
+        '''
         raise NotImplemented
 
     def model_predict(self, test_dataset):
+        '''
+        Making predictions using the model on the testing dataset.
+
+        Not implemented in the BasicModel class.
+
+        ...
+
+        Parameters
+        ----------
+        test_dataset : stanscofi.Dataset
+            testing dataset on which the model should be validated
+        '''
         raise NotImplemented
 
 ###############################################################################################################
@@ -202,21 +279,90 @@ class BasicModel(object):
 ###################
 
 class NMF(BasicModel):
+    '''
+    Non-negative Matrix Factorization (calls sklearn.decomposition.NMF internally). It uses the very same parameters as sklearn.decomposition.NMF, so please refer to help(sklearn.decomposition.NMF).
+
+    ...
+
+    Parameters
+    ----------
+    params : dict
+        dictionary which contains sklearn.decomposition.NMF parameters plus a key called "decision_threshold" with a float value which determines the decision threshold to label a positive class
+
+    Attributes
+    ----------
+    Same as BasicModel class
+
+    Methods
+    -------
+    Same as BasicModel class
+    preprocessing(train_dataset)
+        Preprocess the input dataset into something that is an input to the self.model.fit if it exists
+    fit(train_dataset)
+        Preprocess and fit the model
+    model_predict(test_dataset)
+        Outputs predictions of the fitted model on test_dataset
+    '''
     def __init__(self, params):
+        '''
+        Creates an instance of stanscofi.NMF
+
+        ...
+
+        Parameters
+        ----------
+        params : dict
+            dictionary which contains sklearn.decomposition.NMF parameters plus a key called "decision_threshold" with a float value which determines the decision threshold to label a positive class
+        '''
         super(NMF, self).__init__(params)
         self.name = "NMF"
         self.model = NonNegMatFact(**{p: params[p] for p in params if (p!="decision_threshold")})
 
     def preprocessing(self, train_dataset):
+        '''
+        Preprocessing step, which converts elements of a dataset (ratings matrix, user feature matrix, item feature matrix) into appropriate inputs to the NMF classifier.
+
+        ...
+
+        Parameters
+        ----------
+        dataset : stanscofi.Dataset
+            dataset to convert
+
+        Returns
+        ----------
+        A_train : array-like of shape (n_users, n_items)
+            transposed translated association matrix so that all its values are non-negative
+        '''
         A_train = train_dataset.ratings_mat.copy()
         A_train -= np.min(A_train)
         return A_train.T
     
     def fit(self, train_dataset):
+        '''
+        Fitting the NMF model on the training dataset.
+
+        ...
+
+        Parameters
+        ----------
+        train_dataset : stanscofi.Dataset
+            training dataset on which the model should fit
+        '''
         inp = self.preprocessing(train_dataset)
         self.model.fit(inp)
     
     def model_predict(self, test_dataset):
+        '''
+        Making predictions using the NMF model on the testing dataset.
+
+        ...
+
+        Parameters
+        ----------
+        test_dataset : stanscofi.Dataset
+            testing dataset on which the model should be validated
+        '''
         inp = self.preprocessing(test_dataset)
         W = self.model.fit_transform(inp)
         return W.dot(self.model.components_).T
@@ -227,7 +373,41 @@ class NMF(BasicModel):
 #########################
 
 class LogisticRegression(BasicModel):
+    '''
+    Logistic Regression (calls sklearn.linear_model.LogisticRegression internally). It uses the very same parameters as sklearn.linear_model.LogisticRegression, so please refer to help(sklearn.linear_model.LogisticRegression).
+
+    ...
+
+    Parameters
+    ----------
+    params : dict
+        dictionary which contains sklearn.linear_model.LogisticRegression parameters plus a key called "decision_threshold" with a float value which determines the decision threshold to label a positive class, plus a key called "preprocessing" which determines which preprocessing function (in stanscofi.preprocessing) should be applied to data, plus a key called "subset" which gives the maximum number of features to consider in the model (those features will be the Top-subset in terms of variance across samples)
+
+    Attributes
+    ----------
+    Same as BasicModel class
+
+    Methods
+    -------
+    Same as BasicModel class
+    preprocessing(train_dataset)
+        Preprocess the input dataset into something that is an input to the self.model.fit if it exists
+    fit(train_dataset)
+        Preprocess and fit the model
+    model_predict(test_dataset)
+        Outputs predictions of the fitted model on test_dataset
+    '''
     def __init__(self, params):
+        '''
+        Creates an instance of stanscofi.LogisticRegression
+
+        ...
+
+        Parameters
+        ----------
+        params : dict
+            dictionary which contains sklearn.linear_model.LogisticRegression parameters plus a key called "decision_threshold" with a float value which determines the decision threshold to label a positive class, plus a key called "preprocessing" which determines which preprocessing function (in stanscofi.preprocessing) should be applied to data, plus a key called "subset" which gives the maximum number of features to consider in the model (those features will be the Top-subset in terms of variance across samples)
+        '''
         super(LogisticRegression, self).__init__(params)
         self.name = "LogisticRegression"
         self.scalerP, self.scalerS = None, None
@@ -238,6 +418,23 @@ class LogisticRegression(BasicModel):
         self.filter = None
 
     def preprocessing(self, train_dataset):
+        '''
+        Preprocessing step, which converts elements of a dataset (ratings matrix, user feature matrix, item feature matrix) into appropriate inputs to the Logistic Regression classifier. 
+
+        ...
+
+        Parameters
+        ----------
+        dataset : stanscofi.Dataset
+            dataset to convert
+
+        Returns
+        ----------
+        X : array-like of shape (n_ratings, n_pair_features)
+            (user, item) feature matrix (the actual contents of the matrix depends on parameters "preprocessing" and "subset" given as input
+        y : array-like of shape (n_ratings, )
+            response vector for each (user, item) pair
+        '''
         if (self.preprocessing_str == "Perlman_procedure"):
             X, y = eval("stanscofi.preprocessing."+self.preprocessing_str)(train_dataset, njobs=1, sep_feature="-", missing=-666, verbose=False)
             scalerS, scalerP = None, None
@@ -261,10 +458,30 @@ class LogisticRegression(BasicModel):
         return X, y
     
     def fit(self, train_dataset):
+        '''
+        Fitting the Logistic Regression model on the training dataset.
+
+        ...
+
+        Parameters
+        ----------
+        train_dataset : stanscofi.Dataset
+            training dataset on which the model should fit
+        '''
         X, y = self.preprocessing(train_dataset)
         self.model.fit(X, y)
     
     def model_predict(self, test_dataset):
+        '''
+        Making predictions using the Logistic Regression model on the testing dataset.
+
+        ...
+
+        Parameters
+        ----------
+        test_dataset : stanscofi.Dataset
+            testing dataset on which the model should be validated
+        '''
         X, _ = self.preprocessing(test_dataset)
         preds = self.model.predict_proba(X)
         ids = np.argwhere(np.ones(test_dataset.ratings_mat.shape))
