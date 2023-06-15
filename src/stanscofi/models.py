@@ -223,7 +223,7 @@ class BasicModel(object):
         print("%d unique items, %d unique users" % (Nitems, Nusers))
         print("Positive class: %d, Negative class: %d\n" % (np.sum(predictions[:,2]==1), np.sum(predictions[:,2]==-1)))
 
-    def preprocessing(self, train_dataset):
+    def preprocessing(self, dataset):
         '''
         Preprocessing step, which converts elements of a dataset (ratings matrix, user feature matrix, item feature matrix) into appropriate inputs to the classifier (e.g., X feature matrix for each (user, item) pair, y response vector).
 
@@ -318,7 +318,7 @@ class NMF(BasicModel):
         self.name = "NMF"
         self.model = NonNegMatFact(**{p: params[p] for p in params if (p!="decision_threshold")})
 
-    def preprocessing(self, train_dataset):
+    def preprocessing(self, dataset):
         '''
         Preprocessing step, which converts elements of a dataset (ratings matrix, user feature matrix, item feature matrix) into appropriate inputs to the NMF classifier.
 
@@ -331,12 +331,12 @@ class NMF(BasicModel):
 
         Returns
         ----------
-        A_train : array-like of shape (n_users, n_items)
+        A : array-like of shape (n_users, n_items)
             transposed translated association matrix so that all its values are non-negative
         '''
-        A_train = train_dataset.ratings_mat.copy()
-        A_train -= np.min(A_train)
-        return A_train.T
+        A = dataset.ratings_mat.copy()
+        A -= np.min(A)
+        return A.T
     
     def fit(self, train_dataset):
         '''
@@ -417,7 +417,7 @@ class LogisticRegression(BasicModel):
         self.subset = params["subset"]
         self.filter = None
 
-    def preprocessing(self, train_dataset):
+    def preprocessing(self, dataset):
         '''
         Preprocessing step, which converts elements of a dataset (ratings matrix, user feature matrix, item feature matrix) into appropriate inputs to the Logistic Regression classifier. 
 
@@ -436,12 +436,12 @@ class LogisticRegression(BasicModel):
             response vector for each (user, item) pair
         '''
         if (self.preprocessing_str == "Perlman_procedure"):
-            X, y = eval("stanscofi.preprocessing."+self.preprocessing_str)(train_dataset, njobs=1, sep_feature="-", missing=-666, verbose=False)
+            X, y = eval("stanscofi.preprocessing."+self.preprocessing_str)(dataset, njobs=1, sep_feature="-", missing=-666, verbose=False)
             scalerS, scalerP = None, None
         if (self.preprocessing_str == "meanimputation_standardize"):
-            X, y, scalerS, scalerP = eval("stanscofi.preprocessing."+self.preprocessing_str)(train_dataset, subset=self.subset, scalerS=self.scalerS, scalerP=self.scalerP, inf=2, verbose=False)
+            X, y, scalerS, scalerP = eval("stanscofi.preprocessing."+self.preprocessing_str)(dataset, subset=self.subset, scalerS=self.scalerS, scalerP=self.scalerP, inf=2, verbose=False)
         if (self.preprocessing_str == "same_feature_preprocessing"):
-            X, y = eval("stanscofi.preprocessing."+self.preprocessing_str)(train_dataset)
+            X, y = eval("stanscofi.preprocessing."+self.preprocessing_str)(dataset)
             scalerS, scalerP = None, None
         if (self.preprocessing_str != "meanimputation_standardize"):
             if ((self.subset is not None) or (self.filter is not None)):
