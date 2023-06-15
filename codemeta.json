@@ -9,7 +9,8 @@
     "downloadUrl": "https://github.com/RECeSS-EU-Project/stanscofi/archive/refs/heads/master.zip",
     "issueTracker": "https://github.com/RECeSS-EU-Project/stanscofi/issues",
     "name": "stanscofi",
-    "version": "1.0.2",
+    "version": "1.0.3",
+    "softwareVersion": "1.0.3",
     "identifier": "10.5281/zenodo.8038847",
     "description": "Package for STANdard drug Screening by COllaborative FIltering. Performs benchmarks against datasets and SotA algorithms, and implements training, validation and testing procedures.",
     "applicationCategory": "Drug development",
@@ -18,7 +19,6 @@
     "developmentStatus": "active",
     "isPartOf": "https://recess-eu-project.github.io/",
     "readme": "https://github.com/RECeSS-EU-Project/stanscofi/blob/master/README.md",
-    "softwareVersion": "1.0.2",
     "funder": {
         "@type": "Organization",
         "name": "European Union's Horizon 2020 research and innovation programme"
