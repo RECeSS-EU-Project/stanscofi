@@ -79,9 +79,9 @@ This repository is under an [OSI-approved](https://opensource.org/licenses/) [MI
 If you use **stanscofi** in academic research, please cite it as follows
 
 ```
-Clémence Réda. (2023). 
-stanscofi: a Python package for the development of collaborative filtering-based drug repurposing algorithms (v1.0.0). 
-Zenodo. https://doi.org/10.5281/zenodo.8020433
+Réda, Clémence. (2023). 
+STANdard for drug Screening by COllaborative FIltering (stanscofi). 
+Zenodo. https://doi.org/10.5281/zenodo.8038847
 ```
 
 ## Community guidelines with respect to contributions, issue reporting, and support
