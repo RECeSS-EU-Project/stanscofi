@@ -1,10 +1,10 @@
-cff-version: 1.0.1
+cff-version: 1.0.2
 message: "If you use this software, please cite it as below."
 authors:
   - family-names: R\'{e}da
     given-names: Cl\'{e}mence
     orcid: https://orcid.org/0000-0003-3238-0258
 title: "STANdard for drug Screening by COllaborative FIltering (stanscofi)"
-version: 1.0.1
+version: 1.0.4
 doi: "10.5281/zenodo.8038847"
-date-released: 2023-06-09
+date-released: 2023-06-21

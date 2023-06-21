@@ -42,7 +42,7 @@ def compute_metrics(scores, predictions, test_dataset, beta=1, ignore_zeroes=Fal
     assert predictions.shape[1]==3
     assert predictions.shape[0]==scores.shape[0]
     assert beta>0
-    y_true_all = np.array([test_dataset.ratings_mat[i,j] for i,j in scores[:,:2].astype(int).tolist()])
+    y_true_all = np.array([test_dataset.ratings_mat[j,i] for i,j in scores[:,:2].astype(int).tolist()])
     y_pred_all = predictions[:,2].flatten()
     if (not ignore_zeroes):
         scores_ = deepcopy(scores)

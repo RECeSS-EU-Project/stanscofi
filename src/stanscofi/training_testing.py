@@ -253,7 +253,7 @@ def cv_training(template, params, train_dataset, metric="AUC", beta=1, njobs=1, 
     full_list = np.zeros((Nitems*Nusers, 3))
     full_list[:,0] = grid[0].flatten()
     full_list[:,1] = grid[1].flatten()
-    full_list[:,2] = [train_dataset.ratings_mat[i,j] for i,j in full_list[:,:2].astype(int).tolist()]
+    full_list[:,2] = [train_dataset.ratings_mat[j,i] for i,j in full_list[:,:2].astype(int).tolist()]
     full_list = full_list.astype(int)
     cv_folds = cv_generator.split(full_list[:,:2], np.ravel(full_list[:,2]))
     best_estimator, best_metric = {}, -float("inf")
