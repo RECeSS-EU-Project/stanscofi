@@ -50,7 +50,7 @@ def compute_metrics(scores, predictions, test_dataset, beta=1, ignore_zeroes=Fal
         y_true = (y_true_all>0).astype(int) 
         y_pred = (y_pred_all>0).astype(int)
     else:
-        ids = np.argwhere(y_true!=0)
+        ids = np.argwhere(y_true_all!=0)
         scores_ = scores[ids.flatten().tolist(),:]
         predictions_ = predictions[ids,:]
         y_true = (y_true_all[ids]>0).astype(int)
