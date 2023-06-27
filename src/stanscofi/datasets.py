@@ -15,7 +15,7 @@ import stanscofi.utils
 import stanscofi.preprocessing
 
 import warnings
-warnings.filterwarnings("ignore", message=".*The 'nopython' keyword.*")
+warnings.filterwarnings("ignore", message=".*he 'nopython' keyword argument was not supplied to the 'numba.jit' decorator.*")
 
 def generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std, random_state=12454):
     '''
