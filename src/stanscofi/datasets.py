@@ -8,11 +8,14 @@ import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 
 from sklearn.decomposition import PCA
-from sklearn.manifold import TSNE
+import umap
 from sklearn.preprocessing import StandardScaler
 
 import stanscofi.utils
 import stanscofi.preprocessing
+
+import warnings
+warnings.filterwarnings("ignore", message=".*The 'nopython' keyword.*")
 
 def generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std, random_state=12454):
     '''
@@ -203,7 +206,7 @@ class Dataset(object):
 
     def visualize(self, withzeros=False, X=None, y=None, metric="euclidean", figsize=(5,5), fontsize=20, dimred_args={}, predictions=None, use_ratings=False, random_state=1234, show_errors=False, verbose=False):
         '''
-        Plots a representation of the datapoints in a stanscofi.Dataset which is annotated either by the ground truth labels or the predicted labels. The representation is the plot of the datapoints according to the first two Principal Components, or the first two dimensions in tSNE, if the feature matrices can be converted into a (n_ratings, n_features) shaped matrix where n_features>1, else it plots a heatmap with the values in the matrix for each rating pair. 
+        Plots a representation of the datapoints in a stanscofi.Dataset which is annotated either by the ground truth labels or the predicted labels. The representation is the plot of the datapoints according to the first two Principal Components, or the first two dimensions in UMAP, if the feature matrices can be converted into a (n_ratings, n_features) shaped matrix where n_features>1, else it plots a heatmap with the values in the matrix for each rating pair. 
 
         In the legend, ground truth labels are denoted with brackets: e.g., [0] (unknown), [1] (positive) and [-1] (negative); predicted ratings are denoted by "pos" (positive) and "neg" (negative); correct (resp., incorrect) predictions are denoted by "correct", resp. "error"
 
@@ -224,7 +227,7 @@ class Dataset(object):
         fontsize : int
             size of the legend, title and labels of the figure
         dimred_args : dict
-            dictionary which lists the parameters to the dimensionality reduction method (either PCA, by default, or tSNE, if parameter "perplexity" is provided)
+            dictionary which lists the parameters to the dimensionality reduction method (either PCA, by default, or UMAP, if parameter "n_neighbors" is provided)
         predictions : array-like of shape (n_ratings, 3) or None
             a matrix which contains the user indices (column 1), the item indices (column 2) and the class for the corresponding (user, item) pair (value in {-1, 0, 1} in column 3); if predictions=None, then the ground truth ratings will be used to color datapoints, otherwise, the predicted ratings will be used
         use_ratings : bool
@@ -299,27 +302,29 @@ class Dataset(object):
         if (verbose):
             print("<datasets.visualize> Reducing dimension and plotting matrix X of size %d x %d" % X.shape)
         dimred_args.update({"n_components":min(2,X.shape[1]), "random_state":random_state})
-        use_pca = ("perplexity" not in dimred_args)
+        use_pca = ("n_neighbors" not in dimred_args)
         if (use_pca):
             with np.errstate(invalid="ignore"): # for NaN or 0 variance matrices
                 pca = PCA(**dimred_args)
                 dimred_X = pca.fit_transform(X)
                 var12 = pca.explained_variance_ratio_[:2]*100
         else:
-            dimred_args.update({"perplexity":max(5,min(dimred_args["perplexity"],min(30,all_pairs.shape[0])))})
+            dimred_args.update({"n_neighbors":max(5,min(dimred_args["n_neighbors"],min(50,all_pairs.shape[0])))})
+            dimred_args.update({"min_dist":max(0.5,min(dimred_args.get("min_dist", 0.1), 0.001))})
+            dimred_args.update({"metric":dimred_args.get("metric", 'correlation')})
             if (verbose):
-                print("<datasets.visualize> Perplexity = %d" % dimred_args["perplexity"])
+                print("<datasets.visualize> n_neighbors = %d\tmin_dist = %.2f\tmetric = %s" % (dimred_args["n_neighbors"], dimred_args["min_dist"], dimred_args["metric"]))
             with np.errstate(invalid="ignore"): # for NaN or 0 variance matrices
-                tsne = TSNE(**dimred_args)
-                dimred_X = tsne.fit_transform(X-np.min(X)+1)
-                var12 = tsne.kl_divergence_
+                umap_model = umap.UMAP(**dimred_args)
+                dimred_X = umap_model.fit_transform(X, y)
+                var12 = [np.nan]*2
         ## Put points in the front layer
         layer = {"g.": 1, "r.": 1, "y.": 0} if (predictions is None) else ({"g.": 0, "r.": 0, "y.": 0, "g+": 0, "r+": 1, "y+": 0, "gv": 0, "rv": 0, "yv": 0} if (not show_errors) else {"g.": 0, "r.": 0, "y.": 0, "g+": 0, "r+": 1, "y+": 0, "gv": 1, "rv": 0, "yv": 0})
         ## More visible points
         alpha = {"g.": 0.75, "r.": 1, "y.": 0.1}
         plt.figure(figsize=figsize)
         if (X.shape[1]>1):
-            ## Prints a PCA
+            ## Prints a PCA / UMAP
             for mkr in np.unique(np.ravel(all_pairs[:,3])).tolist():
                 all_pairs_k = np.argwhere(all_pairs[:,3]==mkr)[:,0].tolist()
                 if ((not withzeros) and (((predictions is None) and (mkr=="y.")) or ((predictions is not None) and (mkr[-1]==".")))):
@@ -345,7 +350,7 @@ class Dataset(object):
             plt.xticks(fontsize=fontsize, rotation=90)
             plt.yticks(fontsize=fontsize)
             plt.ylabel(("PC2 ("+str(int(var12[1]))+"%)" if (use_pca) else "Dim2") if (not np.isnan(var12[1])) else "C2", fontsize=fontsize)
-            plt.xlabel((("PC1 ("+str(int(var12[0]))+"%)" if (use_pca) else "Dim1 (KL div=%.2f)" % var12)) if (not np.isnan(var12[0] if (use_pca) else var12)) else "C1", fontsize=fontsize)
+            plt.xlabel((("PC1 ("+str(int(var12[0]))+"%)" if (use_pca) else "Dim1")) if (not np.isnan(var12[0])) else "C1", fontsize=fontsize)
             plt.title("on %d features" % X.shape[1], fontsize=fontsize//2)
             plt.legend(handles=handles, fontsize=fontsize, loc='upper right', bbox_to_anchor=(1.6,0.9))
             plt.show()

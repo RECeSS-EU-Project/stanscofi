@@ -23,7 +23,7 @@ class TestDatasets(unittest.TestCase):
 
     def test_existing_dataset(self):
         ## For PREDICT, considering the publicly (partial) dataset on Zenodo
-        available_datasets = ["Gottlieb", "Cdataset", "DNdataset", "LRSSL", "PREDICT_Gottlieb", "TRANSCRIPT", "PREDICT"]
+        available_datasets = ["Gottlieb", "Cdataset", "DNdataset", "LRSSL", "PREDICT_Gottlieb", "TRANSCRIPT", "PREDICT", "TRANSCRIPT_v1", "PREDICT_v1"]
         values = {
                 'Gottlieb': [593, 593, 313, 313, 1933, 0, 1.04],
                 'Cdataset': [663, 663, 409, 409, 2532, 0, 0.93],
@@ -33,6 +33,9 @@ class TestDatasets(unittest.TestCase):
                 'TRANSCRIPT': [204, 12096, 116, 12096, 401, 11, 0.45],
                 #'PREDICT': [1351, 6265, 1066, 2914, 5624, 152, 0.34], ##private version
                 'PREDICT': [1014, 1642, 941, 1490, 4627, 132, 0.40], ##public version
+                'TRANSCRIPT_v1': [558, 10811, 118, 10811, 773, 181, 0.76],
+                #'PREDICT_v1': [1395, 6030, 1501, 2361, 8240, 295, 0.38], ##private version
+                'PREDICT_v1': [20, 2150, 920, 1170, 59, 3, 0.28], ##public version
         }
         for dataset_name in available_datasets:
             data_args = stanscofi.utils.load_dataset(dataset_name, save_folder="./")
@@ -70,6 +73,7 @@ class TestDatasets(unittest.TestCase):
         data_args = stanscofi.datasets.generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std)
         dataset = stanscofi.datasets.Dataset(**data_args)
         dataset.visualize(withzeros=False)
+        dataset.visualize(withzeros=False, dimred_args={"n_neighbors":10}) ## UMAP
         dataset.visualize(withzeros=True)
         ## Generate random class predictions
         pi=1/16

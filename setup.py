@@ -33,6 +33,7 @@ setup(name=NAME,
         "tqdm>=4.58.0",
         "codecarbon>=2.2.2",
         "seaborn>=0.11.0",
+        "umap-learn>=0.5.3",
     ],
     entry_points={},
 )
