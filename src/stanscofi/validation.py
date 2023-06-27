@@ -65,6 +65,9 @@ def compute_metrics(scores, predictions, test_dataset, beta=1, ignore_zeroes=Fal
     base_pres = np.linspace(0, 1, 101)
     for user_id in user_ids:
         user_ids_i = np.argwhere(scores_[:,0].flatten()==user_id)
+        if (len(user_ids_i)==0):
+            n_ignored += 1
+            continue
         user_truth = y_true[user_ids_i].reshape(1, -1)
         user_pred = y_pred[user_ids_i].reshape(1, -1)
         if (len(np.unique(user_truth))==2):
@@ -81,6 +84,10 @@ def compute_metrics(scores, predictions, test_dataset, beta=1, ignore_zeroes=Fal
             n_ignored += 1
     if (verbose and n_ignored>0):
         print("<validation.compute_metrics> Computed on #users=%d, %d ignored (%2.f perc)" % (len(user_ids), n_ignored, 100*n_ignored/len(user_ids)))
+    if (len(aucs)==0 or len(fscores)==0):
+        metrics = pd.DataFrame([], index=["AUC", "F_%.1f" % beta], 
+		columns=["Avg. across users", "Std"])
+        return metrics, {}
     metrics = pd.DataFrame([[f(x) for f in [np.mean, np.std]] for x in [aucs, fscores]], index=["AUC", "F_%.1f" % beta], 
 		columns=["Avg. across users", "Std"])
     return metrics, {"y_true": y_true, "y_pred": y_pred, "scores": scores_[:,2].flatten(), "predictions": y_pred_all, "ground_truth": y_true_all, "aucs": aucs, "fscores": fscores, "tprs": np.array(tprs), "recs": np.array(recs)}
@@ -132,8 +139,8 @@ def plot_metrics(y_true=None, y_pred=None, scores=None, ground_truth=None, predi
     assert len(aucs)==len(fscores)
     assert tprs.shape[0]==recs.shape[0]
     assert len(figsize)==2
-    base_fpr = np.linspace(0, 1, 101)
-    base_pres = np.linspace(0, 1, 101)
+    base_fpr = np.linspace(0, 1, tprs.shape[1])
+    base_pres = np.linspace(0, 1, np.array(recs).shape[1])
     ## Compute average values across users
     if (len(aucs) > 0):
         mean_tprs = tprs.mean(axis=0)
@@ -155,7 +162,7 @@ def plot_metrics(y_true=None, y_pred=None, scores=None, ground_truth=None, predi
     recs_lower = mean_recs - std_recs
     fig, axes = plt.subplots(nrows=2, ncols=2, figsize=figsize)
     ## ROC curve
-    axes[0,0].plot(base_fpr, mean_tprs, 'b', alpha = 0.8, label=model_name+' (AUC = %0.2f $\pm$ %0.2f)' % (auc, std_auc))
+    axes[0,0].plot(base_fpr, mean_tprs, 'b', alpha = 0.8, label=model_name+' (AUC = %0.2f %s %0.2f)' % (auc, "$\\pm$", std_auc))
     axes[0,0].fill_between(base_fpr, tprs_lower, tprs_upper, color = 'blue', alpha = 0.2)
     axes[0,0].plot([0, 1], [0, 1], linestyle = '--', lw = 2, color = 'r', alpha= 0.8, label="Constant")
     axes[0,0].set_ylabel('True Positive Rate')
@@ -163,7 +170,7 @@ def plot_metrics(y_true=None, y_pred=None, scores=None, ground_truth=None, predi
     axes[0,0].legend(loc="lower right")
     axes[0,0].set_title('Avg. user ROC curve')
     ## Precision-recall curve
-    axes[0,1].plot(base_pres, mean_recs, 'b', alpha=0.8, label=model_name+' (F = %0.2f $\pm$ %0.2f)' % (fs, std_fs))
+    axes[0,1].plot(base_pres, mean_recs, 'b', alpha=0.8, label=model_name+' (F = %0.2f %s %0.2f)' % (fs, "$\\pm$", std_fs))
     axes[0,1].fill_between(base_pres, recs_lower, recs_upper, color="blue", alpha=0.2)
     axes[0,1].plot([0,1], [1,0], linestyle="--", lw=2, color="r", alpha=0.8, label="Constant")
     axes[0,1].set_xlabel('Precision')

@@ -8,14 +8,14 @@ import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 
 from sklearn.decomposition import PCA
-import umap
+import warnings
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", message=".*he 'nopython' keyword argument was not supplied to the 'numba.jit' decorator.*")
+    import umap
 from sklearn.preprocessing import StandardScaler
 
 import stanscofi.utils
 import stanscofi.preprocessing
-
-import warnings
-warnings.filterwarnings("ignore", message=".*he 'nopython' keyword argument was not supplied to the 'numba.jit' decorator.*")
 
 def generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std, random_state=12454):
     '''
