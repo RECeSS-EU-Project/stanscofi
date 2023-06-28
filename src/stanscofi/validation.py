@@ -44,8 +44,17 @@ def compute_metrics(scores, predictions, test_dataset, beta=1, ignore_zeroes=Fal
     assert beta>0
     y_true_all = np.array([test_dataset.ratings_mat[j,i] for i,j in scores[:,:2].astype(int).tolist()])
     y_pred_all = predictions[:,2].flatten()
-    if (not ignore_zeroes):
+    if (test_dataset.folds is not None):
+        ids = np.argwhere(np.ones(test_dataset.ratings_mat.shape))
+        folds_ids = [((test_dataset.folds[:,0]==i)&(test_dataset.folds[:,1]==j)).any() for i,j in ids[:,:2].tolist()]
+        y_true_all = y_true_all[folds_ids]
+        y_pred_all = y_pred_all[folds_ids]
+        scores_ = scores[folds_ids,:]
+        assert y_true_all.shape[0] == test_dataset.folds.shape[0]
+        assert y_pred_all.shape[0] == test_dataset.folds.shape[0]
+    else:
         scores_ = deepcopy(scores)
+    if (not ignore_zeroes):
         predictions_ = deepcopy(predictions)
         y_true = (y_true_all>0).astype(int) 
         y_pred = (y_pred_all>0).astype(int)
@@ -55,7 +64,7 @@ def compute_metrics(scores, predictions, test_dataset, beta=1, ignore_zeroes=Fal
         predictions_ = predictions[ids,:]
         y_true = (y_true_all[ids]>0).astype(int)
         y_pred = (y_pred_all[ids]>0).astype(int)
-    assert y_true.shape[0]==y_pred.shape[0]
+    assert y_true.shape[0]==y_pred.shape[0]==scores_.shape[0]
     assert all([x in [-1,0,1] for x in np.unique(y_true).flatten()])
     ## Compute average metric per user
     user_ids = np.unique(scores_[:,0].flatten()).astype(int).tolist()

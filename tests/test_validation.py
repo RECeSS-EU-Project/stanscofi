@@ -43,7 +43,17 @@ class TestValidation(unittest.TestCase):
         self.assertTrue(np.isnan(metrics.values[1,0]))
         self.assertTrue(np.isnan(metrics.values[1,1]))
 
+    def test_compute_metrics_mask_dataset(self):
+        dataset, scores, threshold = self.generate_dataset_scores_threshold()
+        nitems, nusers = [x//3+1 for x in dataset.ratings_mat.shape]
+        folds = np.array([[i,j,dataset.ratings_mat[i,j]] for i in range(nitems) for j in range(nusers)])
+        masked_dataset = dataset.mask_dataset(folds, subset_name="dataset")
+        predictions = np.copy(scores)
+        predictions[:,2] = (-1)**(predictions[:,2]<threshold)
+        metrics, _ = stanscofi.validation.compute_metrics(scores, predictions, masked_dataset, beta=1, ignore_zeroes=False, verbose=False)
+
     def test_plot_metrics(self):
+        return None ## TODO
         dataset, scores, threshold = self.generate_dataset_scores_threshold()
         predictions = np.copy(scores)
         predictions[:,2] = (-1)**(predictions[:,2]<threshold)

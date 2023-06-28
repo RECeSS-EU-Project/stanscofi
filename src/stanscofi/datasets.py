@@ -89,6 +89,8 @@ class Dataset(object):
         a list of the item feature names in the order of column indices in ratings_mat
     name : str
         the name of the dataset (if it exists)
+    folds : array-like of shape (n_ratings, 3)
+        a matrix which contains the user indices (column 1), the item indices (column 2) and the class for the corresponding (user, item) pair (value in {-1, 0, 1} in column 3) (if the dataset is masked, see below)
 
     Attributes
     ----------
@@ -123,8 +125,10 @@ class Dataset(object):
         Plots datapoints in the dataset annotated by the ground truth or predicted ratings
     get_folds(folds, subset_name="subset")
         Creates a subset of the dataset based on the folds given as input
+    mask_dataset(folds, subset_name="dataset")
+        Creates a masked dataset where only some of the ratings are known
     '''
-    def __init__(self, ratings_mat=None, users=None, items=None, same_item_user_features=False, name="dataset"):
+    def __init__(self, ratings_mat=None, users=None, items=None, same_item_user_features=False, name="dataset", folds=None):
         '''
         Creates an instance of stanscofi.Dataset
 
@@ -170,6 +174,7 @@ class Dataset(object):
         self.items = items.values
         self.name = name
         self.same_item_user_features = same_item_user_features
+        self.folds = folds
 
     def summary(self, sep="-"*70):
         '''
@@ -439,4 +444,4 @@ class Dataset(object):
         y = np.zeros(self.ratings_mat.shape)
         y[folds[:,1],folds[:,0]] = folds[:,2]
         y = pd.DataFrame(y, index=A.index, columns=A.columns)
-        return Dataset(ratings_mat=y, users=P, items=S, name=subset_name, same_item_user_features=self.same_item_user_features)
+        return Dataset(ratings_mat=y, users=P, items=S, name=subset_name, same_item_user_features=self.same_item_user_features, folds=folds)
