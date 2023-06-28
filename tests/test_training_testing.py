@@ -73,7 +73,7 @@ class TestTrainingTesting(unittest.TestCase):
         best_estimator_no_parallel = stanscofi.training_testing.cv_training(template, params, dataset, metric="AUC", beta=1, njobs=1, nsplits=5, random_state=1234, show_plots=True, verbose=False)
         auc_test, auc_train, model_params, cv_folds = [best_estimator_no_parallel[x] for x in ["test_AUC", "train_AUC", "model_params", "cv_folds"]]
         ## parallel
-        best_estimator_parallel = stanscofi.training_testing.cv_training(template, params, dataset, metric="AUC", beta=1, njobs=4, nsplits=5, random_state=1234, show_plots=True, verbose=False)
+        best_estimator_parallel = stanscofi.training_testing.cv_training(template, params, dataset, metric="AUC", beta=1, njobs=4, nsplits=5, random_state=1234, show_plots=False, verbose=False)
         auc_test_, auc_train_, model_params_, cv_folds_ = [best_estimator_parallel[x] for x in ["test_AUC", "train_AUC", "model_params", "cv_folds"]]
         self.assertEqual(np.round(auc_test,1), np.round(auc_test_,1))
         self.assertEqual(np.round(auc_train,1), np.round(auc_train_,1))
@@ -92,12 +92,32 @@ class TestTrainingTesting(unittest.TestCase):
         best_params_no_parallel, best_estimator_no_parallel = stanscofi.training_testing.grid_search(search_params, template, params, dataset, metric="AUC", njobs=1, nsplits=5, random_state=1234, show_plots=True, verbose=False)
         auc_test, auc_train, model_params, cv_folds = [best_estimator_no_parallel[x] for x in ["test_AUC", "train_AUC", "model_params", "cv_folds"]]
         ## parallel
-        best_params_parallel, best_estimator_parallel = stanscofi.training_testing.grid_search(search_params, template, params, dataset, metric="AUC", njobs=4, nsplits=5, random_state=1234, show_plots=True, verbose=False)
+        best_params_parallel, best_estimator_parallel = stanscofi.training_testing.grid_search(search_params, template, params, dataset, metric="AUC", njobs=4, nsplits=5, random_state=1234, show_plots=False, verbose=False)
         auc_test_, auc_train_, model_params_, cv_folds_ = [best_estimator_parallel[x] for x in ["test_AUC", "train_AUC", "model_params", "cv_folds"]]
         self.assertEqual(np.round(auc_test,1), np.round(auc_test_,1))
         self.assertEqual(np.round(auc_train,1), np.round(auc_train_,1))
         for p in best_params_no_parallel:
             self.assertEqual(best_params_no_parallel[p], best_params_parallel[p])
+
+    def test_cv_training_mask_dataset(self):
+        dataset, _, _ = self.generate_dataset_folds()
+        params = {"init":None, "solver":'cd', "beta_loss":'frobenius', "tol":0.0001, "max_iter":100, 
+          "random_state":12345, "alpha_W":0.0, "alpha_H":'same', "l1_ratio":0.0, "verbose":0, 
+          "shuffle":False, "n_components": np.min(dataset.ratings_mat.shape)//2+1, "decision_threshold": 0.005}
+        template = stanscofi.models.NMF
+        best_estimator = stanscofi.training_testing.cv_training(template, params, dataset, is_masked=True, metric="AUC", beta=1, njobs=4, nsplits=5, random_state=1234, show_plots=False, verbose=False)
+
+    def test_grid_search_mask_dataset(self):
+        dataset, _, _ = self.generate_dataset_folds()
+        search_params = {
+            "n_components": [2, np.min(dataset.ratings_mat.shape)//2],
+            "decision_threshold": [x*0.001 for x in [5,10]], 
+        }
+        params = {"init":None, "solver":'cd', "beta_loss":'frobenius', "tol":0.0001, "max_iter":100, 
+          "random_state":12345, "alpha_W":0.0, "alpha_H":'same', "l1_ratio":0.0, "verbose":0, 
+          "shuffle":False, "decision_threshold": 0.05, "n_components": np.min(dataset.ratings_mat.shape)//3}
+        template = stanscofi.models.NMF
+        best_params, best_estimator = stanscofi.training_testing.grid_search(search_params, template, params, dataset, is_masked=True, metric="AUC", njobs=4, nsplits=5, random_state=1234, show_plots=False, verbose=False)
 
 if __name__ == '__main__':
     unittest.main()

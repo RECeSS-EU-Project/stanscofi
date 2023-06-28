@@ -200,7 +200,7 @@ def traintest_validation_split(dataset, test_size, early_stop=None, metric="cosi
 # Common training procedure  #
 ##############################
 
-def cv_training(template, params, train_dataset, metric="AUC", beta=1, njobs=1, nsplits=5, random_state=1234, show_plots=True, verbose=False):
+def cv_training(template, params, train_dataset, is_masked=False, metric="AUC", beta=1, njobs=1, nsplits=5, random_state=1234, show_plots=True, verbose=False):
     '''
     Trains a model on a dataset using cross-validation using sklearn.model_selection.StratifiedKFold
 
@@ -261,8 +261,12 @@ def cv_training(template, params, train_dataset, metric="AUC", beta=1, njobs=1, 
         if (verbose):
             print("Crossvalidation step #%d/%d" % (ncv+1,nsplits))
         model = template(params)
-        tdataset = train_dataset.get_folds(full_list[tfolds,:])
-        sdataset = train_dataset.get_folds(full_list[sfolds,:])
+        if (is_masked):
+            tdataset = train_dataset.mask_dataset(full_list[tfolds,:])
+            sdataset = train_dataset.mask_dataset(full_list[sfolds,:])            
+        else:
+            tdataset = train_dataset.get_folds(full_list[tfolds,:])
+            sdataset = train_dataset.get_folds(full_list[sfolds,:])
         model.fit(tdataset)
         scores_train = model.predict(tdataset)
         predictions_train = model.classify(scores_train)
@@ -286,7 +290,7 @@ def cv_training(template, params, train_dataset, metric="AUC", beta=1, njobs=1, 
     best_estimator = {"test_"+metric: best_metric, "train_"+metric: best_train_metric, "model_params": best_model, "cv_folds": best_folds}
     return best_estimator
 
-def grid_search(search_params, template, params, train_dataset, metric="AUC", njobs=1, nsplits=5, random_state=1234, show_plots=True, verbose=False):
+def grid_search(search_params, template, params, train_dataset, is_masked=False, metric="AUC", njobs=1, nsplits=5, random_state=1234, show_plots=True, verbose=False):
     '''
     Grid-search over hyperparameters, iteratively optimizing over one parameter at a time, and internally calling cv_training.
 
@@ -338,7 +342,7 @@ def grid_search(search_params, template, params, train_dataset, metric="AUC", nj
             params_ = params.copy()
             params_.update(best_params)
             params_.update({param: param_val})
-            best_estimator = cv_training(template, params_, train_dataset, metric=metric, njobs=njobs, nsplits=nsplits, random_state=random_state, show_plots=show_plots, verbose=verbose)
+            best_estimator = cv_training(template, params_, train_dataset, is_masked=is_masked, metric=metric, njobs=njobs, nsplits=nsplits, random_state=random_state, show_plots=show_plots, verbose=verbose)
             if (verbose):
                 print("<training_testing.grid_search> [%s=%s] %s on Test %f (Train %f)" % (param, str(param_val), metric, best_estimator["test_"+metric], best_estimator["train_"+metric]))
             if (best_estimator["test_"+metric]>best_metric):
