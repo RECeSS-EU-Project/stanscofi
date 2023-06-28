@@ -28,7 +28,6 @@ class TestDatasets(unittest.TestCase):
         self.assertTrue(all([x in [-1,0,1] for x in np.unique(data_args["ratings_mat"].values)]))
 
     def test_existing_dataset(self):
-        return None
         ## For PREDICT, considering the publicly (partial) dataset on Zenodo
         available_datasets = ["Gottlieb", "Cdataset", "DNdataset", "LRSSL", "PREDICT_Gottlieb", "TRANSCRIPT", "PREDICT", "TRANSCRIPT_v1", "PREDICT_v1"]
         values = {
