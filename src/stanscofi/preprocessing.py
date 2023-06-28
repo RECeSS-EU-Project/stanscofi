@@ -8,6 +8,66 @@ from tqdm import tqdm
 from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
 
+def preprocessing_routine(dataset, preprocessing_str, subset_=None, filter_=None, scalerS=None, scalerP=None, inf=2, njobs=1):
+    '''
+    Converts a score vector or a score value into a list of scores
+
+    ...
+
+    Parameters
+    ----------
+    dataset : stanscofi.datasets.Dataset
+        dataset to preprocess
+    preprocessing_str : str
+        type of preprocessing: in ["Perlman_procedure","meanimputation_standardize","same_feature_preprocessing"]. see notebook for further details
+    subset_ : None or int
+        Number of features to restrict the dataset to (Top-subset_ features in terms of cross-sample variance) /!\ across user and item features if preprocessing_str!="meanimputation_standardize" otherwise 2*subset_ features are preserved (subset_ for item features, subset_ for user features)
+    filter_ : None or list
+        list of feature indices to keep (of length subset_) (overrides the subset_ parameter if both are fed)
+    scalerS : None or stanscofi.models.CustomScaler instance
+        scaler for items; the scaler fitted on item feature vectors
+    scalerP : None or stanscofi.models.CustomScaler instance
+        scaler for users; the scaler fitted on user feature vectors
+    inf : float or int
+        placeholder value for infinity values (positive : +inf, negative : -inf)
+    njobs : int
+        number of jobs to run in parallel (njobs > 0) for the Perlman procedure
+
+    Returns
+    ----------
+    X : array-like of shape (n_items x n_users, n_item_features+n_user_features)
+        the feature matrix
+    y : array-like of shape (n_items x n_users, )
+        the response/outcome vector
+    scalerS : None or stanscofi.models.CustomScaler instance
+        scaler for items; if the input value was None, returns the scaler fitted on item feature vectors
+    scalerP : None or stanscofi.models.CustomScaler instance
+        scaler for users; if the input value was None, returns the scaler fitted on user feature vectors
+    filter_ : None or list
+        list of feature indices to keep (of length subset_)
+    '''
+    assert njobs>0
+    assert preprocessing_str in ["Perlman_procedure","meanimputation_standardize","same_feature_preprocessing"]
+    if (preprocessing_str == "Perlman_procedure"):
+        X, y = eval(preprocessing_str)(dataset, njobs=njobs, sep_feature="-", missing=-666, verbose=False)
+        scalerS, scalerP = None, None
+    if (preprocessing_str == "meanimputation_standardize"):
+        X, y, scalerS, scalerP = eval(preprocessing_str)(dataset, subset=subset_, scalerS=scalerS, scalerP=scalerP, inf=inf, verbose=False)
+    if (preprocessing_str == "same_feature_preprocessing"):
+        X, y = eval(preprocessing_str)(dataset)
+        scalerS, scalerP = None, None
+    if (preprocessing_str != "meanimputation_standardize"):
+        if ((subset_ is not None) or (filter_ is not None)):
+            if ((subset_ is not None) and (filter_ is None)):
+                with np.errstate(over="ignore"):
+                    x_vars = [np.nanvar(X[:,i]) if (np.sum(~np.isnan(X[:,i]))>0) else 0 for i in range(X.shape[1])]
+                    x_vars = [x if (not np.isnan(x) and not np.isinf(x)) else 0 for x in x_vars]
+                    x_ids_vars = np.argsort(x_vars).tolist()
+                    features = x_ids_vars[-subset_:]
+                    filter_ = features
+            X = X[:,filter_]
+    return X, y, scalerS, scalerP, filter_
+
 class CustomScaler(object):
     '''
     A class used to encode a simple preprocessing pipeline for feature matrices. Does mean imputation for features, feature filtering, correction of infinity errors and standardization

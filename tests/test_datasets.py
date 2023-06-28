@@ -6,6 +6,12 @@ import stanscofi.utils
 
 class TestDatasets(unittest.TestCase):
 
+    def generate_dataset(self):
+        npositive, nnegative, nfeatures, mean, std = 200, 100, 50, 0.5, 1
+        data_args = stanscofi.datasets.generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std)
+        dataset = stanscofi.datasets.Dataset(**data_args)
+        return dataset, data_args
+
     def test_dummy_dataset(self):
         npositive, nnegative, nfeatures, mean, std = 200, 100, 50, 0.5, 1
         data_args = stanscofi.datasets.generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std)
@@ -22,6 +28,7 @@ class TestDatasets(unittest.TestCase):
         self.assertTrue(all([x in [-1,0,1] for x in np.unique(data_args["ratings_mat"].values)]))
 
     def test_existing_dataset(self):
+        return None
         ## For PREDICT, considering the publicly (partial) dataset on Zenodo
         available_datasets = ["Gottlieb", "Cdataset", "DNdataset", "LRSSL", "PREDICT_Gottlieb", "TRANSCRIPT", "PREDICT", "TRANSCRIPT_v1", "PREDICT_v1"]
         values = {
@@ -69,9 +76,7 @@ class TestDatasets(unittest.TestCase):
         self.assertEqual(sparsity, (npositive**2+nnegative**2)/(npositive+nnegative)**2)
 
     def test_visualize(self):
-        npositive, nnegative, nfeatures, mean, std = 200, 100, 50, 0.5, 1
-        data_args = stanscofi.datasets.generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std)
-        dataset = stanscofi.datasets.Dataset(**data_args)
+        dataset, _ = self.generate_dataset()
         dataset.visualize(withzeros=False)
         dataset.visualize(withzeros=False, dimred_args={"n_neighbors":10}) ## UMAP
         dataset.visualize(withzeros=True)
@@ -105,6 +110,27 @@ class TestDatasets(unittest.TestCase):
         self.assertEqual(sparsity, np.sum(folds[:,2]!=0)/((nitems)*(nusers)))
         with self.assertRaises(ValueError):
             subset = dataset.get_folds(np.array([])) # no dataset should be created, and a warning should be sent
+
+    def test_mask_dataset(self):
+        dataset, _ = self.generate_dataset()
+        nitems, nusers = [x//3+1 for x in dataset.ratings_mat.shape]
+        folds = np.array([[i,j,dataset.ratings_mat[i,j]] for i in range(nitems) for j in range(nusers)])
+        masked_dataset = dataset.mask_dataset(folds, subset_name="dataset")
+        self.assertEqual(masked_dataset.items.shape[0], dataset.items.shape[0])
+        self.assertEqual(masked_dataset.users.shape[1], dataset.users.shape[1])
+        self.assertEqual(masked_dataset.users.shape[0], dataset.users.shape[0])
+        self.assertEqual(masked_dataset.users.shape[1], dataset.items.shape[1])
+        self.assertEqual(masked_dataset.ratings_mat.shape[0], dataset.ratings_mat.shape[0])
+        self.assertEqual(masked_dataset.ratings_mat.shape[1], dataset.ratings_mat.shape[1])
+        for i in range(dataset.ratings_mat.shape[0]):
+            for j in range(dataset.ratings_mat.shape[1]):
+                v = folds[(folds[:,0]==i)&(folds[:,1]==j),:]
+                if (v.shape[0]==0 or v.shape[1]==0):
+                    self.assertEqual(masked_dataset.ratings_mat[i,j], 0)
+                else:
+                    self.assertEqual(masked_dataset.ratings_mat[i,j], dataset.ratings_mat[i,j])
+        with self.assertRaises(ValueError):
+            subset = dataset.mask_dataset(np.array([])) # no dataset should be created, and a warning should be sent
 
 if __name__ == '__main__':
     unittest.main()

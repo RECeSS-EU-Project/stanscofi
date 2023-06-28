@@ -12,7 +12,6 @@ import warnings
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", message=".*he 'nopython' keyword argument was not supplied to the 'numba.jit' decorator.*")
     import umap
-from sklearn.preprocessing import StandardScaler
 
 import stanscofi.utils
 import stanscofi.preprocessing
@@ -383,7 +382,7 @@ class Dataset(object):
         Parameters
         ----------
         folds : array-like of shape (n_ratings, 3)
-            a matrix which contains the user indices (column 1), the item indices (column 2) and the class for the corresponding (user, item) pair (value in {-1, 0, 1} in column 3)
+            a matrix which contains the user indices (column 1), the item indices (column 2) and the class for the corresponding (user, item) pair (value in {-1, 0, 1} in column 3). /!\ the ratings in the last column overrides values in dataset.ratings_mat
         subset_name : str
             name of the newly created stanscofi.Dataset
 
@@ -409,3 +408,35 @@ class Dataset(object):
         S = pd.DataFrame(self.items[:,item_lst], index=self.item_features, 
                 columns=[self.item_list[i] for i in item_lst])
         return Dataset(A, P, S, name=subset_name, same_item_user_features=self.same_item_user_features)
+
+    def mask_dataset(self, folds, subset_name="dataset"):
+        '''
+        Obtains a copy of a stanscofi.Dataset based on a set of user and item indices where some values in the initial ratings matrix are masked with 0's. Contrary to get_folds, the shapes of the user and item feature matrices are preserved, as well as ratings_mat. Some values (not in folds) are masked with 0's in the ratings_mat matrix.
+
+        ...
+
+        Parameters
+        ----------
+        folds : array-like of shape (n_ratings, 3)
+            a matrix which contains the user indices (column 1), the item indices (column 2) and the class for the corresponding (user, item) pair (value in {-1, 0, 1} in column 3). /!\ the ratings in the last column DO NOT override values in dataset.ratings_mat
+        subset_name : str
+            name of the newly created stanscofi.Dataset
+
+        Returns
+        subset : stanscofi.Dataset
+            dataset where ratings values outside of the folds in input are masked
+        ----------
+        '''
+        if (len(folds)==0):
+            raise ValueError("Fold is empty!")
+        assert folds.shape[1]==3
+        assert np.max(folds[:,0])<=self.ratings_mat.shape[1]
+        assert np.max(folds[:,1])<=self.ratings_mat.shape[0]
+        assert ((folds[:,-1]==1)|(folds[:,-1]==-1)|(folds[:,-1]==0)).all()
+        P = pd.DataFrame(self.users, index=self.user_features, columns=self.user_list)
+        S = pd.DataFrame(self.items, index=self.item_features, columns=self.item_list)
+        A = pd.DataFrame(self.ratings_mat, index=self.item_list, columns=self.user_list)
+        y = np.zeros(self.ratings_mat.shape)
+        y[folds[:,1],folds[:,0]] = folds[:,2]
+        y = pd.DataFrame(y, index=A.index, columns=A.columns)
+        return Dataset(ratings_mat=y, users=P, items=S, name=subset_name, same_item_user_features=self.same_item_user_features)

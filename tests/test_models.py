@@ -25,6 +25,24 @@ class TestModels(unittest.TestCase):
         self.assertEqual(ratings.values[0,2], scores.values[0,0])
         self.assertEqual(ratings.values[-1,2], scores.values[-1,-1])
 
+    def test_create_scores(self):
+        dataset = self.generate_dataset()
+        ## unary form
+        scores = stanscofi.models.create_scores(1, dataset)
+        self.assertEqual(scores.shape[1], 3)
+        self.assertEqual(scores.shape[0], np.prod(dataset.ratings_mat.shape))
+        self.assertTrue((scores[:,2]==1).all())
+        scores = stanscofi.models.create_scores(1., dataset)
+        self.assertEqual(scores.shape[1], 3)
+        self.assertEqual(scores.shape[0], np.prod(dataset.ratings_mat.shape))
+        self.assertTrue((scores[:,2]==1.).all())
+        ## vector form
+        preds = np.random.normal(0,1,size=np.prod(dataset.ratings_mat.shape))
+        scores = stanscofi.models.create_scores(preds, dataset)
+        self.assertEqual(scores.shape[1], 3)
+        self.assertEqual(scores.shape[0], preds.shape[0])
+        self.assertTrue((scores[:,2]==preds).all())
+
     def test_NMF(self):
         dataset = self.generate_dataset()
         params = {"init":None, "solver":'cd', "beta_loss":'frobenius', "tol":0.0001, "max_iter":100, 

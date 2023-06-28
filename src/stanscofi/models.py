@@ -42,6 +42,33 @@ def scores2ratings(df, user_col="user", item_col="item", rating_col="rating"):
     res_df[rating_col] = [df.values[i,j] for i,j in grid.tolist()]
     return res_df[[user_col, item_col, rating_col]]
 
+def create_scores(preds, dataset):
+    '''
+    Converts a score vector or a score value into a list of scores
+
+    ...
+
+    Parameters
+    ----------
+    preds : int or float or array-like of shape (n_ratings, )
+        the matrix of scores
+    dataset : stanscofi.datasets.Dataset
+        dataset to apply the scores to
+
+    Returns
+    ----------
+    scores : array-like of shape (n_ratings, 3)
+        the list of scores where the first column correspond to users, second to items, third to scores
+    '''
+    assert str(type(preds)) in ["<class 'float'>", "<class 'int'>"] or len(preds.shape)==1 or preds.shape[1]==1
+    ids = np.argwhere(np.ones(dataset.ratings_mat.shape))
+    assert str(type(preds)) in ["<class 'float'>", "<class 'int'>"] or preds.shape[0]==ids.shape[0]
+    scores = np.zeros((ids.shape[0], 3))
+    scores[:,0] = ids[:,1] 
+    scores[:,1] = ids[:,0] 
+    scores[:,2] = np.ravel(preds)
+    return scores
+
 ###############################################################################################################
 ###################
 # Basic model     #
@@ -435,24 +462,8 @@ class LogisticRegression(BasicModel):
         y : array-like of shape (n_ratings, )
             response vector for each (user, item) pair
         '''
-        if (self.preprocessing_str == "Perlman_procedure"):
-            X, y = eval("stanscofi.preprocessing."+self.preprocessing_str)(dataset, njobs=1, sep_feature="-", missing=-666, verbose=False)
-            scalerS, scalerP = None, None
-        if (self.preprocessing_str == "meanimputation_standardize"):
-            X, y, scalerS, scalerP = eval("stanscofi.preprocessing."+self.preprocessing_str)(dataset, subset=self.subset, scalerS=self.scalerS, scalerP=self.scalerP, inf=2, verbose=False)
-        if (self.preprocessing_str == "same_feature_preprocessing"):
-            X, y = eval("stanscofi.preprocessing."+self.preprocessing_str)(dataset)
-            scalerS, scalerP = None, None
-        if (self.preprocessing_str != "meanimputation_standardize"):
-            if ((self.subset is not None) or (self.filter is not None)):
-                if ((self.subset is not None) and (self.filter is None)):
-                    with np.errstate(over="ignore"):
-                        x_vars = [np.nanvar(X[:,i]) if (np.sum(~np.isnan(X[:,i]))>0) else 0 for i in range(X.shape[1])]
-                        x_vars = [x if (not np.isnan(x) and not np.isinf(x)) else 0 for x in x_vars]
-                        x_ids_vars = np.argsort(x_vars).tolist()
-                        features = x_ids_vars[-self.subset:]
-                        self.filter = features
-                X = X[:,self.filter]
+        X, y, scalerS, scalerP, filter_ = stanscofi.preprocessing.preprocessing_routine(dataset, self.preprocessing_str, subset_=self.subset, filter_=self.filter, scalerS=self.scalerS, scalerP=self.scalerP, inf=2, njobs=1)
+        self.filter = filter_
         self.scalerS = scalerS
         self.scalerP = scalerP
         return X, y
@@ -483,10 +494,6 @@ class LogisticRegression(BasicModel):
             testing dataset on which the model should be validated
         '''
         X, _ = self.preprocessing(test_dataset)
-        preds = self.model.predict_proba(X)
-        ids = np.argwhere(np.ones(test_dataset.ratings_mat.shape))
-        predicted_ratings = np.zeros((X.shape[0], 3))
-        predicted_ratings[:,0] = ids[:X.shape[0],1] 
-        predicted_ratings[:,1] = ids[:X.shape[0],0] 
-        predicted_ratings[:,2] = preds.max(axis=1)
-        return predicted_ratings
+        preds = self.model.predict_proba(X).max(axis=1)
+        scores = create_scores(preds, test_dataset)
+        return scores
