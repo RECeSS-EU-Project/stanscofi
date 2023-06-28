@@ -53,7 +53,6 @@ class TestValidation(unittest.TestCase):
         metrics, _ = stanscofi.validation.compute_metrics(scores, predictions, masked_dataset, beta=1, ignore_zeroes=False, verbose=False)
 
     def test_plot_metrics(self):
-        return None ## TODO
         dataset, scores, threshold = self.generate_dataset_scores_threshold()
         predictions = np.copy(scores)
         predictions[:,2] = (-1)**(predictions[:,2]<threshold)
