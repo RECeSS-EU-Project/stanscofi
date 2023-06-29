@@ -69,6 +69,36 @@ def create_scores(preds, dataset):
     scores[:,2] = np.ravel(preds)
     return scores
 
+def create_overscores(preds, dataset):
+    '''
+    Converts a sublist of scores into a list of scores on the full dataset
+
+    ...
+
+    Parameters
+    ----------
+    preds : array-like of shape (n_ratings, 3)
+        the list of scores where the first column correspond to users, second to items, third to scores, where ratings are a subset of all possible ratings in the input dataset
+    dataset : stanscofi.datasets.Dataset
+        over-dataset which was used
+
+    Returns
+    ----------
+    scores : array-like of shape (n_ratings, 3)
+        the list of scores where the first column correspond to users, second to items, third to scores on all possible pairs in the dataset
+    '''
+    assert preds.shape[1]==3
+    assert np.max(preds[:,0])<=np.max(dataset.ratings_mat.shape[1])
+    assert np.max(preds[:,1])<=np.max(dataset.ratings_mat.shape[0])
+    ids = np.argwhere(np.ones(dataset.ratings_mat.shape))
+    scores = np.zeros((ids.shape[0], 3))
+    scores[:,0] = ids[:,1]
+    scores[:,1] = ids[:,0]
+    in_preds = [((preds[:,0]==i)&(preds[:,1]==j)).any() for i,j in ids[:,:2].tolist()]
+    assert sum(in_preds)==preds.shape[0]
+    scores[in_preds,2] = preds[:,2]
+    return scores
+
 ###############################################################################################################
 ###################
 # Basic model     #
