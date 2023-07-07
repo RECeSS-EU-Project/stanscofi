@@ -46,7 +46,7 @@ def compute_metrics(scores, predictions, test_dataset, beta=1, ignore_zeroes=Fal
     y_pred_all = predictions[:,2].flatten()
     if (test_dataset.folds is not None):
         ids = np.argwhere(np.ones(test_dataset.ratings_mat.shape))
-        folds_ids = [((test_dataset.folds[:,0]==i)&(test_dataset.folds[:,1]==j)).any() for i,j in ids[:,:2].tolist()]
+        folds_ids = [((test_dataset.folds[:,0]==j)&(test_dataset.folds[:,1]==i)).any() for i,j in ids[:,:2].tolist()]
         y_true_all = y_true_all[folds_ids]
         y_pred_all = y_pred_all[folds_ids]
         scores_ = scores[folds_ids,:]
