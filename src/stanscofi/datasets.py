@@ -81,10 +81,10 @@ class Dataset(object):
     ----------
     ratings_mat : array-like of shape (n_items, n_users)
         a matrix which contains values in {-1, 0, 1} describing the known and unknown user-item matchings
-    users : array-like of shape (n_item_features, n_items)
-        a list of the item feature names in the order of column indices in ratings_mat
-    items : array-like of shape (n_user_features, n_users)
-        a list of the item feature names in the order of column indices in ratings_mat
+    users : array-like of shape (n_user_features, n_users)
+        a list of the user feature names in the order of column indices in ratings_mat
+    items : array-like of shape (n_item_features, n_items)
+        a list of the item feature names in the order of row indices in ratings_mat
     same_item_user_features : bool
         a list of the item feature names in the order of column indices in ratings_mat
     name : str
@@ -174,7 +174,7 @@ class Dataset(object):
         self.items = items.values
         self.name = name
         self.same_item_user_features = same_item_user_features
-        self.folds = folds
+        self.folds = np.copy(folds)
 
     def summary(self, sep="-"*70):
         '''
