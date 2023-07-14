@@ -23,7 +23,7 @@ requirements:
     - matplotlib
     - tqdm >=4.65.0
     - codecarbon >=2.2.5
-    - umap-learn >=0.5.3
+    - umap-learn
     - seaborn >=0.12.2
 
 test:
