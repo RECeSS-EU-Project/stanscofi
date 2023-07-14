@@ -31,7 +31,6 @@ class TestDatasets(unittest.TestCase):
         self.assertTrue(all([x in [-1,0,1] for x in np.unique(data_args["ratings"].toarray())]))
 
     def test_existing_dataset(self):
-        return None ###TODO
         ## For PREDICT, considering the publicly (partial) dataset on Zenodo
         available_datasets = ["Gottlieb", "Cdataset", "DNdataset", "LRSSL", "PREDICT_Gottlieb", "TRANSCRIPT", "PREDICT", "TRANSCRIPT_v1", "PREDICT_v1"]
         values = {
@@ -79,7 +78,6 @@ class TestDatasets(unittest.TestCase):
         self.assertEqual(sparsity, (npositive**2+nnegative**2)/(npositive+nnegative)**2)
 
     def test_visualize(self):
-        return None ###TODO
         dataset, _ = self.generate_dataset()
         dataset.visualize(withzeros=False)
         dataset.visualize(withzeros=False, dimred_args={"n_neighbors":10}) ## UMAP
