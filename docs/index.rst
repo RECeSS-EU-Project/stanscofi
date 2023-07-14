@@ -6,12 +6,14 @@
 Welcome to stanscofi's documentation!
 =====================================
 
-This repository is a part of the `EU-funded RECeSS project (#101102016)<https://recess-eu-project.github.io>`, and hosts the code for the open-source Python package stanscofi for the development of collaborative filtering-based drug repurposing algorithms.
+This repository is a part of the EU-funded RECeSS project `(RECeSS#101102016) <https://recess-eu-project.github.io>`_, and hosts the code for the open-source Python package stanscofi for the development of collaborative filtering-based drug repurposing algorithms.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
+   install
+   content
+   stanscofi/modules
 
 Indices and tables
 ==================
