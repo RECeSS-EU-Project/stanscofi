@@ -300,7 +300,7 @@ class Dataset(object):
         '''
         assert fontsize > 0
         assert random_state >= 0
-        nvalues = np.prod(self.folds.data.shape)
+        nvalues = self.folds.data.shape[0]
         assert (X is None and y is None) or ((X.shape[0]==y.shape[0]==nvalues))
         assert predictions is None or (predictions.data.shape[0]==nvalues)
         if (self.users.shape[0]==0 or self.items.shape[0]==0):

@@ -108,7 +108,9 @@ class BasicModel(object):
         scores : COO-array of shape (n_items, n_users)
             sparse matrix in COOrdinate format, with nonzero values corresponding to predictions on available pairs in the dataset
         '''
-        scores = coo_array(self.model_predict_proba(*self.preprocessing(test_dataset, is_training=False)))
+        scores = self.model_predict_proba(*self.preprocessing(test_dataset, is_training=False))
+        print(np.sum(scores==0))
+        scores = coo_array(scores)
         #print(("folds",test_dataset.folds.data.shape[0]))
         if (scores.shape==test_dataset.folds.shape):
             scores = scores*test_dataset.folds
