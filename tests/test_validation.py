@@ -19,19 +19,18 @@ class TestValidation(unittest.TestCase):
         np.random.seed(1223435)
         pi=1/16
         npoints = np.sum(dataset.folds.data)
-        scores = np.random.normal(np.random.choice([-10,10], p=[pi,1-pi], size=npoints), 1).reshape(dataset.folds.shape)
+        scores = np.random.normal(0, 1, size=npoints).reshape(dataset.folds.shape)
         return dataset, coo_array(scores), threshold
 
     def test_compute_metrics(self):
         dataset, scores, threshold = self.generate_dataset_scores_threshold()
         predictions = coo_array((-1)**(scores.toarray()<threshold))
-        metrics, _ = compute_metrics(scores, predictions, dataset, metrics=tuple(metrics_list), k=1, beta=1, verbose=False)
-        print(metrics)
+        metrics, _ = compute_metrics(scores, predictions, dataset, metrics=metrics_list, k=1, beta=1, verbose=False)
         self.assertEqual(metrics.shape[0], len(metrics_list)+1)
         self.assertEqual(metrics.shape[1], 2)
         self.assertEqual(np.round(metrics.loc["AUC"]["Average"],1), 0.5)
         self.assertEqual(np.round(metrics.loc["AUC"]["StandardDeviation"],1), 0.0)
-        self.assertEqual(np.round(metrics.loc["Fscore"]["Average"],1), 0.5)
+        self.assertEqual(np.round(metrics.loc["Fscore"]["Average"],1), 0.3)
         self.assertEqual(np.round(metrics.loc["Fscore"]["StandardDeviation"],1), 0.0)
 
     def test_plot_metrics(self):

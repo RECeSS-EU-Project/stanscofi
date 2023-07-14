@@ -19,12 +19,12 @@ requirements:
 
   run:
     - cute-ranking >=0.0.3
-    - scikit-learn >=1.3.0
+    - scikit-learn
     - matplotlib
-    - tqdm >=4.65.0
-    - codecarbon >=2.2.5
+    - tqdm
+    - codecarbon
     - umap-learn
-    - seaborn >=0.12.2
+    - seaborn
 
 test:
   imports:

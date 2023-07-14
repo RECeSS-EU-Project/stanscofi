@@ -300,14 +300,14 @@ class Dataset(object):
         '''
         assert fontsize > 0
         assert random_state >= 0
-        nvalues = np.prod(self.ratings.shape)
+        nvalues = np.prod(self.folds.data.shape)
         assert (X is None and y is None) or ((X.shape[0]==y.shape[0]==nvalues))
-        assert predictions is None or ((predictions.shape[1]==3) and (predictions.shape[0]==nvalues))
+        assert predictions is None or (predictions.data.shape[0]==nvalues)
         if (self.users.shape[0]==0 or self.items.shape[0]==0):
             if (verbose):
                 print("<datasets.visualize> Can't plot (no item/user feature matrix).")
             return None
-        assert predictions is None or (((predictions[:,-1]==1)|(predictions[:,-1]==-1)).all())
+        assert predictions is None or (((predictions.toarray()==1)|(predictions.toarray()==-1)|(predictions.toarray()==0)).all())
         if (X is None and y is None):
             if (verbose):
                 print("<datasets.visualize> Imputation of missing values by average row-value, standard scaling")
@@ -333,10 +333,9 @@ class Dataset(object):
             all_pairs = np.concatenate((markers, all_pairs), axis=1)
             assert all_pairs.shape[1]==4 and all_pairs.shape[0]==nvalues
         else:
-            predictions = predictions.astype(int)
             ## 2. predictions!=None: Plots datapoints according to predicted annotations
             if (not use_ratings):
-                classes = dict(zip([(i,j) for i,j in predictions[:,:2].tolist()], predictions[:,2].flatten()))
+                classes = dict(zip([(i,j) for i,j in zip(self.folds.row, self.folds.col)], predictions.data))
                 all_pairs = np.array([[classes[(j,i)]] for i, j in markers[:,:2].tolist()])
                 all_pairs = np.concatenate((markers, all_pairs), axis=1)
             else:
@@ -346,7 +345,7 @@ class Dataset(object):
                 values = np.array([[{0:"r", 1:"g", -1:"y"}[int(true==pred)-int(true==0)]+{-1:"v", 1:"+", 0:"."}[true]] for [i,j,true,pred] in all_pairs.tolist()])
                 ## Predicted ratings for all known pairs of items and users in the dataset
                 ## item i, user u, rating r, scatter style (color + marker shape)
-                all_pairs = np.concatenate((all_pairs[:,[0,1,3]],values), axis=1, dtype=object)
+                all_pairs = np.array(np.concatenate((all_pairs[:,[0,1,3]], values), axis=1), dtype=object)
                 all_pairs = all_pairs[y!=0,:]
                 X = X[y!=0,:]
                 assert all_pairs.shape[1]==4
@@ -355,7 +354,7 @@ class Dataset(object):
                 values = np.array([[{-1:"r", 1:"g", 0:"y"}[pred]+{-1:"v", 1:"+", 0:"."}[true]] for [i,j,true,pred] in all_pairs.tolist()])
                 ## Predicted ratings for all known pairs of items and users in the dataset
                 ## item i, user u, rating r, scatter style (color + marker shape)
-                all_pairs = np.concatenate((all_pairs[:,[0,1,3]],values), axis=1, dtype=object)
+                all_pairs = np.array(np.concatenate((all_pairs[:,[0,1,3]], values), axis=1), dtype=object)
                 assert all_pairs.shape[1]==4 and all_pairs.shape[0]==X.shape[0]
         all_pairs[:,:-1] = all_pairs[:,:-1].astype(float).astype(int)
         if (verbose):

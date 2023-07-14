@@ -84,11 +84,8 @@ class TestDatasets(unittest.TestCase):
         dataset.visualize(withzeros=True)
         ## Generate random class predictions
         pi=1/16
-        npoints = dataset.ratings.shape[0]*dataset.ratings.shape[1]
-        predictions = np.zeros((npoints, 3))
-        predictions[:,0] = [i for i in range(dataset.nusers) for _ in range(dataset.nitems)]
-        predictions[:,1] = [j for _ in range(dataset.nusers) for j in range(dataset.nitems)]
-        predictions[:,2] = np.random.choice([-1,1], p=[pi,1-pi], size=npoints)
+        npoints = np.prod(dataset.ratings.shape)
+        predictions = coo_array(np.random.choice([-1,1], p=[pi,1-pi], size=np.prod(dataset.folds.shape)))
         dataset.visualize(predictions=predictions, withzeros=False)
         dataset.visualize(predictions=predictions, show_errors=True)
         ## if it ends without any error, it is a success
