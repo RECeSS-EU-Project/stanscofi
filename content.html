@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Statement of need &#8212; stanscofi v2.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="stanscofi" href="stanscofi/modules.html" />
+    <link rel="prev" title="Installation" href="install.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="statement-of-need">
+<h1>Statement of need<a class="headerlink" href="#statement-of-need" title="Permalink to this heading">¶</a></h1>
+<p>As of 2022, current drug development pipelines last around 10 years, costing $2billion in average, while drug commercialization failure rates go up to 90%. These issues can be mitigated by drug repurposing, where chemical compounds are screened for new therapeutic indications in a systematic fashion. In prior works, this approach has been implemented through collaborative filtering. This semi-supervised learning framework leverages known drug-disease matchings in order to recommend new ones.</p>
+<p>The stanscofi package comprises method-agnostic training, validation, preprocessing and visualization procedures on several published drug repurposing datasets. The proper implementation of these steps is crucial in order to avoid data leakage, i.e., the model is learnt over information that should be unavailable at prediction time. Indeed, data leakage is the source of a major reproducibility crisis in machine learning. This will be avoided by building training and validation sets which are weakly correlated with respect to the drug and disease feature vectors. The main performance metric will be the area under the curve (AUC), which estimates the diagnostic ability of a recommender system better than accuracy in imbalanced datasets.</p>
+<p>Medium-term outcomes to this package will significantly alleviate the economic burden of drug discovery pipelines, and will help find treatments in a more sustainable manner, especially for rare or tropical neglected diseases.</p>
+<p>For more information about the datasets accessible in stanscofi, please refer to the following <a class="reference external" href="https://github.com/RECeSS-EU-Project/drug-repurposing-datasets">repository</a>.</p>
+<section id="install-the-latest-release">
+<h2>Install the latest release<a class="headerlink" href="#install-the-latest-release" title="Permalink to this heading">¶</a></h2>
+<p>Using pip (package hosted on PyPI)</p>
+<p>pip install stanscofi</p>
+<p>Using conda (package hosted on Anaconda.org)</p>
+<p>conda install -c recess stanscofi</p>
+</section>
+<section id="example-usage">
+<h2>Example usage<a class="headerlink" href="#example-usage" title="Permalink to this heading">¶</a></h2>
+<p>Once installed, to import stanscofi into your Python code</p>
+<p>import stanscofi</p>
+<p>Please check out notebook <a class="reference external" href="https://github.com/RECeSS-EU-Project/stanscofi/blob/master/docs/Introduction%20to%20stanscofi.ipynb">Introduction to stanscofi.ipynb</a>. All functions are documented, so one can check out the inputs and outputs of a function func by typing</p>
+<p>help(func)</p>
+<p>To mesure your environmental impact when using this package (in terms of carbon emissions), please run the following command</p>
+<p>! codecarbon init</p>
+<blockquote>
+<div><p>to initialize the CodeCarbon config. For more information about using CodeCarbon, please refer to the <a class="reference external" href="https://github.com/mlco2/codecarbon">official repository</a>.</p>
+</div></blockquote>
+</section>
+<section id="environment">
+<h2>Environment<a class="headerlink" href="#environment" title="Permalink to this heading">¶</a></h2>
+<p>In order to run notebook <a class="reference external" href="https://github.com/RECeSS-EU-Project/stanscofi/blob/master/docs/Introduction%20to%20stanscofi.ipynb">Introduction to stanscofi.ipynb</a>, it is strongly advised to create a virtual environment using Conda (python&gt;=3.8)</p>
+<p>conda create -n stanscofi_env python=3.8.5 -y
+conda activate stanscofi_env
+python3 -m pip install stanscofi ## or use the conda command above
+python3 -m pip install notebook&gt;=6.5.4 markupsafe==2.0.1 ## packages for Jupyter notebook
+conda deactivate
+conda activate stanscofi_env
+cd docs/ &amp;&amp; jupyter notebook</p>
+<p>The complete list of dependencies for stanscofi can be found at <a class="reference external" href="https://raw.githubusercontent.com/RECeSS-EU-Project/stanscofi/master/pip/requirements.txt">requirements.txt</a> (pip) or <a class="reference external" href="https://raw.githubusercontent.com/RECeSS-EU-Project/stanscofi/master/conda/meta.yaml">meta.yaml</a> (conda).</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">stanscofi</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Statement of need</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#install-the-latest-release">Install the latest release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-usage">Example usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#environment">Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="stanscofi/modules.html">stanscofi</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="install.html" title="previous chapter">Installation</a></li>
+      <li>Next: <a href="stanscofi/modules.html" title="next chapter">stanscofi</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Clémence Réda.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/content.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
