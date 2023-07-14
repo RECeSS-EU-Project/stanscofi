@@ -25,7 +25,7 @@ setup(name=NAME,
     install_requires=[
         "cute-ranking>=0.0.3",
         "scikit-learn>=1.3.0",
-        "matplotlib>=3.7.2",
+        "matplotlib",
         "tqdm>=4.65.0",
         "codecarbon>=2.2.5",
         "umap-learn>=0.5.3",
