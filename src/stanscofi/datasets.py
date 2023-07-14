@@ -319,7 +319,7 @@ class Dataset(object):
             predictions = None
             show_errors = False
             use_inputX=True
-        markers = np.argwhere(np.ones(self.ratings.shape))
+        markers = np.column_stack((self.folds.row, self.folds.col))
         ## True (known and unknown) ratings for all items and users in the dataset
         ## item i, user u, rating r
         markers = np.concatenate((markers, y.reshape(-1,1)), axis=1)

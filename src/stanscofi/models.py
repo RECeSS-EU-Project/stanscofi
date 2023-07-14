@@ -113,10 +113,10 @@ class BasicModel(object):
         if (scores.shape==test_dataset.folds.shape):
             scores = scores*test_dataset.folds
             #print(("scores",scores.data.shape[0]))
-            return scores
+            return coo_array(scores)
         assert scores.data.shape[0]==test_dataset.folds.data.shape[0]
         #print(("scores",scores.data.shape[0]))
-        return scores
+        return coo_array(scores)
 
     def predict(self, scores, threshold=0.5):
         '''
