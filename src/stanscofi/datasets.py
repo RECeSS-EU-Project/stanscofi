@@ -2,6 +2,7 @@
 
 import pandas as pd
 import numpy as np
+from scipy.sparse import coo_array, csr_array
 import seaborn as sns
 
 import matplotlib.pyplot as plt
@@ -13,8 +14,13 @@ with warnings.catch_warnings():
     warnings.filterwarnings("ignore", message=".*he 'nopython' keyword argument was not supplied to the 'numba.jit' decorator.*")
     import umap
 
-import stanscofi.utils
-import stanscofi.preprocessing
+from .preprocessing import meanimputation_standardize
+
+def indices_to_folds(indices, indices_array, shape):
+    row = indices_array[indices,0].ravel()
+    col = indices_array[indices,1].ravel()
+    data = [1]*len(indices)
+    return coo_array((data, (row, col)), shape=shape)
 
 def generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std, random_state=12454):
     '''
@@ -39,7 +45,7 @@ def generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std, random_st
 
     Returns
     ----------
-    ratings_mat : array-like of shape (n_items, n_users)
+    ratings : array-like of shape (n_items, n_users)
         a matrix which contains values in {-1, 0, 1} describing the known and unknown user-item matchings
     users : array-like of shape (n_item_features, n_items)
         a list of the item feature names in the order of column indices in ratings_mat
@@ -55,80 +61,74 @@ def generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std, random_st
     users = np.concatenate((positive, negative), axis=1)[:nfeatures//2,:]
     items = np.concatenate((positive, negative), axis=1)[nfeatures//2:,:]
     ## Generate ratings
-    ratings = np.zeros((nitems*nusers, 3))
-    ids = np.argwhere(np.ones((nitems, nusers)))
-    ratings[:,0] = ids[:,0]
-    ratings[:,1] = ids[:,1]
-    positive = (ratings[:,0]<npositive)&(ratings[:,1]<npositive)
-    negative_u = (ratings[:,0]>=npositive)&(ratings[:,0]<nnegative+npositive+1)
-    negative_i = (ratings[:,1]>=npositive)&(ratings[:,1]<nnegative+npositive+1)
-    ratings[positive,2] = 1
-    ratings[negative_u&negative_i,2] = -1
-    ratings = pd.DataFrame(ratings, columns=["user","item","rating"], index=range(ratings.shape[0]))
+    ratings = np.zeros((nitems, nusers))
+    ratings[:npositive,:npositive] = 1
+    ratings[npositive:,npositive:] = -1
     ## Input to stanscofi
-    ratings_mat = stanscofi.utils.ratings2matrix(ratings, user_col="user", item_col="item", rating_col="rating")
-    users = pd.DataFrame(users, index=range(nfeatures//2), columns=range(nusers))
-    items = pd.DataFrame(items, index=range(nfeatures//2), columns=range(nitems))
-    return {"ratings_mat": ratings_mat, "users": users, "items": items}
+    return {"ratings": coo_array(ratings), "users": users, "items": items}
 
 class Dataset(object):
     '''
-    A class used to encode a drug repurposing dataset
+    A class used to encode a drug repurposing dataset (items are drugs, users are diseases)
 
     ...
 
     Parameters
     ----------
-    ratings_mat : array-like of shape (n_items, n_users)
-        a matrix which contains values in {-1, 0, 1} describing the known and unknown user-item matchings
-    users : array-like of shape (n_user_features, n_users)
-        a list of the user feature names in the order of column indices in ratings_mat
+    ratings : array-like of shape (n_items, n_users)
+        an array which contains values in {-1, 0, 1, np.nan} describing the negative, unlabelled, positive, unavailable user-item matchings
     items : array-like of shape (n_item_features, n_items)
-        a list of the item feature names in the order of row indices in ratings_mat
-    same_item_user_features : bool
-        a list of the item feature names in the order of column indices in ratings_mat
+        an array which contains the item feature vectors
+    users : array-like of shape (n_user_features, n_users)
+        an array which contains the user feature vectors
+    same_item_user_features : bool (default: False)
+        whether the item and user features are the same (optional)
     name : str
-        the name of the dataset (if it exists)
-    folds : array-like of shape (n_ratings, 3)
-        a matrix which contains the user indices (column 1), the item indices (column 2) and the class for the corresponding (user, item) pair (value in {-1, 0, 1} in column 3) (if the dataset is masked, see below)
+        name of the dataset (optional)
 
     Attributes
     ----------
     name : str
-        the name of the dataset (if it exists)
-    ratings_mat : array-like of shape (n_items, n_users)
-        a matrix which contains values in {-1, 0, 1} describing the known and unknown user-item matchings
-    users : array-like of shape (n_item_features, n_items)
-        a list of the item feature names in the order of column indices in ratings_mat
-    items : array-like of shape (n_user_features, n_users)
-        a list of the item feature names in the order of column indices in ratings_mat
+        name of the dataset 
+    ratings : COO-array of shape (n_items, n_users)
+        an array which contains values in {-1, 0, 1} describing the negative, unlabelled/unavailable, positive user-item matchings
+    folds : COO-array of shape (n_items, n_users)
+        an array which contains values in {0, 1} describing the unavailable and available user-item matchings in ratings
+    items : COO-array of shape (n_item_features, n_items)
+        an array which contains the user feature vectors (NaN for missing features)
+    users : COO-array of shape (n_user_features, n_users)
+        an array which contains the item feature vectors (NaN for missing features)
     item_list : list of str
         a list of the item names in the order of row indices in ratings_mat
     user_list : list of str
-        a list of the item names in the order of column indices in ratings_mat
+        a list of the user names in the order of column indices in ratings_mat
     item_features : list of str
         a list of the item feature names in the order of column indices in ratings_mat
     user_features : list of str
-        a list of the item feature names in the order of column indices in ratings_mat
-    ratings : array-like of shape (n_ratings, 3)
-        a list of the item feature names in the order of column indices in ratings_mat
+        a list of the user feature names in the order of column indices in ratings_mat
     same_item_user_features : bool
-        a list of the item feature names in the order of column indices in ratings_mat
+        whether the item and user features are the same
+    nusers : int
+        number of users
+    nitems : int
+        number of items
+    nuser_features : int
+        number of user features
+    nitem_features : int
+        number of item features
 
     Methods
     -------
-    __init__(ratings_mat=None, users=None, items=None, same_item_user_features=False, name="dataset")
+    __init__(ratings=None, users=None, items=None, same_item_user_features=False, name="dataset")
         Initialize the Dataset object and creates all attributes
     summary(sep="-"*70)
         Prints out the characteristics of the drug repurposing dataset
     visualize(withzeros=False, X=None, y=None, figsize=(5,5), fontsize=20, dimred_args={}, predictions=None, use_ratings=False, random_state=1234, show_errors=False, verbose=False)
         Plots datapoints in the dataset annotated by the ground truth or predicted ratings
-    get_folds(folds, subset_name="subset")
+    subset(folds, subset_name="subset")
         Creates a subset of the dataset based on the folds given as input
-    mask_dataset(folds, subset_name="dataset")
-        Creates a masked dataset where only some of the ratings are known
     '''
-    def __init__(self, ratings_mat=None, users=None, items=None, same_item_user_features=False, name="dataset", folds=None):
+    def __init__(self, ratings=None, users=None, items=None, same_item_user_features=False, name="dataset"):
         '''
         Creates an instance of stanscofi.Dataset
 
@@ -136,49 +136,73 @@ class Dataset(object):
 
         Parameters
         ----------
-        ratings_mat : array-like of shape (n_items, n_users)
-            a matrix which contains values in {-1, 0, 1} describing the known and unknown user-item matchings
-        users : array-like of shape (n_item_features, n_items)
-            a list of the item feature names in the order of column indices in ratings_mat
-        items : array-like of shape (n_user_features, n_users)
-            a list of the item feature names in the order of column indices in ratings_mat
-        same_item_user_features : bool
-            a list of the item feature names in the order of column indices in ratings_mat
+        ratings : array-like of shape (n_items, n_users)
+            an array which contains values in {-1, 0, 1, np.nan} describing the negative, unlabelled, positive, unavailable user-item matchings
+        items : array-like of shape (n_item_features, n_items)
+            an array which contains the item feature vectors
+        users : array-like of shape (n_user_features, n_users)
+            an array which contains the user feature vectors
+        same_item_user_features : bool (default: False)
+            whether the item and user features are the same (optional)
         name : str
-            the name of the dataset (if it exists)
+            name of the dataset (optional)
         '''
-        assert ratings_mat is not None
-        assert users is not None
-        assert items is not None
-        self.item_list = list(ratings_mat.index)
-        self.user_list = list(ratings_mat.columns)
-        users = users[self.user_list]
-        items = items[self.item_list]
-        if (same_item_user_features):
-            features = list(set(list(users.index)).intersection(set(list(items.index))))
+        assert ratings is not None
+        assert users is not None and users.shape[1]==ratings.shape[1]
+        assert items is not None and items.shape[1]==ratings.shape[0]
+        ## get metadata
+        if (str(type(ratings))=="<class 'pandas.core.frame.DataFrame'>"):
+            self.item_list = [str(x) for x in ratings.index]
+            self.user_list = [str(x) for x in ratings.columns]
+            ratings_ = ratings.values
+        else:
+            self.item_list = [str(x) for x in range(ratings.shape[0])]
+            self.user_list = [str(x) for x in range(ratings.shape[1])]
+            if (str(type(ratings))=="<class 'scipy.sparse._arrays.coo_array'>"):
+                ratings_ = ratings.toarray()
+            else:
+                ratings_ = ratings.copy()
+            ratings_ = ratings_.copy()
+        if (str(type(users))=="<class 'pandas.core.frame.DataFrame'>"):
+            users = users[self.user_list]
+            self.user_features = [str(x) for x in users.index]
+            users_ = users.values
+        else:
+            self.user_features = [str(x) for x in range(users.shape[0])]
+            users_ = users.copy()
+        if (str(type(items))=="<class 'pandas.core.frame.DataFrame'>"):
+            items = items[self.item_list]
+            self.item_features = [str(x) for x in items.index]
+            items_ = items.values
+        else:
+            self.item_features = [str(x) for x in range(items.shape[0])]
+            items_ = items.copy()
+        self.same_item_user_features = same_item_user_features
+        if (self.same_item_user_features):
+            features = list(set(self.item_features).intersection(set(self.user_features)))
             assert len(features)>0
             self.user_features = features
             self.item_features = features
             users = users.loc[features]
             items = items.loc[features]
-        else:
-            self.user_features = list(users.index)
-            self.item_features = list(items.index)
-        self.ratings_mat = ratings_mat.values
-        self.ratings = stanscofi.utils.matrix2ratings(ratings_mat, user_col="ind_id", item_col="drug_id", rating_col="rating").values
-        assert all([a in users.columns for a in self.ratings[:,0]])
-        assert all([a in items.columns for a in self.ratings[:,1]])
-        self.ratings[:,0] = [self.user_list.index(x) for x in self.ratings[:,0]] 
-        self.ratings[:,1] = [self.item_list.index(x) for x in self.ratings[:,1]] 
-        self.users = users.values
-        self.items = items.values
+        ## format
         self.name = name
-        self.same_item_user_features = same_item_user_features
-        self.folds = np.copy(folds)
+        self.ratings = coo_array(np.nan_to_num(ratings_, copy=True, nan=0))
+        ids = np.argwhere(~np.isnan(ratings_))
+        row = ids[:,0].ravel()
+        col = ids[:,1].ravel()
+        data = [1]*ids.shape[0]
+        self.folds = coo_array((data, (row, col)), shape=ratings_.shape)
+        self.users = coo_array(users_)
+        self.items = coo_array(items_)
+        self.nusers = self.users.shape[1]
+        self.nitems = self.items.shape[1]
+        self.nuser_features = self.users.shape[0]
+        self.nitem_features = self.items.shape[0]
 
     def summary(self, sep="-"*70):
         '''
-        Prints out a summary of the contents of a stanscofi.Dataset: the number of items, users, the number of positive, negative, unknown matchings, the sparsity number, and the shape and percentage of missing values in the item and user feature matrices
+        Prints out a summary of the contents of a stanscofi.Dataset: the number of items, users, the number of positive, negative, unlabeled, unavailable matchings, the sparsity number, and the shape and percentage of missing values in the item and user feature matrices
 
         ...
 
@@ -186,27 +210,58 @@ class Dataset(object):
         ----------
         sep : str
             separator for pretty printing
+        ...
+
+        Returns
+        ----------
+        ndrugs : int
+            number of drugs
+        ndiseases : int
+            number of diseases
+        ndrugs_known : int
+            number of drugs with at least one known (positive or negative) rating
+        ndiseases_known : int
+            number of diseases with at least one known (positive or negative) rating
+        npositive : int
+            number of positive ratings
+        nnegative : int
+            number of negative ratings
+        nunlabeled_unavailable : int
+            number of unlabeled or unavailable ratings
+        nunavailable : int
+            number of unavailable ratings
+        sparsity : float
+            percentage of known ratings
+        sparsity_known : float
+            percentage of known ratings among drugs and diseases with at least one known rating
+        ndrug_features : int
+            number of drug features
+        missing_drug_features : float
+            percentage of missing drug feature values
+        ndisease_features : int
+            number of disease features
+        missing_disease_features : float
+            percentage of missing disease feature values
         '''
-        A = pd.DataFrame(self.ratings_mat, index=self.item_list, columns=self.user_list)
         print(sep)
-        print("* Matching matrix:")
-        ratings = pd.DataFrame(self.ratings, index=range(self.ratings.shape[0]), columns=["user", "item", "rating"])
-        ratings2 = ratings.copy()
-        ratings2["item"] = ratings2["item"].astype(str)
-        args = [len(np.unique(ratings2["item"])), len(np.unique(ratings2["user"]))]
-        args += [ratings2.loc[ratings2["rating"]==v].shape[0] for v in [1,-1]]
-        args += [np.prod(A.shape)-args[2]-args[3],(args[2]+args[3])*100/np.prod(A.shape)]
-        dataset_str = "Ratings: %d drugs\t%d diseases involved in at least one known matching\n%d positive, %d negative, %d unknown matchings\nSparsity for drugs/diseases involved in at least one known matching: %.2f perc."
-        print(dataset_str % tuple(args))
+        print("* Rating matrix: %d drugs x %d diseases" % (self.nitems, self.nusers))
+        restricted_ratings = self.ratings.toarray()[np.abs(self.ratings).sum(axis=1)>0,:]
+        restricted_ratings = restricted_ratings[:,np.abs(restricted_ratings).sum(axis=0)>0]
+        print("Including %d drugs and %d diseases involved in at least one positive/negative rating" % restricted_ratings.shape)
+        print("%d positive, %d negative, %d unlabeled (including %d unavailable) drug-disease ratings" % ((self.ratings==1).sum(), (self.ratings==-1).sum(), np.prod(self.ratings.shape)-self.ratings.getnnz(), np.prod(self.folds.shape)-self.folds.getnnz()))
+        print("Sparsity: %.2f percent (on drugs/diseases with at least one known rating %.2f)" % ((self.ratings!=0).mean()*100, (restricted_ratings!=0).mean()*100))
         print(sep[:len(sep)//2])
         print("* Feature matrices:")
         if (self.items.shape[0]>0):
-            print("Total #Drugs: %d\t#Drug features: %d\tPerc. Missing features: %d" % (self.items.shape[1], self.items.shape[0], np.sum(np.isnan(self.items))*100/(self.items.shape[0]*self.items.shape[1])))
+            print("#Drug features: %d\tTotal #Drugs: %d" % (self.items.shape))
+            print("Missing features: %.2f percent" % (np.isnan(self.items.toarray()).mean()*100))
         if (self.users.shape[0]>0):
-            print("Total #Diseases: %d\t#Disease features: %d\tPerc. Missing features: %d" % (self.users.shape[1], self.users.shape[0], np.sum(np.isnan(self.users))*100/(self.users.shape[0]*self.users.shape[1])))
+            print("#Disease features: %d\tTotal #Disease: %d" % (self.users.shape))
+            print("Missing features: %.2f percent" % (np.isnan(self.users.toarray()).mean()*100))
         if (self.users.shape[0]+self.items.shape[0]==0):
             print("No feature matrices.")
         print(sep+"\n")
+        return self.nitems, self.nusers, restricted_ratings.shape[0], restricted_ratings.shape[1], (self.ratings==1).sum(), (self.ratings==-1).sum(), np.prod(self.ratings.shape)-self.ratings.getnnz(), np.prod(self.folds.shape)-self.folds.getnnz(), (self.ratings!=0).mean()*100, (restricted_ratings!=0).mean()*100, self.items.shape[0], np.isnan(self.items.toarray()).mean()*100, self.users.shape[0], np.isnan(self.users.toarray()).mean()*100
 
     def visualize(self, withzeros=False, X=None, y=None, metric="euclidean", figsize=(5,5), fontsize=20, dimred_args={}, predictions=None, use_ratings=False, random_state=1234, show_errors=False, verbose=False):
         '''
@@ -245,7 +300,7 @@ class Dataset(object):
         '''
         assert fontsize > 0
         assert random_state >= 0
-        nvalues = np.prod(self.ratings_mat.shape)
+        nvalues = np.prod(self.ratings.shape)
         assert (X is None and y is None) or ((X.shape[0]==y.shape[0]==nvalues))
         assert predictions is None or ((predictions.shape[1]==3) and (predictions.shape[0]==nvalues))
         if (self.users.shape[0]==0 or self.items.shape[0]==0):
@@ -258,13 +313,13 @@ class Dataset(object):
                 print("<datasets.visualize> Imputation of missing values by average row-value, standard scaling")
             subselect_size = max(2,min(int(5e7)//nvalues+1, nvalues))
             ## Preprocessed (item, user) pair feature matrix and corresponding outcome vector
-            X, y, _, _ = stanscofi.preprocessing.meanimputation_standardize(self, subset=min(subselect_size, min(self.users.shape[0],self.items.shape[0])), inf=2, verbose=verbose)
+            X, y, _, _ = meanimputation_standardize(self, subset=min(subselect_size, min(self.users.shape[0],self.items.shape[0])), inf=2, verbose=verbose)
             use_inputX=False
         else:
             predictions = None
             show_errors = False
             use_inputX=True
-        markers = np.argwhere(np.ones(self.ratings_mat.shape))
+        markers = np.argwhere(np.ones(self.ratings.shape))
         ## True (known and unknown) ratings for all items and users in the dataset
         ## item i, user u, rating r
         markers = np.concatenate((markers, y.reshape(-1,1)), axis=1)
@@ -302,7 +357,7 @@ class Dataset(object):
                 ## item i, user u, rating r, scatter style (color + marker shape)
                 all_pairs = np.concatenate((all_pairs[:,[0,1,3]],values), axis=1, dtype=object)
                 assert all_pairs.shape[1]==4 and all_pairs.shape[0]==X.shape[0]
-        all_pairs[:,:-1] = all_pairs[:,:-1].astype(int)
+        all_pairs[:,:-1] = all_pairs[:,:-1].astype(float).astype(int)
         if (verbose):
             print("<datasets.visualize> Reducing dimension and plotting matrix X of size %d x %d" % X.shape)
         dimred_args.update({"n_components":min(2,X.shape[1]), "random_state":random_state})
@@ -360,8 +415,8 @@ class Dataset(object):
             plt.show()
         elif ((dimred_X!=0).any()):
             ## Prints a heatmap according to values in X
-            X_heatmap = X.reshape(self.ratings_mat.shape)
-            annot = self.ratings_mat.copy().astype(str)
+            X_heatmap = X.reshape(self.ratings.shape)
+            annot = self.ratings.toarray().astype(str)
             annot[annot=="0"] = "" #unknown
             annot[annot=="1"] = "+"  #positive
             annot[annot=="-1"] = "*"  #negative
@@ -378,7 +433,7 @@ class Dataset(object):
                 print("<stanscofi.dataset.visualize> Matrix is empty, can't plot!")
         return None
 
-    def get_folds(self, folds, subset_name="subset"):
+    def subset(self, folds, subset_name="subset"):
         '''
         Obtains a subset of a stanscofi.Dataset based on a set of user and item indices
 
@@ -386,62 +441,25 @@ class Dataset(object):
 
         Parameters
         ----------
-        folds : array-like of shape (n_ratings, 3)
-            a matrix which contains the user indices (column 1), the item indices (column 2) and the class for the corresponding (user, item) pair (value in {-1, 0, 1} in column 3). /!\ the ratings in the last column overrides values in dataset.ratings_mat
+        folds : COO-array of shape (n_items, n_users)
+            an array which contains values in {0, 1} describing the unavailable and available user-item matchings in ratings
         subset_name : str
             name of the newly created stanscofi.Dataset
 
         Returns
+        ----------
         subset : stanscofi.Dataset
             dataset corresponding to the folds in input
-        ----------
         '''
-        if (len(folds)==0):
+        if (np.prod(folds.shape)==0):
             raise ValueError("Fold is empty!")
-        assert folds.shape[1]==3
-        assert np.max(folds[:,0])<=self.ratings_mat.shape[1]
-        assert np.max(folds[:,1])<=self.ratings_mat.shape[0]
-        assert ((folds[:,-1]==1)|(folds[:,-1]==-1)|(folds[:,-1]==0)).all()
-        ratings = pd.DataFrame(folds, index=range(folds.shape[0]), columns=["user","item","rating"])
-        ratings["user"] = [self.user_list[x] for x in ratings["user"]]
-        ratings["item"] = [self.item_list[x] for x in ratings["item"]]
-        user_lst = np.unique(folds[:,0]).tolist() ## order of unique
-        item_lst = np.unique(folds[:,1]).tolist() ## order of unique
-        A = stanscofi.utils.ratings2matrix(ratings, user_col="user", item_col="item", rating_col="rating")
-        P = pd.DataFrame(self.users[:,user_lst], index=self.user_features, 
-                columns=[self.user_list[i] for i in user_lst])
-        S = pd.DataFrame(self.items[:,item_lst], index=self.item_features, 
-                columns=[self.item_list[i] for i in item_lst])
-        return Dataset(A, P, S, name=subset_name, same_item_user_features=self.same_item_user_features)
-
-    def mask_dataset(self, folds, subset_name="dataset"):
-        '''
-        Obtains a copy of a stanscofi.Dataset based on a set of user and item indices where some values in the initial ratings matrix are masked with 0's. Contrary to get_folds, the shapes of the user and item feature matrices are preserved, as well as ratings_mat. Some values (not in folds) are masked with 0's in the ratings_mat matrix.
-
-        ...
-
-        Parameters
-        ----------
-        folds : array-like of shape (n_ratings, 3)
-            a matrix which contains the user indices (column 1), the item indices (column 2) and the class for the corresponding (user, item) pair (value in {-1, 0, 1} in column 3). /!\ the ratings in the last column DO NOT override values in dataset.ratings_mat
-        subset_name : str
-            name of the newly created stanscofi.Dataset
-
-        Returns
-        subset : stanscofi.Dataset
-            dataset where ratings values outside of the folds in input are masked
-        ----------
-        '''
-        if (len(folds)==0):
-            raise ValueError("Fold is empty!")
-        assert folds.shape[1]==3
-        assert np.max(folds[:,0])<=self.ratings_mat.shape[1]
-        assert np.max(folds[:,1])<=self.ratings_mat.shape[0]
-        assert ((folds[:,-1]==1)|(folds[:,-1]==-1)|(folds[:,-1]==0)).all()
-        P = pd.DataFrame(self.users, index=self.user_features, columns=self.user_list)
-        S = pd.DataFrame(self.items, index=self.item_features, columns=self.item_list)
-        A = pd.DataFrame(self.ratings_mat, index=self.item_list, columns=self.user_list)
-        y = np.zeros(self.ratings_mat.shape)
-        y[folds[:,1],folds[:,0]] = folds[:,2]
-        y = pd.DataFrame(y, index=A.index, columns=A.columns)
-        return Dataset(ratings_mat=y, users=P, items=S, name=subset_name, same_item_user_features=self.same_item_user_features, folds=folds)
+        assert folds.shape==self.folds.shape
+        #data = self.ratings.toarray()[folds.row, folds.col].ravel()
+        sfolds = np.asarray(folds.toarray(), dtype=float)
+        sfolds[sfolds==0] = np.nan
+        ratings = self.ratings.toarray() * sfolds
+        ratings = pd.DataFrame(ratings, index=self.item_list, columns=self.user_list)
+        users = pd.DataFrame(self.users.toarray(), index=self.user_features, columns=self.user_list)
+        items = pd.DataFrame(self.items.toarray(), index=self.item_features, columns=self.item_list)
+        subset =  Dataset(ratings=ratings, users=users, items=items, same_item_user_features=self.same_item_user_features, name=subset_name)
+        return subset

@@ -1,7 +1,5 @@
 #coding: utf-8
 
-from sklearn.metrics import roc_auc_score as AUC
-from sklearn.metrics import fbeta_score
 from sklearn.metrics import precision_recall_curve as PRC
 from sklearn.metrics import roc_curve as ROC
 
@@ -10,96 +8,131 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from copy import deepcopy
 
-def compute_metrics(scores, predictions, test_dataset, beta=1, ignore_zeroes=False, verbose=False):
+###################################
+## LIST OF AVAILABLE METRICS     ##
+###################################
+from cute_ranking.core import mean_reciprocal_rank, r_precision, precision_at_k, recall_at_k, f1_score_at_k, average_precision, mean_average_precision, dcg_at_k, ndcg_at_k, mean_rank, hit_rate_at_k
+from sklearn.metrics import roc_auc_score, fbeta_score
+from scipy.stats import kendalltau, spearmanr
+
+def ERR(y_true, y_pred, max=10, max_grade=2):
     '''
-    Computes validation metrics for a given set of scores and predictions w.r.t. a dataset
+        source: https://raw.githubusercontent.com/skondo/evaluation_measures/master/evaluations_measures.py
+    '''
+    max=10
+    max_grade=2
+    ranking = y_true[np.argsort(-y_pred)]
+    if max is None:
+        max = len(ranking)
+    ranking = ranking[:min(len(ranking), max)]
+    ranking = map(float, ranking)
+    result = 0.0
+    prob_step_down = 1.0 
+    for rank, rel in enumerate(ranking):
+        rank += 1
+        utility = (pow(2, rel) - 1) / pow(2, max_grade)
+        result += prob_step_down * utility / rank
+        prob_step_down *= (1 - utility)  
+    return result
+AUC = lambda y_true, y_pred, k, u1 : roc_auc_score(y_true, y_pred, average="weighted")
+Fscore = lambda y_true, y_pred, u, beta : fbeta_score(y_true, y_pred, beta=beta, average="weighted")
+TAU = lambda y_true, y_pred, u, u1 : kendalltau(y_true, y_pred)
+Rscore = lambda y_true, y_pred, u, u1 : spearmanr(y_true, y_pred)
+MRR = lambda y_true, y_pred, u, u1 : mean_reciprocal_rank(y_true[np.argsort(-y_pred)])
+RP = lambda y_true, y_pred, u, u1 : r_precision(y_true[np.argsort(-y_pred)])
+PrecisionK = lambda y_true, y_pred, k, u1 : precision_at_k(y_true[np.argsort(-y_pred)], k)
+RecallK = lambda y_true, y_pred, k, u1 : recall_at_k(y_true[np.argsort(-y_pred)], np.sum(y_true>0), k=k)
+F1K = lambda y_true, y_pred, k, u1 : f1_score_at_k(y_true[np.argsort(-y_pred)], np.sum(y_true>0), k=k)
+AP = lambda y_true, y_pred, u, u1 : average_precision(y_true[np.argsort(-y_pred)])
+MAP = lambda y_true, y_pred, u, u1 : mean_average_precision(y_true[np.argsort(-y_pred)])
+DCGk = lambda y_true, y_pred, k, u1 : dcg_at_k(y_true[np.argsort(-y_pred)], k)
+NDCGk = lambda y_true, y_pred, k, u1 : ndcg_at_k(y_true[np.argsort(-y_pred)], k)
+MeanRank = lambda y_true, y_pred, u, u1 : mean_rank(y_true[np.argsort(-y_pred)])
+HRk = lambda y_true, y_pred, k, u1 : hit_rate_at_k(y_true[np.argsort(-y_pred)], k)
+metrics_list = ["AUC", "Fscore", "TAU", "Rscore", "MRR", "RP", "PrecisionK", "RecallK", "F1K", "AP", "MAP", "DCGk", "NDCGk", "MeanRank", "HRk", "ERR"]
+
+###################################
+## COMPUTATION OF METRICS        ##
+###################################
+
+def compute_metrics(scores, predictions, dataset, metrics, k=1, beta=1, verbose=False):
+    '''
+    Computes *user-wise* validation metrics for a given set of scores and predictions w.r.t. a dataset
 
     ...
 
     Parameters
     ----------
-    scores : array-like of shape (n_ratings, 3)
-        a matrix which contains the user indices (column 1), the item indices (column 2) and the score for the corresponding (user, item) pair (float value in column 3)
-    predictions : array-like of shape (n_ratings, 3)
-        a matrix which contains the user indices (column 1), the item indices (column 2) and the class for the corresponding (user, item) pair (value in {-1, 0, 1} in column 3)
-    test_dataset : stanscofi.Dataset
-        the validation dataset on which the metrics should be computed
-    beta : float
-        a positive number for the computation of the F-beta metric
-    ignore_zeroes : bool
-        how to deal with more than two class labels; if ignore_zeroes=True, then pairs which are assigned 0 are not taken into account when computing the metric {{-1},{1}}; otherwise, zeroes are considered negative, and the validation metrics are computed {{-1,0},{1}}
+    scores : COO-array of shape (n_items, n_users)
+        sparse matrix in COOrdinate format
+    predictions : COO-array of shape (n_items, n_users)
+        sparse matrix in COOrdinate format with values in {-1,1}
+    dataset : stanscofi.Dataset
+        dataset on which the metrics should be computed
+    metrics : lst of str
+        list of metrics which should be computed
+    k : int (default: 1)
+        Argument of the metric to optimize. Implemented metrics are in validation.py
+    beta : float (default: 1)
+        Argument of the metric to optimize. Implemented metrics are in validation.py
     verbose : bool
         prints out information about ignored users for the computation of validation metrics, that is, users which pairs are only associated to a single class (i.e., all pairs with this users are either assigned 0, -1 or 1)
 
     Returns
     -------
-    metrics : pandas.DataFrame of shape (2, 2)
-        table of metrics: AUC, F_beta score in rows, average and standard deviation across users in columns
+    metrics : pandas.DataFrame of shape (len(metrics), 2)
+        table of metrics: metrics in rows, average and standard deviation across users in columns
     plots_args : dict
-        dictionary of arguments to feed to the plot_metrics function
+        dictionary of arguments to feed to the plot_metrics function to plot the Precision-Recall and the Receiver Operating Chracteristic (ROC) curves
     '''
-    assert scores.shape[1]==3
-    assert predictions.shape[1]==3
-    assert predictions.shape[0]==scores.shape[0]
-    assert beta>0
-    y_true_all = np.array([test_dataset.ratings_mat[j,i] for i,j in scores[:,:2].astype(int).tolist()])
-    y_pred_all = predictions[:,2].flatten()
-    if (test_dataset.folds is not None):
-        ids = np.argwhere(np.ones(test_dataset.ratings_mat.shape))
-        folds_ids = [((test_dataset.folds[:,0]==j)&(test_dataset.folds[:,1]==i)).any() for i,j in ids[:,:2].tolist()]
-        y_true_all = y_true_all[folds_ids]
-        y_pred_all = y_pred_all[folds_ids]
-        scores_ = scores[folds_ids,:]
-        assert y_true_all.shape[0] == test_dataset.folds.shape[0]
-        assert y_pred_all.shape[0] == test_dataset.folds.shape[0]
-    else:
-        scores_ = deepcopy(scores)
-    if (not ignore_zeroes):
-        predictions_ = deepcopy(predictions)
-        y_true = (y_true_all>0).astype(int) 
-        y_pred = (y_pred_all>0).astype(int)
-    else:
-        ids = np.argwhere(y_true_all!=0)
-        scores_ = scores[ids.flatten().tolist(),:]
-        predictions_ = predictions[ids,:]
-        y_true = (y_true_all[ids]>0).astype(int)
-        y_pred = (y_pred_all[ids]>0).astype(int)
-    assert y_true.shape[0]==y_pred.shape[0]==scores_.shape[0]
-    assert all([x in [-1,0,1] for x in np.unique(y_true).flatten()])
+    assert predictions.shape==scores.shape==dataset.folds.shape
+    y_true_all = dataset.ratings.toarray()[dataset.folds.row,dataset.folds.col].ravel() 
+    y_pred_all = predictions.data.ravel()
+    scores_all = scores.data.ravel()
+    assert y_true_all.shape==y_pred_all.shape==scores_all.shape
     ## Compute average metric per user
-    user_ids = np.unique(scores_[:,0].flatten()).astype(int).tolist()
+    user_ids = np.unique(dataset.folds.col)
     n_ignored = 0
     aucs, tprs, recs, fscores = [], [], [], []
     base_fpr = np.linspace(0, 1, 101)
     base_pres = np.linspace(0, 1, 101)
+    metrics_list = {metric: [] for metric in metrics}
     for user_id in user_ids:
-        user_ids_i = np.argwhere(scores_[:,0].flatten()==user_id)
+        user_ids_i = np.argwhere(dataset.folds.col==user_id)
         if (len(user_ids_i)==0):
             n_ignored += 1
             continue
-        user_truth = y_true[user_ids_i].reshape(1, -1)
-        user_pred = y_pred[user_ids_i].reshape(1, -1)
-        if (len(np.unique(user_truth))==2):
-            fpr, tpr, _ = ROC(user_truth.flatten(), user_pred.flatten())
-            pres, rec, _ = PRC(user_truth.flatten(), user_pred.flatten())
-            aucs.append(AUC(user_truth.flatten(), user_pred.flatten()))
-            fscores.append(fbeta_score(user_truth.flatten(), user_pred.flatten(), beta=beta))
+        user_truth = y_true_all[user_ids_i]
+        user_pred = y_pred_all[user_ids_i]
+        if ((len(np.unique(user_truth))==2) and (1 in user_truth)):
+            fpr, tpr, _ = ROC(user_truth, user_pred, pos_label=1.)
+            pres, rec, _ = PRC(user_truth, user_pred)
+            aucs.append(roc_auc_score(user_truth, user_pred, average="weighted"))
+            fscores.append(fbeta_score(user_truth, user_pred, beta=beta, average="weighted"))
             tpr = np.interp(base_fpr, fpr, tpr)
             tpr[0] = 0.0
             tprs.append(tpr)
             rec = np.interp(base_pres, pres, rec)
             recs.append(rec)
+            for metric in metrics:
+                assert metric in metrics_list
+                value = eval(metric)(user_truth, user_pred, k, beta)
+                metrics_list.update({metric: metrics_list[metric]+[value]})
         else:
             n_ignored += 1
     if (verbose and n_ignored>0):
         print("<validation.compute_metrics> Computed on #users=%d, %d ignored (%2.f perc)" % (len(user_ids), n_ignored, 100*n_ignored/len(user_ids)))
     if (len(aucs)==0 or len(fscores)==0):
-        metrics = pd.DataFrame([], index=["AUC", "F_%.1f" % beta], 
-		columns=["Avg. across users", "Std"])
+        metrics = pd.DataFrame([], index=metrics, 
+		columns=["Average", "StandardDeviation"])
         return metrics, {}
-    metrics = pd.DataFrame([[f(x) for f in [np.mean, np.std]] for x in [aucs, fscores]], index=["AUC", "F_%.1f" % beta], 
-		columns=["Avg. across users", "Std"])
-    return metrics, {"y_true": y_true, "y_pred": y_pred, "scores": scores_[:,2].flatten(), "predictions": y_pred_all, "ground_truth": y_true_all, "aucs": aucs, "fscores": fscores, "tprs": np.array(tprs), "recs": np.array(recs)}
+    metrics = pd.DataFrame([[f(metrics_list[m]) for f in [np.mean, np.std]] for m in metrics_list], index=metrics, columns=["Average", "StandardDeviation"])
+    metrics = pd.concat((metrics, pd.DataFrame([[k,beta]], index=["arguments (k, beta)"], columns=metrics.columns)), axis=0)
+    return metrics, {"y_true": (y_true_all>0).astype(int), "y_pred": (y_pred_all>0).astype(int), "scores": scores_all, "predictions": y_pred_all, "ground_truth": y_true_all, "aucs": aucs, "fscores": fscores, "tprs": np.array(tprs), "recs": np.array(recs)}
+
+###################################
+## PLOTS                         ##
+###################################
 
 def plot_metrics(y_true=None, y_pred=None, scores=None, ground_truth=None, predictions=None, aucs=None, fscores=None, tprs=None, recs=None, figsize=(16,5), model_name="Model"):
     '''

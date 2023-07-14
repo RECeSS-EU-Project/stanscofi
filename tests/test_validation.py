@@ -1,8 +1,11 @@
 import unittest
 import numpy as np
+from scipy.sparse import coo_array
 
-import stanscofi.datasets
-import stanscofi.validation
+import sys
+sys.path.insert(0,"../src/")
+from stanscofi.datasets import generate_dummy_dataset, Dataset
+from stanscofi.validation import metrics_list, compute_metrics, plot_metrics
 
 class TestValidation(unittest.TestCase):
 
@@ -10,54 +13,32 @@ class TestValidation(unittest.TestCase):
     def generate_dataset_scores_threshold(self):
         threshold=0.5
         npositive, nnegative, nfeatures, mean, std = 200, 100, 50, 0.5, 1
-        data_args = stanscofi.datasets.generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std)
-        dataset = stanscofi.datasets.Dataset(**data_args)
+        data_args = generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std)
+        dataset = Dataset(**data_args)
         ## Generate random class scores
         np.random.seed(1223435)
         pi=1/16
-        npoints = dataset.ratings_mat.shape[0]*dataset.ratings_mat.shape[1]
-        scores = np.zeros((npoints, 3))
-        scores[:,0] = [i for i in range(dataset.ratings_mat.shape[1]) for _ in range(dataset.ratings_mat.shape[0])]
-        scores[:,1] = [j for _ in range(dataset.ratings_mat.shape[1]) for j in range(dataset.ratings_mat.shape[0])]
-        scores[:,2] = np.random.normal(np.random.choice([-10,10], p=[pi,1-pi], size=npoints), 1).tolist()
-        scores[:,2] -= np.min(scores[:,2])
-        scores[:,2] /= np.max(scores[:,2])
-        return dataset, scores, threshold
+        npoints = np.sum(dataset.folds.data)
+        scores = np.random.normal(np.random.choice([-10,10], p=[pi,1-pi], size=npoints), 1).reshape(dataset.folds.shape)
+        return dataset, coo_array(scores), threshold
 
     def test_compute_metrics(self):
         dataset, scores, threshold = self.generate_dataset_scores_threshold()
-        predictions = np.copy(scores)
-        predictions[:,2] = (-1)**(predictions[:,2]<threshold)
-        metrics, _ = stanscofi.validation.compute_metrics(scores, predictions, dataset, beta=1, ignore_zeroes=False, verbose=False)
-        self.assertEqual(metrics.shape[0], 2)
+        predictions = coo_array((-1)**(scores.toarray()<threshold))
+        metrics, _ = compute_metrics(scores, predictions, dataset, metrics=tuple(metrics_list), k=1, beta=1, verbose=False)
+        print(metrics)
+        self.assertEqual(metrics.shape[0], len(metrics_list)+1)
         self.assertEqual(metrics.shape[1], 2)
-        self.assertEqual(np.round(metrics.values[0,0],1), 0.5)
-        self.assertEqual(np.round(metrics.values[0,1],1), 0.0)
-        self.assertEqual(np.round(metrics.values[1,0],1), 0.8)
-        self.assertEqual(np.round(metrics.values[1,1],1), 0.0)
-        metrics, _ = stanscofi.validation.compute_metrics(scores, predictions, dataset, beta=1, ignore_zeroes=True, verbose=False)
-        self.assertEqual(metrics.shape[0], 2)
-        self.assertEqual(metrics.shape[1], 2)
-        self.assertTrue(np.isnan(metrics.values[0,0]))
-        self.assertTrue(np.isnan(metrics.values[0,1]))
-        self.assertTrue(np.isnan(metrics.values[1,0]))
-        self.assertTrue(np.isnan(metrics.values[1,1]))
-
-    def test_compute_metrics_mask_dataset(self):
-        dataset, scores, threshold = self.generate_dataset_scores_threshold()
-        nitems, nusers = [x//3+1 for x in dataset.ratings_mat.shape]
-        folds = np.array([[i,j,dataset.ratings_mat[i,j]] for i in range(nitems) for j in range(nusers)])
-        masked_dataset = dataset.mask_dataset(folds, subset_name="dataset")
-        predictions = np.copy(scores)
-        predictions[:,2] = (-1)**(predictions[:,2]<threshold)
-        metrics, _ = stanscofi.validation.compute_metrics(scores, predictions, masked_dataset, beta=1, ignore_zeroes=False, verbose=False)
+        self.assertEqual(np.round(metrics.loc["AUC"]["Average"],1), 0.5)
+        self.assertEqual(np.round(metrics.loc["AUC"]["StandardDeviation"],1), 0.0)
+        self.assertEqual(np.round(metrics.loc["Fscore"]["Average"],1), 0.5)
+        self.assertEqual(np.round(metrics.loc["Fscore"]["StandardDeviation"],1), 0.0)
 
     def test_plot_metrics(self):
         dataset, scores, threshold = self.generate_dataset_scores_threshold()
-        predictions = np.copy(scores)
-        predictions[:,2] = (-1)**(predictions[:,2]<threshold)
-        _, plot_args = stanscofi.validation.compute_metrics(scores, predictions, dataset, beta=1, ignore_zeroes=False, verbose=False)
-        stanscofi.validation.plot_metrics(**plot_args, figsize=(10,10), model_name="Random on Dummy")
+        predictions = coo_array((-1)**(scores.toarray()<threshold))
+        _, plot_args = compute_metrics(scores, predictions, dataset, metrics=("AUC", "MRR"), k=1, beta=1, verbose=False)
+        plot_metrics(**plot_args, figsize=(10,10), model_name="Random on Dummy")
         ## if it ends without any error, it is a success
 
 if __name__ == '__main__':

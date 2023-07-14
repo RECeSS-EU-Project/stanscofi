@@ -1,14 +1,13 @@
 #coding:utf-8
 
 import numpy as np
-
 from joblib import Parallel, delayed
 from tqdm import tqdm
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
 
-def preprocessing_routine(dataset, preprocessing_str, subset_=None, filter_=None, scalerS=None, scalerP=None, inf=2, njobs=1):
+def preprocessing_XY(dataset, preprocessing_str, operator="*", sep_feature="-", subset_=None, filter_=None, scalerS=None, scalerP=None, inf=2, njobs=1):
     '''
     Converts a score vector or a score value into a list of scores
 
@@ -19,9 +18,13 @@ def preprocessing_routine(dataset, preprocessing_str, subset_=None, filter_=None
     dataset : stanscofi.datasets.Dataset
         dataset to preprocess
     preprocessing_str : str
-        type of preprocessing: in ["Perlman_procedure","meanimputation_standardize","same_feature_preprocessing"]. see notebook for further details
+        type of preprocessing: in ["Perlman_procedure","meanimputation_standardize","same_feature_preprocessing"]. 
     subset_ : None or int
         Number of features to restrict the dataset to (Top-subset_ features in terms of cross-sample variance) /!\ across user and item features if preprocessing_str!="meanimputation_standardize" otherwise 2*subset_ features are preserved (subset_ for item features, subset_ for user features)
+    operator : None or str
+        arithmetric operation to apply, ex. "+", "*"
+    sep_feature : str
+        separator between feature type and element in the feature matrices in dataset
     filter_ : None or list
         list of feature indices to keep (of length subset_) (overrides the subset_ parameter if both are fed)
     scalerS : None or stanscofi.models.CustomScaler instance
@@ -35,9 +38,9 @@ def preprocessing_routine(dataset, preprocessing_str, subset_=None, filter_=None
 
     Returns
     ----------
-    X : array-like of shape (n_items x n_users, n_item_features+n_user_features)
+    X : array-like of shape (n_folds, n_features)
         the feature matrix
-    y : array-like of shape (n_items x n_users, )
+    y : array-like of shape (n_folds, )
         the response/outcome vector
     scalerS : None or stanscofi.models.CustomScaler instance
         scaler for items; if the input value was None, returns the scaler fitted on item feature vectors
@@ -49,12 +52,12 @@ def preprocessing_routine(dataset, preprocessing_str, subset_=None, filter_=None
     assert njobs>0
     assert preprocessing_str in ["Perlman_procedure","meanimputation_standardize","same_feature_preprocessing"]
     if (preprocessing_str == "Perlman_procedure"):
-        X, y = eval(preprocessing_str)(dataset, njobs=njobs, sep_feature="-", missing=-666, verbose=False)
+        X, y = eval(preprocessing_str)(dataset, njobs=njobs, sep_feature=sep_feature, missing=-666, verbose=False)
         scalerS, scalerP = None, None
     if (preprocessing_str == "meanimputation_standardize"):
         X, y, scalerS, scalerP = eval(preprocessing_str)(dataset, subset=subset_, scalerS=scalerS, scalerP=scalerP, inf=inf, verbose=False)
     if (preprocessing_str == "same_feature_preprocessing"):
-        X, y = eval(preprocessing_str)(dataset)
+        X, y = eval(preprocessing_str)(dataset, operator)
         scalerS, scalerP = None, None
     if (preprocessing_str != "meanimputation_standardize"):
         if ((subset_ is not None) or (filter_ is not None)):
@@ -66,6 +69,7 @@ def preprocessing_routine(dataset, preprocessing_str, subset_=None, filter_=None
                     features = x_ids_vars[-subset_:]
                     filter_ = features
             X = X[:,filter_]
+    assert X.shape[0]==y.shape[0]==dataset.folds.data.shape[0]
     return X, y, scalerS, scalerP, filter_
 
 class CustomScaler(object):
@@ -184,57 +188,54 @@ def meanimputation_standardize(dataset, subset=None, scalerS=None, scalerP=None,
 
     Returns
     ----------
-    X : array-like of shape (n_items x n_users, n_item_features+n_user_features)
+    X : array-like of shape (n_folds, n_item_features+n_user_features)
         the feature matrix
-    y : array-like of shape (n_items x n_users, )
+    y : array-like of shape (n_folds, )
         the response/outcome vector
     scalerS : None or stanscofi.models.CustomScaler instance
         scaler for items; if the input value was None, returns the scaler fitted on item feature vectors
     scalerP : None or stanscofi.models.CustomScaler instance
         scaler for users; if the input value was None, returns the scaler fitted on user feature vectors
     '''
-    y = np.ravel(dataset.ratings_mat.flatten())
+    y = dataset.ratings.toarray()[dataset.folds.row,dataset.folds.col].ravel()
     if (scalerS is None):
         scalerS = CustomScaler(posinf=inf, neginf=-inf)
     if (verbose):
         print("<preprocessing.meanimputation_standardize> Preprocessing of item feature matrix...")
-    S_ = scalerS.fit_transform(dataset.items.T.copy(), subset=subset, verbose=verbose) ## items x features=subset
+    S_ = scalerS.fit_transform(dataset.items.toarray().T, subset=subset, verbose=verbose) ## items x features=subset
     if (scalerP is None):
         scalerP = CustomScaler(posinf=inf, neginf=-inf)
     if (verbose):
         print("<preprocessing.meanimputation_standardize> Preprocessing of user feature matrix...")
-    P_ = scalerP.fit_transform(dataset.users.T.copy(), subset=subset, verbose=verbose) ## users x features=subset
-    ids = np.argwhere(np.ones(dataset.ratings_mat.shape)) 
-    SS = np.concatenate(tuple([S_[i,:].reshape(-1,1) for i, _ in ids.tolist()]), axis=1) ## (item, user) pairs x features
-    PP = np.concatenate(tuple([P_[j,:].reshape(-1,1) for _, j in ids.tolist()]), axis=1) ## (item, user) pairs x features
-    X = np.concatenate((SS, PP), axis=0).T ## (item, user) pairs x item/user features
+    P_ = scalerP.fit_transform(dataset.users.toarray().T, subset=subset, verbose=verbose) ## users x features=subset
+    X = np.column_stack((S_[dataset.folds.row,:], P_[dataset.folds.col,:])) ## (item, user) pairs x (item + user features)
     return X, y, scalerS, scalerP
 
-def same_feature_preprocessing(dataset):
+def same_feature_preprocessing(dataset, operator):
     '''
-    If the users and items have the same features in the dataset, then a simple way to combine the user and item feature matrices is to multiply the feature vectors coefficient per coefficient.
+    If the users and items have the same features in the dataset, then a simple way to combine the user and item feature matrices is to apply an element-wise arithmetic operator (*, +, etc.) to the feature vectors coefficient per coefficient.
 
     ...
 
     Parameters
     ----------
     dataset : stanscofi.Dataset
-        dataset which should be transformed, with n_items items (with n_item_features features) and n_users users (with n_user_features features) where n_item_features==n_user_features and dataset.same_item_user_features==True, and missing values are denoted by 0 or numpy.nan
+        dataset which should be transformed, where n_item_features==n_user_features and dataset.same_item_user_features==True
+    operator : str
+        arithmetric operation to apply, ex. "+", "*"
 
     Returns
     ----------
-    X : array-like of shape (n_items x n_users, n_item_features+n_user_features)
+    X : array-like of shape (n_folds, n_features)
         the feature matrix
-    y : array-like of shape (n_items x n_users, )
+    y : array-like of shape (n_folds, )
         the response/outcome vector
     '''
-    assert dataset.same_item_user_features==True
-    y = np.ravel(dataset.ratings_mat.flatten())
-    S_, P_ = dataset.items.T.copy(), dataset.users.T.copy()
-    P_[np.isnan(P_)] = 0
-    S_[np.isnan(S_)] = 0
-    ids = np.argwhere(np.ones(dataset.ratings_mat.shape)) # (item, user) pairs
-    X = np.concatenate(tuple([np.multiply(S_[i, :], P_[j, :]).reshape(-1,1) for i, j in ids.tolist()]), axis=1).T ## pairs x features
+    assert dataset.same_item_user_features
+    y = dataset.ratings.toarray()[dataset.folds.row,dataset.folds.col].ravel()
+    S_, P_ = [np.nan_to_num(x.toarray().T, copy=True, nan=0.) for x in [dataset.items, dataset.users]]
+    S_, P_ = S_[dataset.folds.row,:], P_[dataset.folds.col,:]
+    X = eval("S_ %s P_" % operator) ## (item, user) pairs x (item + user features)
     return X, y
 
 ## https://stackoverflow.com/questions/11144513/cartesian-product-of-x-and-y-array-points-into-single-array-of-2d-points
@@ -265,12 +266,12 @@ def Perlman_procedure(dataset, njobs=1, sep_feature="-", missing=-666, inf=2, ve
     ----------
     dataset : stanscofi.Dataset
         dataset which should be transformed, with n_items items (with n_item_features features) and n_users users (with n_user_features features) with the following attributes
-            ratings_mat : array-like of shape (n_ratings, 3)
-                a matrix which contains the user indices (column 1), the item indices (column 2) and the class for the corresponding (user, item) pair (value in {-1, 0, 1} in column 3), where 0 stands for unknown class, -1 for negative and 1 for positive classes
-            users : array-like of shape (n_diseases x n_disease_features, n_diseases)
-                concatenation of n_disease_features drug similarity matrices of shape (n_diseases, n_diseases), where values in user_features are denoted by "<feature><sep_feature><disease>" and missing values are denoted by numpy.nan; if the prefix in "<feature><sep_feature>" is missing, it is assumed that users is a single similarity matrix (n_user_matrices=1)
-            items : array-like of shape (n_drugs x n_drug_features, n_drugs)
+            ratings : COO-array of shape (n_items, n_users)
+                an array which contains values in {-1, 0, 1} describing the negative, unlabelled/unavailable, positive user-item matchings
+            items : COO-array of shape (n_item_features, n_items)
                 concatenation of n_drug_features drug similarity matrices of shape (n_drugs, n_drugs), where values in item_features are denoted by "<feature><sep_feature><drug>" and missing values are denoted by numpy.nan; if the prefix in "<feature><sep_feature>" is missing, it is assumed that items is a single similarity matrix (n_item_matrices=1)
+            users : COO-array of shape (n_user_features, n_users)
+                concatenation of n_disease_features drug similarity matrices of shape (n_diseases, n_diseases), where values in user_features are denoted by "<feature><sep_feature><disease>" and missing values are denoted by numpy.nan; if the prefix in "<feature><sep_feature>" is missing, it is assumed that users is a single similarity matrix (n_user_matrices=1)
         NaN values are replaced by 0, whereas infinite values are replaced by inf (parameter below).
     njobs : int
         number of jobs to run in parallel
@@ -295,15 +296,10 @@ def Perlman_procedure(dataset, njobs=1, sep_feature="-", missing=-666, inf=2, ve
     is_item = sum([int(sep_feature in str(x)) for x in dataset.item_features])
     assert is_user in [0, dataset.users.shape[0]]
     assert is_item in [0, dataset.items.shape[0]]
-    A, P, S = dataset.ratings_mat.copy(), dataset.users.copy(), dataset.items.copy()
-    np.nan_to_num(P, copy=False, nan=0, posinf=inf, neginf=-inf)
-    np.nan_to_num(S, copy=False, nan=0, posinf=inf, neginf=-inf)
+    y = dataset.ratings.toarray()[dataset.folds.row,dataset.folds.col].ravel()
+    P, S = [np.nan_to_num(x.toarray(), copy=True, nan=0, posinf=inf, neginf=-inf) for x in [dataset.users, dataset.items]]
     ## Ensure positive values in P and S
-    P = P-np.tile(np.nanmin(P, axis=1), (P.shape[1], 1)).T
-    S = S-np.tile(np.nanmin(S, axis=1), (S.shape[1], 1)).T
-    y = np.ravel(A.flatten())
-    ## All item,user pairs (items x users)
-    ids = np.argwhere(np.ones(A.shape)) 
+    P, S = [x-np.tile(np.nanmin(x, axis=1), (x.shape[1], 1)).T for x in [P, S]]
     ## All types of features (length=#features)
     nuser_features = np.array([missing]*len(dataset.user_features) if (is_user==0) else [x.split(sep_feature)[0] for x in dataset.user_features])
     nitem_features = np.array([missing]*len(dataset.item_features) if (is_item==0) else [x.split(sep_feature)[0] for x in dataset.item_features])
@@ -314,14 +310,15 @@ def Perlman_procedure(dataset, njobs=1, sep_feature="-", missing=-666, inf=2, ve
     Nuf, Nif = len(set(nuser_features)), len(set(nitem_features))
     if (verbose):
         print("<preprocessing.Perlman_procedure> %d item similarities, %d user similarities" % (Nuf, Nif))
-    X = np.zeros((ids.shape[0], Nuf*Nif)) ## (item, user) pairs x feature type
-    if (verbose):
-        print("<preprocessing.Perlman_procedure> For %d ratings pairs, identified %d features" % X.shape)
     item_feature_mask = {fi: (nitem_features==fi).astype(int) for fi in set(nitem_features)}
-    item_mask = [S[:,i] * (nitem_nms!=i).astype(int) for i in range(A.shape[0])]
+    item_mask = [S[:,i] * (nitem_nms!=i).astype(int) for i in range(dataset.nitems)]
     user_feature_mask = {fu: (nuser_features==fu).astype(int) for fu in set(nuser_features)}
-    user_mask = [P[:,u] * (nuser_nms!=u).astype(int) for u in range(A.shape[1])]
-    known = np.array([0 if ((nitem_nms[i]==missing) or (nuser_nms[u]==missing)) else int(A[nitem_nms[i],nuser_nms[u]]!=0) for i in range(S.shape[0]) for u in range(P.shape[0])])
+    user_mask = [P[:,u] * (nuser_nms!=u).astype(int) for u in range(dataset.nusers)]
+    known = np.array([0 if ((nitem_nms[i]==missing) or (nuser_nms[u]==missing)) else int(dataset.ratings.toarray()[nitem_nms[i],nuser_nms[u]]!=0) for i in range(S.shape[0]) for u in range(P.shape[0])])
+    ## All item,user pairs (items x users)
+    ids = np.array([dataset.folds.row, dataset.folds.col]).T
+    if (verbose):
+        print("<preprocessing.Perlman_procedure> For %d ratings pairs, identified %d features" % (ids.shape[0], Nuf*Nif))
     features = [[a,b] for a in set(nitem_features) for b in set(nuser_features)]
     def single_run(fi, fu, known, item_feature_mask, item_mask, user_feature_mask, user_mask, ids):
         if (verbose):
@@ -337,5 +334,5 @@ def Perlman_procedure(dataset, njobs=1, sep_feature="-", missing=-666, inf=2, ve
         vals = [single_run(fi, fu, known, item_feature_mask, item_mask, user_feature_mask, user_mask, ids) for [fi, fu] in tqdm(features)]
     else:
         vals = Parallel(n_jobs=min(njobs, len(features)), backend='loky')(delayed(single_run)(fi, fu, known, item_feature_mask, item_mask, user_feature_mask, user_mask, ids) for [fi, fu] in tqdm(features))
-    X = np.array(vals).T
-    return np.sqrt(X), y
+    X = np.sqrt(np.array(vals).T)
+    return X, y
