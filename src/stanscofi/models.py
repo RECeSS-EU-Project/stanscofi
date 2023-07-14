@@ -109,7 +109,7 @@ class BasicModel(object):
             sparse matrix in COOrdinate format, with nonzero values corresponding to predictions on available pairs in the dataset
         '''
         scores = self.model_predict_proba(*self.preprocessing(test_dataset, is_training=False))
-        print(np.sum(scores==0))
+        scores[(scores==0)&(test_dataset.folds.toarray()==1)] = 1e-31 ## avoid removing these
         scores = coo_array(scores)
         #print(("folds",test_dataset.folds.data.shape[0]))
         if (scores.shape==test_dataset.folds.shape):

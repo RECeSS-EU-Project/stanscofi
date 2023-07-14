@@ -14,7 +14,7 @@ with warnings.catch_warnings():
     warnings.filterwarnings("ignore", message=".*he 'nopython' keyword argument was not supplied to the 'numba.jit' decorator.*")
     import umap
 
-from .preprocessing import meanimputation_standardize
+from .preprocessing import meanimputation_standardize 
 
 def indices_to_folds(indices, indices_array, shape):
     row = indices_array[indices,0].ravel()
@@ -336,7 +336,7 @@ class Dataset(object):
             ## 2. predictions!=None: Plots datapoints according to predicted annotations
             if (not use_ratings):
                 classes = dict(zip([(i,j) for i,j in zip(self.folds.row, self.folds.col)], predictions.data))
-                all_pairs = np.array([[classes[(j,i)]] for i, j in markers[:,:2].tolist()])
+                all_pairs = np.array([[classes.get((i,j), 0)] for i, j in markers[:,:2].astype(int).tolist()])
                 all_pairs = np.concatenate((markers, all_pairs), axis=1)
             else:
                 all_pairs = np.concatenate((markers, markers[:,2]), axis=1)
