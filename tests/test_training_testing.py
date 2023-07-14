@@ -28,7 +28,6 @@ class TestTrainingTesting(unittest.TestCase):
         self.assertEqual(train_folds.shape, dataset.folds.shape)
         self.assertEqual(test_folds.shape, dataset.folds.shape)
         ## are items weakly correlated?
-        print((np.prod(dataset.folds.shape), dataset.folds.data.sum()))
         self.assertTrue(dist_train_test>=max(dist_train, dist_test))
         ## are items disjoints? in the union of training and testing sets?
         self.assertEqual(train_folds.data.sum()+test_folds.data.sum(),dataset.folds.data.sum())
