@@ -9,9 +9,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
-      #- name: Install dependencies
-      #  run: |
-      #    python3 -m pip install -r pip/requirements.txt
+      - name: Install dependencies
+        run: |
+          python3 -m pip install sphinx sphinx-gallery Pillow git+https://github.com/pydata/pydata-sphinx-theme
       - name: Sphinx build
         run: |
           sphinx-apidoc -f -o docs/stanscofi src/stanscofi

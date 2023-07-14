@@ -59,8 +59,7 @@ def weakly_correlated_split(dataset, test_size, early_stop=None, metric="cosine"
     train_nset = int((1-test_size)*dataset.folds.data.shape[0])
 
     dist = pairwise_distances(item_matrix.T, metric=metric)
-    dist_ = squareform(dist, checks=False)
-    Z = linkage(dist_, "average")
+    Z = linkage(squareform(dist, checks=False), "average")
     select_nc, n_cluster_train = None, None
     l_nc, u_nc = 2, item_matrix.shape[1]
     count_sim, oldclnb = 0, None
