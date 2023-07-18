@@ -14,7 +14,8 @@ with warnings.catch_warnings():
     warnings.filterwarnings("ignore", message=".*he 'nopython' keyword argument was not supplied to the 'numba.jit' decorator.*")
     import umap
 
-from .preprocessing import meanimputation_standardize 
+#from .preprocessing import meanimputation_standardize  ## TODO
+from preprocessing import meanimputation_standardize
 
 def indices_to_folds(indices, indices_array, shape):
     row = indices_array[indices,0].ravel()
@@ -312,8 +313,11 @@ class Dataset(object):
             if (verbose):
                 print("<datasets.visualize> Imputation of missing values by average row-value, standard scaling")
             subselect_size = max(2,min(int(5e7)//nvalues+1, nvalues))
+            subselect_size = min(subselect_size, min(self.users.shape[0],self.items.shape[0]))
             ## Preprocessed (item, user) pair feature matrix and corresponding outcome vector
-            X, y, _, _ = meanimputation_standardize(self, subset=min(subselect_size, min(self.users.shape[0],self.items.shape[0])), inf=2, verbose=verbose)
+            X, y, _, _ = meanimputation_standardize(self, subset=subselect_size, inf=2, verbose=verbose)
+            print(X.shape)
+            print(y.shape)
             use_inputX=False
         else:
             predictions = None
