@@ -14,8 +14,7 @@ with warnings.catch_warnings():
     warnings.filterwarnings("ignore", message=".*he 'nopython' keyword argument was not supplied to the 'numba.jit' decorator.*")
     import umap
 
-#from .preprocessing import meanimputation_standardize
-from preprocessing import meanimputation_standardize ## TODO
+from .preprocessing import meanimputation_standardize
 
 def indices_to_folds(indices, indices_array, shape):
     row = indices_array[indices,0].ravel()
@@ -417,12 +416,17 @@ class Dataset(object):
             plt.show()
         elif ((dimred_X!=0).any()):
             ## Prints a heatmap according to values in X
-            X_reshape_folds = coo_array((X.ravel(), (self.folds.row, self.folds.col)), shape=self.folds.shape)
+            X_reshape_folds = coo_array((X.ravel(), (test_dataset.folds.row, test_dataset.folds.col)), 
+                            shape=test_dataset.folds.shape)
             X_heatmap = X_reshape_folds.toarray()
-            annot = self.ratings.toarray().astype(str)
+            annot = test_dataset.ratings.toarray().astype(int).astype(str)
             annot[annot=="0"] = "" #unknown
             annot[annot=="1"] = "+"  #positive
             annot[annot=="-1"] = "*"  #negative
+            keep_ids_y = np.abs(X_heatmap).sum(axis=1)>0 
+            keep_ids_x = np.abs(X_heatmap).sum(axis=0)>0 
+            X_heatmap = X_heatmap[keep_ids_y,:][:,keep_ids_x]
+            annot = annot[keep_ids_y,:][:,keep_ids_x]
             h = sns.clustermap(X_heatmap, method='average', cmap="viridis", metric=metric, annot=annot, fmt="s", figsize=figsize)
             h.ax_heatmap.set_xlabel("Disease", fontsize=fontsize) 
             h.ax_heatmap.set_ylabel("Drug", fontsize=fontsize)
