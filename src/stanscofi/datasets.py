@@ -14,8 +14,7 @@ with warnings.catch_warnings():
     warnings.filterwarnings("ignore", message=".*he 'nopython' keyword argument was not supplied to the 'numba.jit' decorator.*")
     import umap
 
-#from .preprocessing import meanimputation_standardize  ## TODO
-from preprocessing import meanimputation_standardize
+from .preprocessing import meanimputation_standardize
 
 def indices_to_folds(indices, indices_array, shape):
     row = indices_array[indices,0].ravel()
@@ -316,7 +315,6 @@ class Dataset(object):
             subselect_size = min(subselect_size, min(self.users.shape[0],self.items.shape[0]))
             ## Preprocessed (item, user) pair feature matrix and corresponding outcome vector
             X, y, _, _ = meanimputation_standardize(self, subset=subselect_size, inf=2, verbose=verbose)
-            print((X.shape, y.shape)) ##
             use_inputX=False
         else:
             predictions = None
@@ -352,7 +350,6 @@ class Dataset(object):
                 all_pairs = all_pairs[y!=0,:]
                 X = X[y!=0,:]
                 y = y[y!=0]
-                print((X.shape, y.shape)) ##
                 assert all_pairs.shape[1]==4
             ## 2.b. predictions!=None: For all datapoints
             else:
@@ -379,7 +376,6 @@ class Dataset(object):
                 print("<datasets.visualize> n_neighbors = %d\tmin_dist = %.2f\tmetric = %s" % (dimred_args["n_neighbors"], dimred_args["min_dist"], dimred_args["metric"]))
             with np.errstate(invalid="ignore"): # for NaN or 0 variance matrices
                 umap_model = umap.UMAP(**dimred_args)
-                print((X.shape, y.shape)) ##
                 dimred_X = umap_model.fit_transform(X, y)
                 var12 = [np.nan]*2
         ## Put points in the front layer

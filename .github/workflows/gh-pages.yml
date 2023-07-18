@@ -12,7 +12,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          brew info openblas
+          apt-get install openblas
           python -m pip install -r pip/requirements.txt
           python -m pip install .
           python -m pip install sphinx sphinx-gallery Pillow sphinx-rtd-theme
