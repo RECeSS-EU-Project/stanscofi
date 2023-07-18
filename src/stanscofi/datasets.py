@@ -416,10 +416,10 @@ class Dataset(object):
             plt.show()
         elif ((dimred_X!=0).any()):
             ## Prints a heatmap according to values in X
-            X_reshape_folds = coo_array((X.ravel(), (test_dataset.folds.row, test_dataset.folds.col)), 
-                            shape=test_dataset.folds.shape)
+            X_reshape_folds = coo_array((X.ravel(), (self.folds.row, self.folds.col)), 
+                            shape=self.folds.shape)
             X_heatmap = X_reshape_folds.toarray()
-            annot = test_dataset.ratings.toarray().astype(int).astype(str)
+            annot = self.ratings.toarray().astype(int).astype(str)
             annot[annot=="0"] = "" #unknown
             annot[annot=="1"] = "+"  #positive
             annot[annot=="-1"] = "*"  #negative
