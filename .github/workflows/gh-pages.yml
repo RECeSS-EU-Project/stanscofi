@@ -5,13 +5,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8"]
+        python-version: ["3.8.5"]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          brew info openblas
           python -m pip install -r pip/requirements.txt
           python -m pip install .
           python -m pip install sphinx sphinx-gallery Pillow sphinx-rtd-theme
