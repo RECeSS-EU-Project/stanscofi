@@ -1,12 +1,19 @@
 Installation
 ------------
 
+With CONDA
+::::::::
+
+You can install the stanscofi package using pip: ::
+
+    $ conda install -c recess stanscofi
+
 With PIP
 ::::::::
 
 You can install the stanscofi package using pip: ::
 
-    $ pip3 install stanscofi
+    $ pip install stanscofi
 
 From PyPI
 :::::::::

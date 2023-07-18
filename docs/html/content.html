@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Statement of need &mdash; stanscofi v2.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="stanscofi" href="stanscofi/modules.html" />
+    <link rel="prev" title="Installation" href="install.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            stanscofi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Statement of need</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#environment">Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-usage">Example usage</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="stanscofi/modules.html">stanscofi</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">stanscofi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Statement of need</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/content.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="statement-of-need">
+<h1>Statement of need<a class="headerlink" href="#statement-of-need" title="Permalink to this heading"></a></h1>
+<p>As of 2022, current drug development pipelines last around 10 years, costing $2billion in average, while drug commercialization failure rates go up to 90%. These issues can be mitigated by drug repurposing, where chemical compounds are screened for new therapeutic indications in a systematic fashion. In prior works, this approach has been implemented through collaborative filtering. This semi-supervised learning framework leverages known drug-disease matchings in order to recommend new ones.</p>
+<p>The stanscofi package comprises method-agnostic training, validation, preprocessing and visualization procedures on several published drug repurposing datasets. The proper implementation of these steps is crucial in order to avoid data leakage, i.e., the model is learnt over information that should be unavailable at prediction time. Indeed, data leakage is the source of a major reproducibility crisis in machine learning. This will be avoided by building training and validation sets which are weakly correlated with respect to the drug and disease feature vectors. The main performance metric will be the area under the curve (AUC), which estimates the diagnostic ability of a recommender system better than accuracy in imbalanced datasets.</p>
+<p>Medium-term outcomes to this package will significantly alleviate the economic burden of drug discovery pipelines, and will help find treatments in a more sustainable manner, especially for rare or tropical neglected diseases.</p>
+<p>For more information about the datasets accessible in stanscofi, please refer to the following <a class="reference external" href="https://github.com/RECeSS-EU-Project/drug-repurposing-datasets">repository</a>.</p>
+<section id="environment">
+<h2>Environment<a class="headerlink" href="#environment" title="Permalink to this heading"></a></h2>
+<p>In order to run notebook <a class="reference external" href="https://github.com/RECeSS-EU-Project/stanscofi/blob/master/docs/Introduction%20to%20stanscofi.ipynb">Introduction to stanscofi.ipynb</a>, it is strongly advised to create a virtual environment using Conda (python&gt;=3.8):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ conda create -n stanscofi_env python=3.8.5 -y
+$ conda activate stanscofi_env
+$ python3 -m pip install stanscofi ## or use the conda command above
+$ python3 -m pip install notebook&gt;=6.5.4 markupsafe==2.0.1 ## packages for Jupyter notebook
+$ conda deactivate
+$ conda activate stanscofi_env
+$ cd docs/ &amp;&amp; jupyter notebook
+</pre></div>
+</div>
+<p>The complete list of dependencies for stanscofi can be found at <a class="reference external" href="https://raw.githubusercontent.com/RECeSS-EU-Project/stanscofi/master/pip/requirements.txt">requirements.txt</a> (pip) or <a class="reference external" href="https://raw.githubusercontent.com/RECeSS-EU-Project/stanscofi/master/conda/meta.yaml">meta.yaml</a> (conda).</p>
+</section>
+<section id="example-usage">
+<h2>Example usage<a class="headerlink" href="#example-usage" title="Permalink to this heading"></a></h2>
+<p>Once installed, to import stanscofi into your Python code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ import stanscofi
+</pre></div>
+</div>
+<p>Please check out notebook <a class="reference external" href="https://github.com/RECeSS-EU-Project/stanscofi/blob/master/docs/Introduction%20to%20stanscofi.ipynb">Introduction to stanscofi.ipynb</a>. All functions are documented, so one can check out the inputs and outputs of a function func by typing:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ &gt; help(func)
+</pre></div>
+</div>
+<p>To mesure your environmental impact when using this package (in terms of carbon emissions), please run the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ! codecarbon init
+</pre></div>
+</div>
+<blockquote>
+<div><p>to initialize the CodeCarbon config. For more information about using CodeCarbon, please refer to the <a class="reference external" href="https://github.com/mlco2/codecarbon">official repository</a>.</p>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="stanscofi/modules.html" class="btn btn-neutral float-right" title="stanscofi" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Clémence Réda.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
