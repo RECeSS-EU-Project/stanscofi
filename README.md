@@ -40,7 +40,7 @@ Once installed, to import **stanscofi** into your Python code
 import stanscofi
 ```
 
-Please check out notebook *Introduction to stanscofi.ipynb*. All functions are documented, so one can check out the inputs and outputs of a function func by typing
+Please check out notebook *Introduction to stanscofi.ipynb*. Documentation about **stanscofi** can be found at [this page](https://recess-eu-project.github.io/stanscofi/). All functions are documented, so one can check out the inputs and outputs of a function func by typing
 
 ```
 help(func)
@@ -69,10 +69,6 @@ cd docs/ && jupyter notebook
 ```
 
 The complete list of dependencies for *stanscofi* can be found at [requirements.txt](https://raw.githubusercontent.com/RECeSS-EU-Project/stanscofi/master/pip/requirements.txt) (pip) or [meta.yaml](https://raw.githubusercontent.com/RECeSS-EU-Project/stanscofi/master/conda/meta.yaml) (conda).
-
-## Licence
-
-Documentation about **stanscofi** can be found at [this page](https://recess-eu-project.github.io/stanscofi/).
 
 ## Licence
 

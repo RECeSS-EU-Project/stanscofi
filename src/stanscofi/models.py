@@ -109,14 +109,16 @@ class BasicModel(object):
             sparse matrix in COOrdinate format, with nonzero values corresponding to predictions on available pairs in the dataset
         '''
         scores = self.model_predict_proba(*self.preprocessing(test_dataset, is_training=False))
-        scores[(scores==0)&(test_dataset.folds.toarray()==1)] = 1e-31 ## avoid removing these
-        scores = coo_array(scores)
+        default_val = min(1e-31, np.min(scores[scores!=0])/2)
         #print(("folds",test_dataset.folds.data.shape[0]))
         if (scores.shape==test_dataset.folds.shape):
+            scores[(scores==0)&(test_dataset.folds.toarray()==1)] = default_val ## avoid removing these zeroes
+            scores = coo_array(scores)
             scores = scores*test_dataset.folds
             #print(("scores",scores.data.shape[0]))
             return coo_array(scores)
         assert scores.data.shape[0]==test_dataset.folds.data.shape[0]
+        scores[(scores==0)&(test_dataset.folds.data==1)] = default_val ## avoid removing these
         #print(("scores",scores.data.shape[0]))
         return coo_array(scores)
 
