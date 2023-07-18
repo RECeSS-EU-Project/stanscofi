@@ -50,13 +50,19 @@ MRR = lambda y_true, y_pred, u, u1 : mean_reciprocal_rank(y_true[np.argsort(-y_p
 RP = lambda y_true, y_pred, u, u1 : r_precision(y_true[np.argsort(-y_pred)])
 PrecisionK = lambda y_true, y_pred, k, u1 : precision_at_k(y_true[np.argsort(-y_pred)], k)
 RecallK = lambda y_true, y_pred, k, u1 : recall_at_k(y_true[np.argsort(-y_pred)], np.sum(y_true>0), k=k)
-F1K = lambda y_true, y_pred, k, u1 : f1_score_at_k(y_true[np.argsort(-y_pred)], np.sum(y_true>0), k=k)
+def F1K(y_true, y_pred, k, u1):
+    rec = recall_at_k(y_true[np.argsort(-y_pred)], np.sum(y_true>0), k)
+    prec = precision_at_k(y_true[np.argsort(-y_pred)], k)
+    if (rec+prec==0):
+        return 0
+    return f1_score_at_k(y_true[np.argsort(-y_pred)], np.sum(y_true>0), k=k)
 AP = lambda y_true, y_pred, u, u1 : average_precision(y_true[np.argsort(-y_pred)])
-MAP = lambda y_true, y_pred, u, u1 : mean_average_precision(y_true[np.argsort(-y_pred)])
+MAP = lambda y_true, y_pred, u, u1 : mean_average_precision([y_true[np.argsort(-y_pred)]])
 DCGk = lambda y_true, y_pred, k, u1 : dcg_at_k(y_true[np.argsort(-y_pred)], k)
 NDCGk = lambda y_true, y_pred, k, u1 : ndcg_at_k(y_true[np.argsort(-y_pred)], k)
 MeanRank = lambda y_true, y_pred, u, u1 : mean_rank(y_true[np.argsort(-y_pred)])
-HRk = lambda y_true, y_pred, k, u1 : hit_rate_at_k(y_true[np.argsort(-y_pred)], k)
+HRk = lambda y_true, y_pred, k, u1 : hit_rate_at_k([y_true[np.argsort(-y_pred)]], k)
+metrics_list = ["AUC", "Fscore", "TAU", "Rscore", "MRR", "RP", "PrecisionK", "RecallK", "F1K", "AP", "MAP", "DCGk", "NDCGk", "MeanRank", "HRk", "ERR"]
 
 ###################################
 ## COMPUTATION OF METRICS        ##
@@ -92,8 +98,8 @@ def compute_metrics(scores, predictions, dataset, metrics, k=1, beta=1, verbose=
     plots_args : dict
         dictionary of arguments to feed to the plot_metrics function to plot the Precision-Recall and the Receiver Operating Chracteristic (ROC) curves
     '''
-    assert predictions.shape==scores.shape==dataset.folds.shape
     metrics_list = ["AUC", "Fscore", "TAU", "Rscore", "MRR", "RP", "PrecisionK", "RecallK", "F1K", "AP", "MAP", "DCGk", "NDCGk", "MeanRank", "HRk", "ERR"]
+    assert predictions.shape==scores.shape==dataset.folds.shape
     assert all([metric in metrics_list for metric in metrics])
     y_true_all = dataset.ratings.toarray()[dataset.folds.row,dataset.folds.col].ravel() 
     y_pred_all = predictions.data.ravel()
@@ -125,7 +131,7 @@ def compute_metrics(scores, predictions, dataset, metrics, k=1, beta=1, verbose=
             recs.append(rec)
             for metric in metrics:
                 #print(metric)
-                value = eval(metric)(user_truth, user_pred, k, beta)
+                value = eval(metric)(user_truth.ravel(), user_pred.ravel(), k, beta)
                 metrics_list.update({metric: metrics_list[metric]+[value]})
         else:
             n_ignored += 1
