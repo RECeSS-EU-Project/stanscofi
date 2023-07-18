@@ -1,5 +1,5 @@
 Statement of need 
-----------------------
+-----------------
 
 As of 2022, current drug development pipelines last around 10 years, costing $2billion in average, while drug commercialization failure rates go up to 90%. These issues can be mitigated by drug repurposing, where chemical compounds are screened for new therapeutic indications in a systematic fashion. In prior works, this approach has been implemented through collaborative filtering. This semi-supervised learning framework leverages known drug-disease matchings in order to recommend new ones.
 
@@ -8,6 +8,9 @@ The stanscofi package comprises method-agnostic training, validation, preprocess
 Medium-term outcomes to this package will significantly alleviate the economic burden of drug discovery pipelines, and will help find treatments in a more sustainable manner, especially for rare or tropical neglected diseases.
 
 For more information about the datasets accessible in stanscofi, please refer to the following `repository <https://github.com/RECeSS-EU-Project/drug-repurposing-datasets>`__.
+
+Usage
+-----
 
 Environment
 ::::::::::::::::::::::::::::::::::::

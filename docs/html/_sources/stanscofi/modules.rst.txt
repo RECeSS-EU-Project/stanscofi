@@ -1,5 +1,0 @@
-stanscofi
-=========
-
-.. toctree::
-   :maxdepth: 4
