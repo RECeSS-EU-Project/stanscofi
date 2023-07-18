@@ -36,8 +36,16 @@ def ERR(y_true, y_pred, max=10, max_grade=2):
     return result
 AUC = lambda y_true, y_pred, k, u1 : roc_auc_score(y_true, y_pred, average="weighted")
 Fscore = lambda y_true, y_pred, u, beta : fbeta_score(y_true, y_pred, beta=beta, average="weighted")
-TAU = lambda y_true, y_pred, u, u1 : kendalltau(y_true, y_pred)
-Rscore = lambda y_true, y_pred, u, u1 : spearmanr(y_true, y_pred)
+def TAU(y_true, y_pred, u, u1):
+    if (len(np.unique(y_pred))==1):
+        return 0
+    res = kendalltau(y_true, y_pred)
+    return res.correlation
+def Rscore(y_true, y_pred, u, u1):
+    if (len(np.unique(y_pred))==1):
+        return 0
+    res = spearmanr(y_true, y_pred)
+    return res.correlation
 MRR = lambda y_true, y_pred, u, u1 : mean_reciprocal_rank(y_true[np.argsort(-y_pred)])
 RP = lambda y_true, y_pred, u, u1 : r_precision(y_true[np.argsort(-y_pred)])
 PrecisionK = lambda y_true, y_pred, k, u1 : precision_at_k(y_true[np.argsort(-y_pred)], k)
@@ -49,7 +57,6 @@ DCGk = lambda y_true, y_pred, k, u1 : dcg_at_k(y_true[np.argsort(-y_pred)], k)
 NDCGk = lambda y_true, y_pred, k, u1 : ndcg_at_k(y_true[np.argsort(-y_pred)], k)
 MeanRank = lambda y_true, y_pred, u, u1 : mean_rank(y_true[np.argsort(-y_pred)])
 HRk = lambda y_true, y_pred, k, u1 : hit_rate_at_k(y_true[np.argsort(-y_pred)], k)
-metrics_list = ["AUC", "Fscore", "TAU", "Rscore", "MRR", "RP", "PrecisionK", "RecallK", "F1K", "AP", "MAP", "DCGk", "NDCGk", "MeanRank", "HRk", "ERR"]
 
 ###################################
 ## COMPUTATION OF METRICS        ##
@@ -86,6 +93,7 @@ def compute_metrics(scores, predictions, dataset, metrics, k=1, beta=1, verbose=
         dictionary of arguments to feed to the plot_metrics function to plot the Precision-Recall and the Receiver Operating Chracteristic (ROC) curves
     '''
     assert predictions.shape==scores.shape==dataset.folds.shape
+    metrics_list = ["AUC", "Fscore", "TAU", "Rscore", "MRR", "RP", "PrecisionK", "RecallK", "F1K", "AP", "MAP", "DCGk", "NDCGk", "MeanRank", "HRk", "ERR"]
     assert all([metric in metrics_list for metric in metrics])
     y_true_all = dataset.ratings.toarray()[dataset.folds.row,dataset.folds.col].ravel() 
     y_pred_all = predictions.data.ravel()
@@ -116,7 +124,7 @@ def compute_metrics(scores, predictions, dataset, metrics, k=1, beta=1, verbose=
             rec = np.interp(base_pres, pres, rec)
             recs.append(rec)
             for metric in metrics:
-                print(metric)
+                #print(metric)
                 value = eval(metric)(user_truth, user_pred, k, beta)
                 metrics_list.update({metric: metrics_list[metric]+[value]})
         else:
