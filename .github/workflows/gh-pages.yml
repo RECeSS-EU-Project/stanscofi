@@ -1,11 +1,18 @@
 name: Release documentation
-on: [push,pull_request]
+
+on: [push, pull_request]
+
 jobs:
-  docs:
+  build:
+
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
     strategy:
       matrix:
         python-version: ["3.8"]
+
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }} using Miniconda
@@ -17,11 +24,6 @@ jobs:
           python -m pip install --upgrade pip wheel
           python -m pip install -r pip/requirements.txt
           python -m pip install .
-
-          #git clone https://github.com/xianyi/OpenBLAS
-          #cd OpenBLAS && make -j8 && make PREFIX=/home/runner/work/stanscofi/stanscofi/OpenBLAS install && export PKG_CONFIG_PATH=/home/runner/work/stanscofi/stanscofi/OpenBLAS/lib/pkgconfig && cd ..
-          #python -m pip install -r pip/requirements.txt
-
           python -m pip install sphinx sphinx-gallery Pillow sphinx-rtd-theme
       - name: Sphinx build
         run: |
