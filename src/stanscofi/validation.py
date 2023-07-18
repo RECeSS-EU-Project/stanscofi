@@ -86,6 +86,7 @@ def compute_metrics(scores, predictions, dataset, metrics, k=1, beta=1, verbose=
         dictionary of arguments to feed to the plot_metrics function to plot the Precision-Recall and the Receiver Operating Chracteristic (ROC) curves
     '''
     assert predictions.shape==scores.shape==dataset.folds.shape
+    assert all([metric in metrics_list for metric in metrics])
     y_true_all = dataset.ratings.toarray()[dataset.folds.row,dataset.folds.col].ravel() 
     y_pred_all = predictions.data.ravel()
     scores_all = scores.data.ravel()
@@ -115,7 +116,7 @@ def compute_metrics(scores, predictions, dataset, metrics, k=1, beta=1, verbose=
             rec = np.interp(base_pres, pres, rec)
             recs.append(rec)
             for metric in metrics:
-                assert metric in metrics_list
+                print(metric)
                 value = eval(metric)(user_truth, user_pred, k, beta)
                 metrics_list.update({metric: metrics_list[metric]+[value]})
         else:
