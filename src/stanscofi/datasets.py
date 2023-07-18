@@ -14,7 +14,8 @@ with warnings.catch_warnings():
     warnings.filterwarnings("ignore", message=".*he 'nopython' keyword argument was not supplied to the 'numba.jit' decorator.*")
     import umap
 
-from .preprocessing import meanimputation_standardize
+#from .preprocessing import meanimputation_standardize
+from preprocessing import meanimputation_standardize ## TODO
 
 def indices_to_folds(indices, indices_array, shape):
     row = indices_array[indices,0].ravel()
@@ -416,7 +417,8 @@ class Dataset(object):
             plt.show()
         elif ((dimred_X!=0).any()):
             ## Prints a heatmap according to values in X
-            X_heatmap = X.reshape(self.ratings.shape)
+            X_reshape_folds = coo_array((X.ravel(), (self.folds.row, self.folds.col)), shape=self.folds.shape)
+            X_heatmap = X_reshape_folds.toarray()
             annot = self.ratings.toarray().astype(str)
             annot[annot=="0"] = "" #unknown
             annot[annot=="1"] = "+"  #positive
