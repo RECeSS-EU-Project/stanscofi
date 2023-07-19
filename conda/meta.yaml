@@ -9,7 +9,7 @@ source:
   url: "../dist/{{ name }}-{{ version }}.tar.gz"
 
 build:
-  script: python -m pip install --no-deps --ignore-installed .
+  script: python -m pip install --no-deps --ignore-installed cute-ranking==0.0.3 && python -m pip install --no-deps --ignore-installed .
   noarch: python
 
 requirements:
@@ -28,7 +28,6 @@ requirements:
     - tqdm >=4.58.0
     - codecarbon >=2.2.2
     - seaborn >=0.11.0
-    - cute-ranking >=0.0.3
     - umap-learn >=0.5.3
     - fastcluster >=1.2.6
 
