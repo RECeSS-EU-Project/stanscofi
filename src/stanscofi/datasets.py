@@ -16,12 +16,6 @@ with warnings.catch_warnings():
 
 from .preprocessing import meanimputation_standardize
 
-def indices_to_folds(indices, indices_array, shape):
-    row = indices_array[indices,0].ravel()
-    col = indices_array[indices,1].ravel()
-    data = [1]*len(indices)
-    return coo_array((data, (row, col)), shape=shape)
-
 def generate_dummy_dataset(npositive, nnegative, nfeatures, mean, std, random_state=12454):
     '''
     Creates a dummy dataset where the positive and negative (item, user) pairs are arbitrarily similar. 

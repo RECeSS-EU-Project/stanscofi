@@ -92,7 +92,7 @@ class BasicModel(object):
         random.seed(seed)
         self.model_fit(*self.preprocessing(train_dataset, is_training=True))
 
-    def predict_proba(self, test_dataset):
+    def predict_proba(self, test_dataset, default_zero_val=1e-31):
         '''
         Outputs properly formatted scores (not necessarily in [0,1]!) from the fitted model on test_dataset. Internally calls model_predict() then reformats the scores
 
@@ -109,7 +109,10 @@ class BasicModel(object):
             sparse matrix in COOrdinate format, with nonzero values corresponding to predictions on available pairs in the dataset
         '''
         scores = self.model_predict_proba(*self.preprocessing(test_dataset, is_training=False))
-        default_val = min(1e-31, np.min(scores[scores!=0])/2)
+        if ((scores!=0).any()):
+            default_val = min(default_zero_val, np.min(scores[scores!=0])/2)
+        else:
+            default_val = default_zero_val
         #print(("folds",test_dataset.folds.data.shape[0]))
         if (scores.shape==test_dataset.folds.shape):
             scores[(scores==0)&(test_dataset.folds.toarray()==1)] = default_val ## avoid removing these zeroes
@@ -117,10 +120,11 @@ class BasicModel(object):
             scores = scores*test_dataset.folds
             #print(("scores",scores.data.shape[0]))
             return coo_array(scores)
-        assert scores.data.shape[0]==test_dataset.folds.data.shape[0]
-        scores[(scores==0)&(test_dataset.folds.data==1)] = default_val ## avoid removing these
+        assert scores.shape[0]==test_dataset.folds.data.shape[0]
+        scores[(scores==0)&(test_dataset.folds.data==1)] = default_val ## avoid removing these zeroes 
+        scores_arr = coo_array((scores, (test_dataset.folds.row, test_dataset.folds.col)), shape=test_dataset.folds.shape)
         #print(("scores",scores.data.shape[0]))
-        return coo_array(scores)
+        return scores_arr
 
     def predict(self, scores, threshold=0.5):
         '''

@@ -35,6 +35,7 @@ setup(name=NAME,
         "seaborn>=0.11.0",
         "cute-ranking>=0.0.3",
         "umap-learn>=0.5.3",
+        "fastcluster>=1.2.6",
     ],
     entry_points={},
 )

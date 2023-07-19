@@ -251,7 +251,7 @@ def cartesian_product_transpose(*arrays):
         start, end = end, end + rows
     return out.reshape(cols, rows).T
 
-def Perlman_procedure(dataset, njobs=1, sep_feature="-", missing=-666, inf=2, verbose=False):
+def Perlman_procedure(dataset, njobs=1, sep_feature=None, missing=-666, inf=2, verbose=False):
     '''
     Method for combining (several) item and user similarity matrices (reference DOI: 10.1089/cmb.2010.0213). Instead of concatenating item and user features for a given pair, resulting in a vector of size (n_items x n_item_matrices)+(n_users x n_user_matrices), compute a single score per pair of (item_matrix, user_matrix) for each (item, user) pair, resulting in a vector of size (n_item_matrices) x (n_user_matrices).
 
@@ -275,8 +275,8 @@ def Perlman_procedure(dataset, njobs=1, sep_feature="-", missing=-666, inf=2, ve
         NaN values are replaced by 0, whereas infinite values are replaced by inf (parameter below).
     njobs : int
         number of jobs to run in parallel
-    sep_feature : str
-        separator between feature type and element in the feature matrices in dataset
+    sep_feature : str or None
+        separator between feature type and element in the feature matrices in dataset. None if there is one single feature type expected
     missing : int
         placeholder value that should be different from any feature name
     inf : int
@@ -292,10 +292,15 @@ def Perlman_procedure(dataset, njobs=1, sep_feature="-", missing=-666, inf=2, ve
         the response/outcome vector 
     '''
     assert njobs > 0
-    is_user = sum([int(sep_feature in str(x)) for x in dataset.user_features])
-    is_item = sum([int(sep_feature in str(x)) for x in dataset.item_features])
-    assert is_user in [0, dataset.users.shape[0]]
-    assert is_item in [0, dataset.items.shape[0]]
+    if (sep_feature is not None):
+        is_user = sum([int(sep_feature in str(x)) for x in dataset.user_features])
+        is_item = sum([int(sep_feature in str(x)) for x in dataset.item_features])
+    else:
+        is_user, is_item = 0, 0
+    if ((is_user not in [0, dataset.users.shape[0]]) or (is_item not in [0, dataset.items.shape[0]])):
+        print("Ensure that sep_feature(=\"%s\") is set to the correct value. If there is only one type of feature, set this parameter to None." % str(sep_feature))
+        assert is_user in [0, dataset.users.shape[0]]
+        assert is_item in [0, dataset.items.shape[0]]
     y = dataset.ratings.toarray()[dataset.folds.row,dataset.folds.col].ravel()
     P, S = [np.nan_to_num(x.toarray(), copy=True, nan=0, posinf=inf, neginf=-inf) for x in [dataset.users, dataset.items]]
     ## Ensure positive values in P and S

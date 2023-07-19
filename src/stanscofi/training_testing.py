@@ -11,14 +11,117 @@ from scipy.sparse import coo_array
 from scipy.cluster.hierarchy import linkage, fcluster
 from scipy.spatial.distance import squareform
 from sklearn.metrics import pairwise_distances
-from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import StratifiedKFold, train_test_split
 
 from .validation import compute_metrics, plot_metrics, metrics_list
-from .datasets import indices_to_folds
 
-##############################
-# Weak correlation splitting #
-##############################
+#######################################
+# Weak correlation / random splitting #
+#######################################
+
+def indices_to_folds(indices, indices_array, shape):
+    '''
+    Converts indices of datapoints into folds as defined in stanscofi
+
+    ...
+
+    Parameters
+    ----------
+    indices : array-like of size (n_selected_ratings, )
+        flat indices of selected datapoints
+    indices_array : array-like of size (n_total_ratings, 2)
+        corresponding row and column indices of datapoints
+    shape : tuple of integers of size 2
+        total numbers of rows and columns
+
+    Returns
+    ----------
+    folds : COO-array of shape shape
+        folds which can be fed to other functions in stanscofi, e.g., dataset.subset(folds)
+    '''
+    row = indices_array[indices,0].ravel()
+    col = indices_array[indices,1].ravel()
+    data = np.ones(indices.shape[0])
+    return coo_array((data, (row, col)), shape=shape)
+
+def random_simple_split(dataset, test_size, metric="cosine", random_state=1234):
+    '''
+    Splits the data into training and testing datasets randomly.
+
+    ...
+
+    Parameters
+    ----------
+    dataset : stanscofi.Dataset
+        dataset to split
+    test_size : float
+        value between 0 and 1 (strictly) which indicates the maximum percentage of initial data (positive and negative ratings) being assigned to the test dataset
+    metric : str
+        metric to consider to assess distance between training and testing sets. Should belong to [‘cityblock’, ‘cosine’, ‘euclidean’, ‘l1’, ‘l2’, ‘manhattan’, ‘braycurtis’, ‘canberra’, ‘chebyshev’, ‘correlation’, ‘dice’, ‘hamming’, ‘jaccard’, ‘kulsinski’, ‘mahalanobis’, ‘minkowski’, ‘rogerstanimoto’, ‘russellrao’, ‘seuclidean’, ‘sokalmichener’, ‘sokalsneath’, ‘sqeuclidean’, ‘yule’]
+    random_state : int
+        random seed 
+
+    Returns
+    ----------
+    cv_folds : list of COO-array of shape (n_items, n_users)
+        list of arrays which contain values in {0, 1} describing the unavailable and available user-item matchings in the training (resp. testing) set
+    dist_train_test, dist_train, dist_test : float
+        minimum nonzero distance between an element in the training and in the testing sets, resp. inside the training set, resp. inside the testing set
+    '''
+    X = np.column_stack((dataset.folds.row, dataset.folds.col)) ## indices for available ratings
+    y = dataset.ratings.toarray()[dataset.folds.row,dataset.folds.col].ravel() ## values for available ratings
+    train_set, test_set,_,_ = train_test_split(X, y, test_size=test_size, random_state=random_state, shuffle=True, stratify=y)
+    cv_folds = tuple([
+                coo_array((np.ones(x.shape[0]), (x[:,0].ravel(), x[:,1].ravel())), 
+                        shape=dataset.folds.shape) for x in [train_set, test_set]
+    ])
+    item_matrix = np.nan_to_num(dataset.items.toarray(), copy=True, nan=0)
+    dist = pairwise_distances(item_matrix.T, metric=metric)
+    items_train, item_test = [np.unique(cv_folds[i].row) for i in [0,1]]
+    dist_lst = (
+        np.ma.masked_equal(dist[items_train,:][:,item_test], 0.0, copy=True).min(), 
+        np.ma.masked_equal(dist[items_train,:][:,items_train], 0.0, copy=True).min(), 
+        np.ma.masked_equal(dist[item_test,:][:,item_test], 0.0, copy=True).min()
+    )
+    return cv_folds, dist_lst
+
+def random_cv_split(dataset, cv_generator, metric="cosine"):
+    '''
+    Splits the data into training and testing datasets randomly for cross-validation.
+
+    ...
+
+    Parameters
+    ----------
+    dataset : stanscofi.Dataset
+        dataset to split
+    cv_generator : scikit-learn cross-validation index generator
+        e.g. StratifiedKFold, KFold
+    metric : str
+        metric to consider to assess distance between training and testing sets. Should belong to [‘cityblock’, ‘cosine’, ‘euclidean’, ‘l1’, ‘l2’, ‘manhattan’, ‘braycurtis’, ‘canberra’, ‘chebyshev’, ‘correlation’, ‘dice’, ‘hamming’, ‘jaccard’, ‘kulsinski’, ‘mahalanobis’, ‘minkowski’, ‘rogerstanimoto’, ‘russellrao’, ‘seuclidean’, ‘sokalmichener’, ‘sokalsneath’, ‘sqeuclidean’, ‘yule’]
+
+    Returns
+    ----------
+    cv_folds : list of size nsplits of COO-array of shape (n_items, n_users)
+        list of arrays which contain values in {0, 1} describing the unavailable and available user-item matchings in the training (resp. testing) set
+    dist_lst : list of size nsplits of tuples of float of size 3
+        for each fold, minimum nonzero distance between an element in the training and in the testing sets, resp. inside the training set, resp. inside the testing set
+    '''
+    X = np.column_stack((dataset.folds.row, dataset.folds.col)) ## indices for available ratings
+    y = dataset.ratings.toarray()[dataset.folds.row,dataset.folds.col].ravel() ## values for available ratings
+    cv_folds = [
+        (
+            indices_to_folds(train_index, X, dataset.folds.shape), 
+            indices_to_folds(test_index, X, dataset.folds.shape)
+        ) for train_index, test_index in cv_generator.split(X, y)]
+    item_matrix = np.nan_to_num(dataset.items.toarray(), copy=True, nan=0)
+    dist = pairwise_distances(item_matrix.T, metric=metric)
+    dist_lst = [(
+        np.ma.masked_equal(dist[np.unique(train_folds.row),:][:,np.unique(test_folds.row)], 0.0, copy=True).min(), 
+        np.ma.masked_equal(dist[np.unique(train_folds.row),:][:,np.unique(train_folds.row)], 0.0, copy=True).min(), 
+        np.ma.masked_equal(dist[np.unique(test_folds.row),:][:,np.unique(test_folds.row)], 0.0, copy=True).min()
+    ) for train_folds, test_folds in cv_folds]
+    return cv_folds, dist_lst
 
 def weakly_correlated_split(dataset, test_size, early_stop=None, metric="cosine", random_state=1234, verbose=False):
     '''
@@ -176,13 +279,7 @@ def cv_training(template, params, train_dataset, nsplits, metric, k=1, beta=1, t
 
     if (cv_type=="random"):
         cv_generator = StratifiedKFold(n_splits=nsplits, shuffle=True, random_state=random_state)
-        X = np.column_stack((train_dataset.folds.row, train_dataset.folds.col)) ## indices for available ratings
-        y = train_dataset.ratings.toarray()[train_dataset.folds.row,train_dataset.folds.col].ravel() ## values for available ratings
-        cv_folds = [
-                (
-                    indices_to_folds(train_index, X, train_dataset.folds.shape), 
-                    indices_to_folds(test_index, X, train_dataset.folds.shape), 
-                ) for train_index, test_index in cv_generator.split(X, y)]
+        cv_folds, _ = random_cv_split(train_dataset, cv_generator)
     else:
         seeds = np.random.choice(range(int(1e8)), size=nsplits)
         cv_folds = [weakly_correlated_split(train_dataset, test_size, metric=dist_type, early_stop=early_stop, random_state=sd)[0] for sd in seeds]

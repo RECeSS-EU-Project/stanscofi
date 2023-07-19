@@ -1,11 +1,12 @@
 import unittest
 import numpy as np
 from scipy.sparse import coo_array
+from sklearn.model_selection import StratifiedKFold
 
 import sys
 sys.path.insert(0,"../src/")
 from stanscofi.datasets import generate_dummy_dataset, Dataset
-from stanscofi.training_testing import weakly_correlated_split, grid_search, cv_training
+from stanscofi.training_testing import weakly_correlated_split, grid_search, cv_training, random_cv_split, random_simple_split
 from stanscofi.models import NMF
 
 class TestTrainingTesting(unittest.TestCase):
@@ -20,6 +21,34 @@ class TestTrainingTesting(unittest.TestCase):
         folds = coo_array(([1]*(nusers*nitems), (ids[:,0].ravel(), ids[:,1].ravel())), shape=dataset.folds.shape)
         subset = dataset.subset(folds)
         return dataset, folds, subset
+
+    def test_random_simple_split(self):
+        dataset, _, _ = self.generate_dataset_folds()
+        test_size = 0.3
+        (train_folds, test_folds), (dist_train_test, dist_train, dist_test) = random_simple_split(dataset, test_size, metric="euclidean")
+        self.assertEqual(train_folds.shape, dataset.folds.shape)
+        self.assertEqual(test_folds.shape, dataset.folds.shape)
+        ## are items disjoints? in the union of training and testing sets?
+        self.assertEqual(train_folds.data.sum()+test_folds.data.sum(),dataset.folds.data.sum())
+        subset_train = dataset.subset(train_folds)
+        self.assertEqual(subset_train.folds.data.sum(), train_folds.data.sum())
+        subset_test = dataset.subset(test_folds)
+        self.assertEqual(subset_test.folds.data.sum(), test_folds.data.sum())
+
+    def test_random_cv_split(self):
+        dataset, _, _ = self.generate_dataset_folds()
+        test_size = 0.3
+        cv_generator = StratifiedKFold(n_splits=2, shuffle=True, random_state=1234)
+        cv_folds, dist_lst = random_cv_split(dataset, cv_generator, metric="euclidean")
+        for train_folds, test_folds in cv_folds:
+            self.assertEqual(train_folds.shape, dataset.folds.shape)
+            self.assertEqual(test_folds.shape, dataset.folds.shape)
+            ## are items disjoints? in the union of training and testing sets?
+            self.assertEqual(train_folds.data.sum()+test_folds.data.sum(),dataset.folds.data.sum())
+            subset_train = dataset.subset(train_folds)
+            self.assertEqual(subset_train.folds.data.sum(), train_folds.data.sum())
+            subset_test = dataset.subset(test_folds)
+            self.assertEqual(subset_test.folds.data.sum(), test_folds.data.sum())
 
     def test_weakly_correlated_split(self):
         dataset, _, _ = self.generate_dataset_folds()

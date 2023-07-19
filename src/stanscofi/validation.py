@@ -46,7 +46,7 @@ def Rscore(y_true, y_pred, u, u1):
         return 0
     res = spearmanr(y_true, y_pred)
     return res.correlation
-MRR = lambda y_true, y_pred, u, u1 : mean_reciprocal_rank(y_true[np.argsort(-y_pred)])
+MRR = lambda y_true, y_pred, u, u1 : mean_reciprocal_rank([y_true[np.argsort(-y_pred)]])
 RP = lambda y_true, y_pred, u, u1 : r_precision(y_true[np.argsort(-y_pred)])
 PrecisionK = lambda y_true, y_pred, k, u1 : precision_at_k(y_true[np.argsort(-y_pred)], k)
 RecallK = lambda y_true, y_pred, k, u1 : recall_at_k(y_true[np.argsort(-y_pred)], np.sum(y_true>0), k=k)
@@ -60,7 +60,7 @@ AP = lambda y_true, y_pred, u, u1 : average_precision(y_true[np.argsort(-y_pred)
 MAP = lambda y_true, y_pred, u, u1 : mean_average_precision([y_true[np.argsort(-y_pred)]])
 DCGk = lambda y_true, y_pred, k, u1 : dcg_at_k(y_true[np.argsort(-y_pred)], k)
 NDCGk = lambda y_true, y_pred, k, u1 : ndcg_at_k(y_true[np.argsort(-y_pred)], k)
-MeanRank = lambda y_true, y_pred, u, u1 : mean_rank(y_true[np.argsort(-y_pred)])
+MeanRank = lambda y_true, y_pred, k, u1 : mean_rank([y_true[np.argsort(-y_pred)]])
 HRk = lambda y_true, y_pred, k, u1 : hit_rate_at_k([y_true[np.argsort(-y_pred)]], k)
 metrics_list = ["AUC", "Fscore", "TAU", "Rscore", "MRR", "RP", "PrecisionK", "RecallK", "F1K", "AP", "MAP", "DCGk", "NDCGk", "MeanRank", "HRk", "ERR"]
 

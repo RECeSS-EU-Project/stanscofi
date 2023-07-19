@@ -14,7 +14,6 @@ This repository is a part of the EU-funded RECeSS project `(RECeSS#101102016) <h
    install
    content
    modules
-   stanscofi
 
 External Links
 ==================

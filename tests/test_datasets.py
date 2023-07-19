@@ -47,7 +47,8 @@ class TestDatasets(unittest.TestCase):
                 'PREDICT_v1': [20, 2150, 58, 1170, 59, 3, 0.28], ##public version
         }
         for dataset_name in available_datasets:
-            data_args = load_dataset(dataset_name, save_folder="../datasets/")#"./")
+            data_args = load_dataset(dataset_name, save_folder="./")
+            #data_args = load_dataset(dataset_name, save_folder="../datasets")
             data_args.update({"name": dataset_name})
             if (dataset_name=="TRANSCRIPT"):
                 data_args.update({"same_item_user_features": True})
