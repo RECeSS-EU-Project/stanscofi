@@ -9,7 +9,7 @@ source:
   url: "../dist/{{ name }}-{{ version }}.tar.gz"
 
 build:
-  script: python -m pip install --no-deps --ignore-installed cute-ranking==0.0.3 && python -m pip install --no-deps --ignore-installed .
+  script: python -m pip install cute-ranking==0.0.3 && python -m pip install --no-deps --ignore-installed .
   noarch: python
 
 requirements:
