@@ -1,8 +1,6 @@
 name: stancofi Conda release
 
-on:
-  release:
-    types: [push]
+on: [push, pull_request]
 
 jobs:
   conda-publish:
