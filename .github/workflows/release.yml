@@ -28,7 +28,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.3.5
-    - run: sed -i "s:9999:${VERSION//*v/}:" setup.py conda/meta.yaml
+    - run: |
+        sed -i "s:9999:${VERSION//*v/}:" setup.py conda/meta.yaml
+        sed -i "/cute[-]ranking/d" setup.py
       env:
           VERSION: ${{ github.ref }}
     - uses: s-weigand/setup-conda@v1
@@ -36,10 +38,15 @@ jobs:
       run: |
         python setup.py sdist bdist_wheel
         conda install -y anaconda-client conda-build conda-verify
+        conda install -c conda-forge grayskull
         conda update conda -y
-        conda config --set channel_priority strict
-        conda config --set anaconda_upload yes
         conda config --add channels conda-forge
+        conda config --set channel_priority strict
+        grayskull pypi cute-ranking
+        cd cute-ranking/
+        conda build .
+        cd ..
+        conda config --set anaconda_upload yes
     - name: build
       run: |
         cd conda/
