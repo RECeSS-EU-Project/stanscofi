@@ -1,5 +1,5 @@
 ---
-title: 'A new standdard for drug repurposing by collaborative filtering: stanscofi and benchscofi'
+title: 'A new standard for drug repurposing by collaborative filtering: stanscofi and benchscofi'
 tags:
   - Python
   - drug repurposing
@@ -57,7 +57,7 @@ DNDataset          | 550  (1,490)  | 360  (4,516)  | 1,008     |     0     | 0.0
 LRSSL              | 763 (2,049)   | 681 (681)     | 3,051     |      0    | 0.59%
 PREDICT-Gottlieb   | 593 (1,779)   | 313 (313)     | 1,933     |    0      | 1.04%
 
-The main performance metric will be the standard *area under the curve* (AUC) metric, along with an average disease-wise version, which, first, estimates the diagnostic ability of a recommender system better than accuracy in imbalanced datasets [@ling2003auc], and second, takes into account the variation in predictive power across diseases. **stanscofi** also includes standard accuracy and ranking metrics. For an overview of the functionalities implemented in **stanscofi**, please refer to the documentation [@reda2023docStanscofi] and introductory Jupyter notebook "Introduction to stanscofi" [@reda2023introStanscofi]. Using that package, one can then implement algorithms from the literature and easily develop a benchmark pipeline, which is what we demonstrated by implementating package **benchscofi**. 
+The main considered performance metric is the standard *area under the curve* (AUC) metric, along with an average disease-wise version, which, first, estimates the diagnostic ability of a recommender system better than accuracy in imbalanced datasets [@ling2003auc], and second, takes into account the variation in predictive power across diseases. **stanscofi** also includes other standard accuracy and ranking metrics. For an overview of the functionalities implemented in **stanscofi**, please refer to the documentation [@reda2023docStanscofi] and introductory Jupyter notebook "Introduction to stanscofi" [@reda2023introStanscofi]. Using that package, one can then implement algorithms from the literature and easily develop a benchmark pipeline, which is what we demonstrated by implementating package **benchscofi**. 
 
 We have compiled 18 collaborative filtering algorithms from the literature in **benchscofi** [@reda2023benchscofi]. Those cover a large part of platforms (R, MatLab, Python) and approaches (matrix factorization, graph-based methods, etc.). We report in Table 2 below some of the results obtained using this package for the following algorithms: PMF [@mnih2007probabilistic], ALSWR [@ethen2023ALSWR], Fast.ai collab learner [@howard2020deep], NIMCGCN [@li2020neural], DRRS [@luo2018computational], SCPMF [@meng2021drug], BNNR [@yang2019drug], LRSSL [@liang2017lrssl], MBiRW [@luo2016drug], LibMF [@chin2016libmf], LogisticMF [@johnson2014logistic], DDA-SKF [@gao2022dda] and HAN [@wang2019heterogeneous]. Please refert to the ``README.md'' file in the repository for further details.
 
@@ -85,6 +85,6 @@ The two packages **stanscofi** and **benchscofi** have the potential to signific
 
 # Acknowledgements
 
-The research leading to these results has received funding from the European Union’s HORIZON 2020 Programme under grant agreement no. 101102016 (RECeSS, MHORIZON TMA MSCA Postdoctoral Fellowships - European Fellowships, C.R.).
+The research leading to these results has received funding from the European Union’s HORIZON 2020 Programme under grant agreement no. 101102016 (RECeSS, HORIZON TMA MSCA Postdoctoral Fellowships - European Fellowships, C.R.).
 
 # References
