@@ -1,0 +1,37 @@
+{
+  "@context": "https://raw.githubusercontent.com/codemeta/codemeta/master/codemeta.jsonld",
+  "@type": "Code",
+  "author": [
+    {
+      "@id": "http://orcid.org/0000-0003-3238-0258",
+      "@type": "Person",
+      "email": "clemence.reda@uni-rostock.de",
+      "name": "Clémence Réda",
+      "affiliation": "Department of Systems Biology and Bioinformatics, University of Rostock, G-18055 Rostock, Germany"
+    },
+    {
+      "@id": "http://orcid.org/0000-0002-9304-2220",
+      "@type": "Person",
+      "email": "jill-jenn.vie@inria.fr",
+      "name": "Jill-Jênn Vie",
+      "affiliation": "Soda Team, Inria Saclay, F-91120 Palaiseau, France"
+    },
+    {
+      "@id": "http://orcid.org/0000-0001-6105-2937",
+      "@type": "Person",
+      "email": "olaf.wolkenhauer@uni-rostock.de",
+      "name": "Olaf Wolkenhauer",
+      "affiliation": "Department of Systems Biology and Bioinformatics, University of Rostock, G-18055 Rostock, Germany; Leibniz-Institute for Food Systems Biology, Freising, G-85354, Germany; Stellenbosch Institute of Advanced Study, Wallenberg Research Centre, Univ. Stellenbosch, Stellenbosch, SA-7602, South Africa"
+    },
+  ],
+  "identifier": "",
+  "codeRepository": "https://github.com/RECeSS-EU-Project/stanscofi",
+  "datePublished": "2023-06-09",
+  "dateModified": "2023-07-19",
+  "dateCreated": "2023-06-09",
+  "description": "Package for STANdard drug Screening by COllaborative FIltering. Performs benchmarks against datasets and SotA algorithms, and implements training, validation and testing procedures.",
+  "keywords": "Python, collaborative filtering, drug repurposing, open science, reproducibility",
+  "license": "MIT",
+  "title": "stanscofi",
+  "version": "v2.0.0"
+}

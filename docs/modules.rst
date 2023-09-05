@@ -4,4 +4,9 @@ stanscofi
 .. toctree::
    :maxdepth: 4
 
-   stanscofi
+   datasets
+   models
+   preprocessing
+   trainingtesting
+   validation
+   utils
