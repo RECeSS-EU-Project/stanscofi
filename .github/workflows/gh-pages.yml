@@ -1,6 +1,6 @@
 name: Release documentation
 
-on: #push
+on:
   release:
     types: [published]
 

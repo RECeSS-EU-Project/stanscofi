@@ -1,8 +1,6 @@
 name: stanscofi post-pushing testing
 
-on: #[push, pull_request]
-  release:
-    types: [published]
+on: [push, pull_request]
 
 jobs:
   build:
