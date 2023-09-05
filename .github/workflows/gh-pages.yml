@@ -1,8 +1,8 @@
 name: Release documentation
 
-on:
-  release:
-    types: [published]
+on: pull
+#  release:
+#    types: [published]
 
 jobs:
   build:
