@@ -51,20 +51,20 @@ To facilitate benchmarking, stanscofi allows to easily import several drug repur
 
 Dataset            |   drugs       | diseases      | positive  | negative  | sparsity
 -------------------|---------------|---------------|-----------|-----------|----------
-PREDICT            | 1,351         | 1,066         |   5,624   |  152      | 0.34%
-(nb. features)     |  (6,265)      |       (2,914) |           |           | 
-TRANSCRIPT         | 204           | 116           |   401     |  11       | 0.45%
-(nb. features)     |  (12,096)     |   (12,096)    |           |           | 
-Gottlieb           | 593           | 313           |  1,933    |    0      | 1.04%
-(nb. features)     |  (593)        | (313)         |           |           | 
 CDataset           | 663           | 409           |  2,532    |     0     | 0.93%
 (nb. features)     |  (663)        | (409)         |           |           | 
 DNDataset          | 550           | 360           | 1,008     |     0     | 0.01%
 (nb. features)     |  (1,490)      | (4,516)       |           |           | 
+Gottlieb           | 593           | 313           |  1,933    |    0      | 1.04%
+(nb. features)     |  (593)        | (313)         |           |           | 
 LRSSL              | 763           | 681           | 3,051     |      0    | 0.59%
 (nb. features)     |  (2,049)      | (681)         |           |           | 
+PREDICT            | 1,351         | 1,066         |   5,624   |  152      | 0.34%
+(nb. features)     |  (6,265)      |       (2,914) |           |           | 
 PREDICT-Gottlieb   | 593           | 313 (313)     | 1,933     |    0      | 1.04%
 (nb. features)     |  (1,779)      | (313)         |           |           | 
+TRANSCRIPT         | 204           | 116           |   401     |  11       | 0.45%
+(nb. features)     |  (12,096)     |   (12,096)    |           |           | 
 
 ## Module *training/testing*
 
@@ -84,7 +84,7 @@ Using that package, one can then test algorithms from the literature and easily 
 
 ## *benchscofi* package
 
-We have compiled 18 collaborative filtering algorithms from the literature in **benchscofi** [@reda2023benchscofi]. Those cover a large part of platforms (R, MATLAB, Python) and approaches (matrix factorization, graph-based methods, etc.). We report in Table 2 below some of the results obtained using this package for the following algorithms, using default parameter values: PMF [@mnih2007probabilistic], ALSWR [@ethen2023ALSWR], Fast.ai collab learner [@howard2020deep], NIMCGCN [@li2020neural], DRRS [@luo2018computational], SCPMF [@meng2021drug], BNNR [@yang2019drug], LRSSL [@liang2017lrssl], MBiRW [@luo2016drug], LibMF [@chin2016libmf], LogisticMF [@johnson2014logistic], DDA-SKF [@gao2022dda] and HAN [@wang2019heterogeneous]. The code to execute in order to get **Table 2** is ''cd tests/ && python3 -m test_models ALGORITHM DATASET'', where ALGORITHM and DATASET are replaced by the corresponding row and column indices.
+We have compiled 18 collaborative filtering algorithms from the literature in **benchscofi** [@reda2023benchscofi]. Those cover a large part of platforms (R, MATLAB, Python) and approaches (matrix factorization, graph-based methods, etc.). We report in Table 2 below some of the results obtained using this package for the following algorithms, using default parameter values: ALSWR [@ethen2023ALSWR], BNNR [@yang2019drug], DDA-SKF [@gao2022dda], DRRS [@luo2018computational], Fast.ai *collab learner* [@howard2020deep], HAN [@wang2019heterogeneous], LibMF [@chin2016libmf], LogisticMF [@johnson2014logistic], LRSSL [@liang2017lrssl], MBiRW [@luo2016drug], NIMCGCN [@li2020neural], PMF [@mnih2007probabilistic], and SCPMF [@meng2021drug]. The code to execute in order to get **Table 2** is ''cd tests/ && python3 -m test_models ALGORITHM DATASET'', where ALGORITHM and DATASET are replaced by the corresponding row and column indices.
 
 **Table 2:** Results obtained by combining **stanscofi** and **benchscofi**. Reported values are the standard *area under the curve* (AUC) scores, which are globally computed on all scores associated with drug-disease pairs. Maximum value in a column is denoted with an asterisk.
 
