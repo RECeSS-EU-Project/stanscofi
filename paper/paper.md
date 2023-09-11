@@ -17,7 +17,7 @@ authors:
     orcid: 0000-0001-6105-2937
     affiliation: "1,3,4" 
 affiliations:
- - name: Department of Systems Biology and Bioinformatics, University of Rostock, Rostock, G-18055, Germany
+ - name: Department of Systems Biology and Bioinformatics, University of Rostock, Rostock, G-18051, Germany
    index: 1
  - name: Soda Team, Inria Saclay, F-91120 Palaiseau, France
    index: 2
