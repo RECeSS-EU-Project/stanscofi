@@ -104,7 +104,7 @@ NIMCGCN                    |  0.854            |  0.843        |  0.841       | 
 PMF                        |  0.579            |  0.598        |  0.604       |  0.611    
 SCPMF                      |  0.680            |  0.548        |  0.538       |  0.708     
 
-This package allows the design of large-scale benchmarks and enables a fair and comprehensive assessment of the performance of state-of-the-art methods. It will ease the development and testing of competitive drug repurposing approaches. A collection of Jupyter notebooks to uncover the different components implemented in **stanscofi** and **benchscofi** is available on the corresponding GitHub repositories.
+This package allows the design of large-scale benchmarks and enables a fair and comprehensive assessment of the performance of state-of-the-art methods. It will ease the development and testing of competitive drug repurposing approaches. Jupyter notebooks illustrating the different components implemented in **stanscofi** and **benchscofi** are available on the corresponding GitHub repositories.
 
 The two packages **stanscofi** and **benchscofi** have the potential to alleviate the economic burden of drug discovery pipelines significantly. They could help to find treatments in a more sustainable manner, which still remains a topical question, especially for rare or tropical neglected diseases [@walker2021supporting]. This project aligns with recent European health policies, in which drug repurposing has become a top priority in 2020 [@europeanpolicy].
 
