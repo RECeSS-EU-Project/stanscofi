@@ -30,7 +30,17 @@ pip install stanscofi
 conda install -c recess stanscofi
 ```
 
-## Running the notebooks
+## Running notebooks using Docker
+
+Credits to [Abhishek Tiwari](https://github.com/abhishektiwari) for the Dockerfile, instructions and comments. In the root folder of the repository, run the following commands
+
+```bash
+docker build -t stanscofi . #Build Docker image
+docker run -it --expose 3000  -p 3000:3000 stanscofi #Run Docker image built in previous step and drop into SSH
+cd docs/ && jupyter notebook --ip 0.0.0.0 --no-browser --allow-root --port 3000 #Run notebook
+```
+
+The notebook is available at ``http://127.0.0.1:3000/tree``.
 
 ## Example usage
 
