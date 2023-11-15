@@ -35,9 +35,12 @@ conda install -c recess stanscofi
 Credits to [Abhishek Tiwari](https://github.com/abhishektiwari) for the Dockerfile, instructions and comments. In the root folder of the repository, run the following commands
 
 ```bash
-docker build -t stanscofi . #Build Docker image
-docker run -it --expose 3000  -p 3000:3000 stanscofi #Run Docker image built in previous step and drop into SSH
-cd docs/ && jupyter notebook --ip 0.0.0.0 --no-browser --allow-root --port 3000 #Run notebook
+#Build Docker image
+docker build -t stanscofi .
+#Run Docker image built in previous step and drop into SSH
+docker run -it --expose 3000  -p 3000:3000 stanscofi 
+#Run notebook
+cd docs/ && jupyter notebook --ip 0.0.0.0 --no-browser --allow-root --port 3000 
 ```
 
 The notebook is available at ``http://127.0.0.1:3000/tree``.
