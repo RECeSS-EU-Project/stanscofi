@@ -30,6 +30,12 @@ pip install stanscofi
 conda install -c recess stanscofi
 ```
 
+### Using Docker image (image hosted on DockerHub)
+
+```bash
+docker push recessproject/stanscofi:<version>
+```
+
 ## Running notebooks using Docker
 
 Credits to [Abhishek Tiwari](https://github.com/abhishektiwari) for the Dockerfile, instructions and comments. In the root folder of the repository, run the following commands

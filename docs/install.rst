@@ -14,6 +14,13 @@ With Pip
 You can install the stanscofi package using pip: ::
 
     $ pip install stanscofi
+    
+Using Docker image
+::::::::::::::::::::::::
+
+You can also use the Docker image hosted on DockerHub: ::
+
+    $ docker push recessproject/stanscofi:<version>
 
 From Source Files
 :::::::::::::::::
