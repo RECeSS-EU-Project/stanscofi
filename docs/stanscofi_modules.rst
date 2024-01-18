@@ -1,5 +1,5 @@
-stanscofi
-=========
+Documentation in *stanscofi*
+=============================
 
 .. toctree::
    :maxdepth: 4
