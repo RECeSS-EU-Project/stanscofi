@@ -1148,7 +1148,7 @@ In code: ::
 
  stanscofi.validation.MAP(y_test, scores, 1, 1)
 
-Kendall's $\tau$
+Kendall's :math:`\tau`
 ================================
 
 If :math:`N_\text{dis}` is the number of discordant pairs between predicted scores :math:`p` and true labels :math:`t` (i.e., :math:`(i,j)` such that :math:`p[i]<p[j] \land t[i]>t[j]` or :math:`p[j]<p[i] \land t[j]>t[i]`)
