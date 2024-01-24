@@ -1,5 +1,5 @@
 ---
-title: 'A new standard for drug repurposing by collaborative filtering: stanscofi and benchscofi'
+title: 'stanscofi and benchscofi: a new standard for drug repurposing by collaborative filtering'
 tags:
   - Python
   - drug repurposing
