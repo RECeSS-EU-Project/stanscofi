@@ -45,23 +45,23 @@ The modularity of **stanscofi** and **benchscofi** at model, dataset, and prepro
 
 **stanscofi** facilitates benchmarking by allowing the import of several drug repurposing datasets, all under the same form: a drug-disease matrix that summarizes reported clinical trials as either "positive" (denoted by a 1, for drugs which are known to treat the corresponding disease), "negative" (indicated by a -1, for clinical trials where toxic side effects or low accrual, for instance, were reported), and "unknown" (denoted by a 0, the most occurring outcome). Some datasets also comprise drug and disease feature matrices, which bring supplementary information about drug-to-drug and disease-to-disease similarities. Moreover, one can easily convert any other drug repurposing dataset into the *Dataset* class in **stanscofi**. This package also integrates several plotting functions, allowing easier data visualization.
 
-**Table 1:** Datasets in **stanscofi**. Reported drug and disease numbers correspond to the number of drugs and diseases involved in at least one nonzero drug-disease matching. The sparsity number is the percentage of known (positive and negative) matchings times 100 over the total number of possible drug-disease matchings (rounded to the second decimal place). The datasets are Gottlieb [@gottlieb2011predict] -- also called FDataset in [@luo2018computational] -- LRSSL [@liang2017lrssl], CDataset, DNDataset [@luo2018computational], PREDICT-Gottlieb [@gao2022dda] -- which is a version of FDataset with novel types of drug and disease features -- PREDICT [@reda2023PREDICT], and TRANSCRIPT [@reda2023TRANSCRIPT].
+**Table 1:** Datasets in **stanscofi**. Reported drug and disease numbers correspond to the number of drugs and diseases involved in at least one nonzero drug-disease matching. The sparsity number is the percentage of unknown (outcome equal to 0) matchings times 100 over the total number of possible drug-disease matchings (rounded to the second decimal place). The datasets are Gottlieb [@gottlieb2011predict] -- also called FDataset in [@luo2018computational] -- LRSSL [@liang2017lrssl], CDataset, DNDataset [@luo2018computational], PREDICT-Gottlieb [@gao2022dda] -- which is a version of FDataset with novel types of drug and disease features -- PREDICT [@reda2023PREDICT], and TRANSCRIPT [@reda2023TRANSCRIPT].
 
 Dataset            |   drugs       | diseases      | positive  | negative  | sparsity
 -------------------|---------------|---------------|-----------|-----------|----------
-CDataset           | 663           | 409           |  2,532    |     0     | 0.93%
+CDataset           | 663           | 409           |  2,532    |     0     | 99.07%
 (nb. features)     |  (663)        | (409)         |           |           | 
-DNDataset          | 550           | 360           | 1,008     |     0     | 0.01%
+DNDataset          | 550           | 360           | 1,008     |     0     | 99.49%
 (nb. features)     |  (1,490)      | (4,516)       |           |           | 
-Gottlieb           | 593           | 313           |  1,933    |    0      | 1.04%
+Gottlieb           | 593           | 313           |  1,933    |    0      | 98.96%
 (nb. features)     |  (593)        | (313)         |           |           | 
-LRSSL              | 763           | 681           | 3,051     |      0    | 0.59%
+LRSSL              | 763           | 681           | 3,051     |      0    | 99.41%
 (nb. features)     |  (2,049)      | (681)         |           |           | 
-PREDICT            | 1,351         | 1,066         |   5,624   |  152      | 0.34%
+PREDICT            | 1,351         | 1,066         |   5,624   |  152      | 99.60%
 (nb. features)     |  (6,265)      |       (2,914) |           |           | 
-PREDICT-Gottlieb   | 593           | 313 (313)     | 1,933     |    0      | 1.04%
+PREDICT-Gottlieb   | 593           | 313 (313)     | 1,933     |    0      | 98.96%
 (nb. features)     |  (1,779)      | (313)         |           |           | 
-TRANSCRIPT         | 204           | 116           |   401     |  11       | 0.45%
+TRANSCRIPT         | 204           | 116           |   401     |  11       | 98.26%
 (nb. features)     |  (12,096)     |   (12,096)    |           |           | 
 
 ## Module *training/testing*
