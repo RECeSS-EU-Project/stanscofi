@@ -1,10 +1,40 @@
-cff-version: 1.1.0
-message: "If you use this software, please cite it as below."
+cff-version: "1.2.0"
 authors:
-  - family-names: R\'{e}da
-    given-names: Cl\'{e}mence
-    orcid: https://orcid.org/0000-0003-3238-0258
-title: "STANdard for drug Screening by COllaborative FIltering (stanscofi)"
-version: 2.0.0
-doi: "10.5281/zenodo.8038847"
-date-released: 2023-07-20
+- family-names: Réda
+  given-names: Clémence
+  orcid: "https://orcid.org/0000-0003-3238-0258"
+- family-names: Vie
+  given-names: Jill-Jênn
+  orcid: "https://orcid.org/0000-0002-9304-2220"
+- family-names: Wolkenhauer
+  given-names: Olaf
+  orcid: "https://orcid.org/0000-0001-6105-2937"
+doi: 10.5281/zenodo.10561760
+message: If you use this software, please cite our article in the
+  Journal of Open Source Software.
+preferred-citation:
+  authors:
+  - family-names: Réda
+    given-names: Clémence
+    orcid: "https://orcid.org/0000-0003-3238-0258"
+  - family-names: Vie
+    given-names: Jill-Jênn
+    orcid: "https://orcid.org/0000-0002-9304-2220"
+  - family-names: Wolkenhauer
+    given-names: Olaf
+    orcid: "https://orcid.org/0000-0001-6105-2937"
+  date-published: 2024-01-25
+  doi: 10.21105/joss.05973
+  issn: 2475-9066
+  issue: 93
+  journal: Journal of Open Source Software
+  publisher:
+    name: Open Journals
+  start: 5973
+  title: "stanscofi and benchscofi: a new standard for drug repurposing
+    by collaborative filtering"
+  type: article
+  url: "https://joss.theoj.org/papers/10.21105/joss.05973"
+  volume: 9
+title: "stanscofi and benchscofi: a new standard for drug repurposing by
+  collaborative filtering"

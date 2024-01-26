@@ -4,7 +4,7 @@
 
 This repository is a part of the EU-funded [RECeSS project](https://recess-eu-project.github.io) (#101102016), and hosts the code for the open-source Python package *stanscofi* for the development of collaborative filtering-based drug repurposing algorithms.
 
-[![Python Version](https://img.shields.io/badge/python-3.8%7C3.9-pink)](https://badge.fury.io/py/stanscofi) [![PyPI version](https://img.shields.io/pypi/v/stanscofi.svg)](https://badge.fury.io/py/stanscofi) [![Anaconda version](https://anaconda.org/recess/stanscofi/badges/version.svg)](https://anaconda.org/recess/stanscofi) [![Zenodo version](https://zenodo.org/badge/DOI/10.5281/zenodo.8038847.svg)](https://doi.org/10.5281/zenodo.8038847) ![GitHub](https://img.shields.io/github/license/recess-eu-project/stanscofi.svg) [![Build Status](https://github.com/recess-eu-project/stanscofi/actions/workflows/post-push-test.yml/badge.svg)](https://github.com/recess-eu-project/stanscofi/actions/workflows/post-push-test.yml) [![Codecov](https://codecov.io/github/recess-eu-project/stanscofi/coverage.svg?branch=master)](https://codecov.io/github/recess-eu-project/stanscofi?branch=master) [![Codefactor](https://www.codefactor.io/repository/github/recess-eu-project/stanscofi/badge?style=plastic)](https://www.codefactor.io/repository/github/recess-eu-project/stanscofi) [![JOSS](https://joss.theoj.org/papers/8c32602b0c4b97e70c7a3bca5f3eebc0/status.svg)](https://joss.theoj.org/papers/8c32602b0c4b97e70c7a3bca5f3eebc0)
+[![Python Version](https://img.shields.io/badge/python-3.8%7C3.9-pink)](https://badge.fury.io/py/stanscofi) [![PyPI version](https://img.shields.io/pypi/v/stanscofi.svg)](https://badge.fury.io/py/stanscofi) [![Anaconda version](https://anaconda.org/recess/stanscofi/badges/version.svg)](https://anaconda.org/recess/stanscofi) [![Zenodo version](https://zenodo.org/badge/DOI/10.5281/zenodo.8038847.svg)](https://doi.org/10.5281/zenodo.8038847) ![GitHub](https://img.shields.io/github/license/recess-eu-project/stanscofi.svg) [![Build Status](https://github.com/recess-eu-project/stanscofi/actions/workflows/post-push-test.yml/badge.svg)](https://github.com/recess-eu-project/stanscofi/actions/workflows/post-push-test.yml) [![Codecov](https://codecov.io/github/recess-eu-project/stanscofi/coverage.svg?branch=master)](https://codecov.io/github/recess-eu-project/stanscofi?branch=master) [![Codefactor](https://www.codefactor.io/repository/github/recess-eu-project/stanscofi/badge?style=plastic)](https://www.codefactor.io/repository/github/recess-eu-project/stanscofi) [![JOSS](https://joss.theoj.org/papers/10.21105/joss.05973/status.svg)](https://doi.org/10.21105/joss.05973)
 
 ## Statement of need 
 
@@ -39,7 +39,8 @@ This repository is under an [OSI-approved](https://opensource.org/licenses/) [MI
 If you use *stanscofi* in academic research, please cite it as follows
 
 ```
-Réda, Clémence, Jill-Jênn Vie, and Olaf Wolkenhauer. "A new standard for drug repurposing by collaborative filtering: stanscofi and benchscofi." (2023).
+Réda et al., (2024). stanscofi and benchscofi: a new standard for drug repurposing by collaborative filtering. 
+Journal of Open Source Software, 9(93), 5973, https://doi.org/10.21105/joss.05973
 ```
 
 ## Community guidelines with respect to contributions, issue reporting, and support
