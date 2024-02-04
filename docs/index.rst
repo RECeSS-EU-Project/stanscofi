@@ -19,9 +19,10 @@ Licence & Citation
 
 Those two packages are under an OSI-approved MIT license. If you use them in academic research, please cite them as follows: ::
 
-   Réda, Clémence, Jill-Jênn Vie, and Olaf Wolkenhauer. (2023).
-   "A new standard for drug repurposing by collaborative filtering: stanscofi and benchscofi." 
-   
+   Réda, Clémence, Jill-Jênn Vie, and Olaf Wolkenhauer. (2024).
+   "stanscofi and benchscofi: a new standard for drug repurposing by collaborative filtering." 
+   Journal of Open Source Software, 9(93), 5973, https://doi.org/10.21105/joss.05973
+  
 Package *stanscofi*
 =====================
 
