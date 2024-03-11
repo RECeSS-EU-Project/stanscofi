@@ -123,7 +123,7 @@ def random_cv_split(dataset, cv_generator, metric="cosine"):
     ) for train_folds, test_folds in cv_folds]
     return cv_folds, dist_lst
 
-def weakly_correlated_split(dataset, test_size, early_stop=None, metric="cosine", random_state=1234, niter=1000, verbose=False):
+def weakly_correlated_split(dataset, test_size, early_stop=None, metric="cosine", random_state=1234, niter=100, verbose=False):
     '''
     Splits the data into training and testing datasets with a low correlation among items, by applying a hierarchical clustering on the item feature matrix. NaNs in the item feature matrix are converted to 0. 
 
@@ -141,6 +141,8 @@ def weakly_correlated_split(dataset, test_size, early_stop=None, metric="cosine"
         metric to consider to perform hierarchical clustering on the dataset. Should belong to [‘cityblock’, ‘cosine’, ‘euclidean’, ‘l1’, ‘l2’, ‘manhattan’, ‘braycurtis’, ‘canberra’, ‘chebyshev’, ‘correlation’, ‘dice’, ‘hamming’, ‘jaccard’, ‘kulsinski’, ‘mahalanobis’, ‘minkowski’, ‘rogerstanimoto’, ‘russellrao’, ‘seuclidean’, ‘sokalmichener’, ‘sokalsneath’, ‘sqeuclidean’, ‘yule’]
     random_state : int
         random seed 
+    niter : int
+        maximum number of iterations of the clustering loop
     verbose : bool
         prints out information
 
@@ -170,11 +172,14 @@ def weakly_correlated_split(dataset, test_size, early_stop=None, metric="cosine"
     while (l_nc<u_nc):
         nc = (l_nc+u_nc)//2
         clusters = fcluster(Z, nc, criterion='maxclust', depth=2, R=None, monocrit=None)
-        nratings_train = {len([x for x in dataset.folds.row if (clusters[x]<=c)]):c for c in range(1,len(np.unique(clusters))+1)}
+        #nratings_train = {len([x for x in dataset.folds.row if (clusters[x]<=c)]):c for c in range(1,len(np.unique(clusters))+1)}
+        drug_clusters = clusters[dataset.folds.row]
+        nratings_train = { drug_clusters[drug_clusters<=c].shape[0]:c for c in range(1,len(np.unique(clusters))+1)}
         select_clust = np.max([k if (k<=train_nset) else -1 for k in nratings_train])
         #print("#training=%d\t#clust=%d\t#clusters=%d" % (train_nset, select_clust, nratings_train[select_clust]))
         #print(np.max([k if (k<select_clust) else -1 for k in nratings_train]), select_clust, np.min([k if (k>select_clust) else len(dataset.folds.row) for k in nratings_train]))
         cluster_size = nratings_train.get(select_clust, -1)
+        #print(cluster_size)
         if (verbose):
             print("<training_testing.traintest_validation_split> Find #clusters=%d in [%d, %d] (%d ~ %d?)" % (nc, l_nc, u_nc, select_clust, train_nset))
         if (select_clust==train_nset):
