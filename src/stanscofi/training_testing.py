@@ -123,7 +123,7 @@ def random_cv_split(dataset, cv_generator, metric="cosine"):
     ) for train_folds, test_folds in cv_folds]
     return cv_folds, dist_lst
 
-def weakly_correlated_split(dataset, test_size, early_stop=None, metric="cosine", random_state=1234, verbose=False):
+def weakly_correlated_split(dataset, test_size, early_stop=None, metric="cosine", random_state=1234, niter=1000, verbose=False):
     '''
     Splits the data into training and testing datasets with a low correlation among items, by applying a hierarchical clustering on the item feature matrix. NaNs in the item feature matrix are converted to 0. 
 
@@ -165,7 +165,7 @@ def weakly_correlated_split(dataset, test_size, early_stop=None, metric="cosine"
     Z = linkage(squareform(dist, checks=False), "average")
     select_nc, n_cluster_train = None, None
     l_nc, u_nc = 2, item_matrix.shape[1]
-    count_sim, oldclnb = 0, None
+    count_sim, oldclnb, iter_ = 0, None, 0
     ## bisection to find the appropriate number of clusters, and where to split the data
     while (l_nc<u_nc):
         nc = (l_nc+u_nc)//2
@@ -189,6 +189,9 @@ def weakly_correlated_split(dataset, test_size, early_stop=None, metric="cosine"
             l_nc = nc+1
         else:
             u_nc = nc
+        if (iter_>=niter):
+            break
+        iter_ += 1
     select_nc = nc
     cluster_size = cluster_size
     ## reproduces an old behavior which did not take into account the test_size parameter and maximizes the distance between training and testing sets
