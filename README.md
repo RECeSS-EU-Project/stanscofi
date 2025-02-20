@@ -39,8 +39,15 @@ This repository is under an [OSI-approved](https://opensource.org/licenses/) [MI
 If you use *stanscofi* in academic research, please cite it as follows
 
 ```
-Réda et al., (2024). stanscofi and benchscofi: a new standard for drug repurposing by collaborative filtering. 
-Journal of Open Source Software, 9(93), 5973, https://doi.org/10.21105/joss.05973
+@article{reda2024stanscofi,
+  title={stanscofi and benchscofi: a new standard for drug repurposing by collaborative filtering},
+  author={R{\'e}da, Cl{\'e}mence and Vie, Jill-J{\^e}nn and Wolkenhauer, Olaf},
+  journal={Journal of Open Source Software},
+  volume={9},
+  number={93},
+  pages={5973},
+  year={2024}
+}
 ```
 
 ## Community guidelines with respect to contributions, issue reporting, and support
