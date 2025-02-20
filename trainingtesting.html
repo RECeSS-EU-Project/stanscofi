@@ -1,0 +1,371 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Training/Testing &mdash; stanscofi v2.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=d2262ce8"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Validation" href="validation.html" />
+    <link rel="prev" title="Preprocessing" href="preprocessing.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            stanscofi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="stanscofi_install.html">Installation of <em>stanscofi</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="stanscofi_content.html">Getting started with <em>stanscofi</em></a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="stanscofi_modules.html">Documentation in <em>stanscofi</em></a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="datasets.html">Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing.html">Preprocessing</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Training/Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.training_testing.cv_training"><code class="docutils literal notranslate"><span class="pre">cv_training()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.training_testing.grid_search"><code class="docutils literal notranslate"><span class="pre">grid_search()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.training_testing.indices_to_folds"><code class="docutils literal notranslate"><span class="pre">indices_to_folds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.training_testing.random_cv_split"><code class="docutils literal notranslate"><span class="pre">random_cv_split()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.training_testing.random_simple_split"><code class="docutils literal notranslate"><span class="pre">random_simple_split()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.training_testing.weakly_correlated_split"><code class="docutils literal notranslate"><span class="pre">weakly_correlated_split()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="validation.html">Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="benchscofi_install.html">Installation of <em>benchscofi</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchscofi_content.html">Getting started with <em>benchscofi</em></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">stanscofi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="stanscofi_modules.html">Documentation in <em>stanscofi</em></a></li>
+      <li class="breadcrumb-item active">Training/Testing</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/trainingtesting.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-stanscofi.training_testing">
+<span id="training-testing"></span><h1>Training/Testing<a class="headerlink" href="#module-stanscofi.training_testing" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.training_testing.cv_training">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.training_testing.</span></span><span class="sig-name descname"><span class="pre">cv_training</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nsplits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cosine'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'random'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early_stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">njobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1234</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_plots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.training_testing.cv_training" title="Permalink to this definition"></a></dt>
+<dd><p>Trains a model on a dataset using cross-validation and custom metrics using sklearn.model_selection.StratifiedKFold</p>
+<p>…</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>template<span class="classifier">stanscofi.BasicModel or subclass</span></dt><dd><p>type of model to train</p>
+</dd>
+<dt>params<span class="classifier">dict</span></dt><dd><p>dictionary of parameters to initialize the model</p>
+</dd>
+<dt>train_dataset<span class="classifier">stanscofi.Dataset</span></dt><dd><p>dataset to train upon</p>
+</dd>
+<dt>nsplits<span class="classifier">int</span></dt><dd><p>number of cross-validation steps</p>
+</dd>
+<dt>metric<span class="classifier">str </span></dt><dd><p>metric to optimize the model upon. Implemented metrics are in validation.py</p>
+</dd>
+<dt>k<span class="classifier">int (default: 1)</span></dt><dd><p>Argument of the metric to optimize. Implemented metrics are in validation.py</p>
+</dd>
+<dt>beta<span class="classifier">float (default: 1)</span></dt><dd><p>Argument of the metric to optimize. Implemented metrics are in validation.py</p>
+</dd>
+<dt>threshold<span class="classifier">float (default: 0)</span></dt><dd><p>decision threshold</p>
+</dd>
+<dt>test_size<span class="classifier">float (default: 0.2)</span></dt><dd><p>percentage of testing set (if cv_type=”weakly_correlated”)</p>
+</dd>
+<dt>dist_type<span class="classifier">str (default: “cosine”)</span></dt><dd><p>type of metric for splitting (if cv_type=”weakly_correlated”)</p>
+</dd>
+<dt>cv_type<span class="classifier">str (default: “random”)</span></dt><dd><p>type of split to apply to the dataset. Can either be “random” or “weakly_correlated”</p>
+</dd>
+<dt>early_stop<span class="classifier">int or None</span></dt><dd><p>positive integer, which stops the cluster number search after 3 tries yielding the same number; note that if early_stop is not None, then the property on test_size will not necessarily hold anymore</p>
+</dd>
+<dt>njobs<span class="classifier">int (default: 1)</span></dt><dd><p>number of jobs to run in parallel. Should be lower than nsplits-1</p>
+</dd>
+<dt>random_state<span class="classifier">int (default: 1234)</span></dt><dd><p>random seed</p>
+</dd>
+<dt>show_plots<span class="classifier">bool (default: False)</span></dt><dd><p>shows the validation plots at each cross-validation step</p>
+</dd>
+<dt>verbose<span class="classifier">bool (default: False)</span></dt><dd><p>prints out information</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h2>Returns<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>results<span class="classifier">dict</span></dt><dd><dl class="simple">
+<dt>a dictionary which contains </dt><dd><dl class="simple">
+<dt>“models”<span class="classifier">list of subinstances of stanscofi.models.BasicModel of length nsplits</span></dt><dd><p>all trained models</p>
+</dd>
+<dt>“train_metric”<span class="classifier">list of floats of length nsplits</span></dt><dd><p>all metrics on training sets</p>
+</dd>
+<dt>“test_metric”<span class="classifier">list of floats of length nsplits</span></dt><dd><p>all metrics on testing sets</p>
+</dd>
+<dt>“cv_folds”<span class="classifier">list of COO-array of shape (n_items, n_users) of length nsplits</span></dt><dd><p>the training and testing folds for each split</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.training_testing.grid_search">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.training_testing.</span></span><span class="sig-name descname"><span class="pre">grid_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">search_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nsplits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cosine'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'random'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early_stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">njobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1234</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_plots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.training_testing.grid_search" title="Permalink to this definition"></a></dt>
+<dd><p>Grid-search over hyperparameters, iteratively optimizing over one parameter at a time, and internally calling cv_training.</p>
+<p>…</p>
+<section id="id1">
+<h2>Parameters<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>search_params<span class="classifier">dict</span></dt><dd><p>a dictionary which contains as keys the hyperparameter names and as values the corresponding intervals to explore during the grid-search</p>
+</dd>
+<dt>template<span class="classifier">stanscofi.BasicModel or subclass</span></dt><dd><p>type of model to train</p>
+</dd>
+<dt>params<span class="classifier">dict</span></dt><dd><p>dictionary of parameters to initialize the model</p>
+</dd>
+<dt>train_dataset<span class="classifier">stanscofi.Dataset</span></dt><dd><p>dataset to train upon</p>
+</dd>
+<dt>metric<span class="classifier">str </span></dt><dd><p>metric to optimize the model upon. Implemented metrics are in validation.py</p>
+</dd>
+<dt>k<span class="classifier">int (default: 1)</span></dt><dd><p>Argument of the metric to optimize. Implemented metrics are in validation.py</p>
+</dd>
+<dt>beta<span class="classifier">float (default: 1)</span></dt><dd><p>Argument of the metric to optimize. Implemented metrics are in validation.py</p>
+</dd>
+<dt>threshold<span class="classifier">float (default: 0)</span></dt><dd><p>decision threshold</p>
+</dd>
+<dt>test_size<span class="classifier">float (default: 0.2)</span></dt><dd><p>percentage of testing set (if cv_type=”weakly_correlated”)</p>
+</dd>
+<dt>dist_type<span class="classifier">str (default: “cosine”)</span></dt><dd><p>type of metric for splitting (if cv_type=”weakly_correlated”)</p>
+</dd>
+<dt>cv_type<span class="classifier">str (default: “random”)</span></dt><dd><p>type of split to apply to the dataset. Can either be “random” or “weakly_correlated”</p>
+</dd>
+<dt>njobs<span class="classifier">int (default: 1)</span></dt><dd><p>number of jobs to run in parallel. Should be lower than nsplits-1</p>
+</dd>
+<dt>random_state<span class="classifier">int (default: 1234)</span></dt><dd><p>random seed</p>
+</dd>
+<dt>show_plots<span class="classifier">bool (default: False)</span></dt><dd><p>shows the validation plots at each cross-validation step</p>
+</dd>
+<dt>verbose<span class="classifier">bool (default: False)</span></dt><dd><p>prints out information</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h2>Returns<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>best_params<span class="classifier">dict</span></dt><dd><p>a dictionary which contains as keys the hyperparameter names and as values the best values obtained across all grid-search steps</p>
+</dd>
+<dt>best_model<span class="classifier">subinstance of stanscofi.models.BasicModel</span></dt><dd><p>the best trained model associated with the best parameters</p>
+</dd>
+<dt>metrics<span class="classifier">dict        </span></dt><dd><dl class="simple">
+<dt>a dictionary which contains </dt><dd><dl class="simple">
+<dt>“train_metric”<span class="classifier">float </span></dt><dd><p>the metric on the training set on the best crossvalidation split for the best set of parameters</p>
+</dd>
+<dt>“test_metric”<span class="classifier">float</span></dt><dd><p>the metric on the testing set on the best crossvalidation split for the best set of parameters</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.training_testing.indices_to_folds">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.training_testing.</span></span><span class="sig-name descname"><span class="pre">indices_to_folds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.training_testing.indices_to_folds" title="Permalink to this definition"></a></dt>
+<dd><p>Converts indices of datapoints into folds as defined in stanscofi</p>
+<p>…</p>
+<section id="id3">
+<h2>Parameters<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>indices<span class="classifier">array-like of size (n_selected_ratings, )</span></dt><dd><p>flat indices of selected datapoints</p>
+</dd>
+<dt>indices_array<span class="classifier">array-like of size (n_total_ratings, 2)</span></dt><dd><p>corresponding row and column indices of datapoints</p>
+</dd>
+<dt>shape<span class="classifier">tuple of integers of size 2</span></dt><dd><p>total numbers of rows and columns</p>
+</dd>
+</dl>
+</section>
+<section id="id4">
+<h2>Returns<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>folds<span class="classifier">COO-array of shape shape</span></dt><dd><p>folds which can be fed to other functions in stanscofi, e.g., dataset.subset(folds)</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.training_testing.random_cv_split">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.training_testing.</span></span><span class="sig-name descname"><span class="pre">random_cv_split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv_generator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cosine'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.training_testing.random_cv_split" title="Permalink to this definition"></a></dt>
+<dd><p>Splits the data into training and testing datasets randomly for cross-validation.</p>
+<p>…</p>
+<section id="id5">
+<h2>Parameters<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>dataset<span class="classifier">stanscofi.Dataset</span></dt><dd><p>dataset to split</p>
+</dd>
+<dt>cv_generator<span class="classifier">scikit-learn cross-validation index generator</span></dt><dd><p>e.g. StratifiedKFold, KFold</p>
+</dd>
+<dt>metric<span class="classifier">str</span></dt><dd><p>metric to consider to assess distance between training and testing sets. Should belong to [‘cityblock’, ‘cosine’, ‘euclidean’, ‘l1’, ‘l2’, ‘manhattan’, ‘braycurtis’, ‘canberra’, ‘chebyshev’, ‘correlation’, ‘dice’, ‘hamming’, ‘jaccard’, ‘kulsinski’, ‘mahalanobis’, ‘minkowski’, ‘rogerstanimoto’, ‘russellrao’, ‘seuclidean’, ‘sokalmichener’, ‘sokalsneath’, ‘sqeuclidean’, ‘yule’]</p>
+</dd>
+</dl>
+</section>
+<section id="id6">
+<h2>Returns<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>cv_folds<span class="classifier">list of size nsplits of COO-array of shape (n_items, n_users)</span></dt><dd><p>list of arrays which contain values in {0, 1} describing the unavailable and available user-item matchings in the training (resp. testing) set</p>
+</dd>
+<dt>dist_lst<span class="classifier">list of size nsplits of tuples of float of size 3</span></dt><dd><p>for each fold, minimum nonzero distance between an element in the training and in the testing sets, resp. inside the training set, resp. inside the testing set</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.training_testing.random_simple_split">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.training_testing.</span></span><span class="sig-name descname"><span class="pre">random_simple_split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cosine'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1234</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.training_testing.random_simple_split" title="Permalink to this definition"></a></dt>
+<dd><p>Splits the data into training and testing datasets randomly.</p>
+<p>…</p>
+<section id="id7">
+<h2>Parameters<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>dataset<span class="classifier">stanscofi.Dataset</span></dt><dd><p>dataset to split</p>
+</dd>
+<dt>test_size<span class="classifier">float</span></dt><dd><p>value between 0 and 1 (strictly) which indicates the maximum percentage of initial data (positive and negative ratings) being assigned to the test dataset</p>
+</dd>
+<dt>metric<span class="classifier">str</span></dt><dd><p>metric to consider to assess distance between training and testing sets. Should belong to [‘cityblock’, ‘cosine’, ‘euclidean’, ‘l1’, ‘l2’, ‘manhattan’, ‘braycurtis’, ‘canberra’, ‘chebyshev’, ‘correlation’, ‘dice’, ‘hamming’, ‘jaccard’, ‘kulsinski’, ‘mahalanobis’, ‘minkowski’, ‘rogerstanimoto’, ‘russellrao’, ‘seuclidean’, ‘sokalmichener’, ‘sokalsneath’, ‘sqeuclidean’, ‘yule’]</p>
+</dd>
+<dt>random_state<span class="classifier">int</span></dt><dd><p>random seed</p>
+</dd>
+</dl>
+</section>
+<section id="id8">
+<h2>Returns<a class="headerlink" href="#id8" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>cv_folds<span class="classifier">list of COO-array of shape (n_items, n_users)</span></dt><dd><p>list of arrays which contain values in {0, 1} describing the unavailable and available user-item matchings in the training (resp. testing) set</p>
+</dd>
+<dt>dist_train_test, dist_train, dist_test<span class="classifier">float</span></dt><dd><p>minimum nonzero distance between an element in the training and in the testing sets, resp. inside the training set, resp. inside the testing set</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.training_testing.weakly_correlated_split">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.training_testing.</span></span><span class="sig-name descname"><span class="pre">weakly_correlated_split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early_stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cosine'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1234</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">niter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.training_testing.weakly_correlated_split" title="Permalink to this definition"></a></dt>
+<dd><p>Splits the data into training and testing datasets with a low correlation among items, by applying a hierarchical clustering on the item feature matrix. NaNs in the item feature matrix are converted to 0.</p>
+<p>…</p>
+<section id="id9">
+<h2>Parameters<a class="headerlink" href="#id9" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>dataset<span class="classifier">stanscofi.Dataset</span></dt><dd><p>dataset to split</p>
+</dd>
+<dt>test_size<span class="classifier">float</span></dt><dd><p>value between 0 and 1 (strictly) which indicates the maximum percentage of initial data (positive and negative ratings) being assigned to the test dataset</p>
+</dd>
+<dt>early_stop<span class="classifier">int or None</span></dt><dd><p>positive integer, which stops the cluster number search after 3 tries yielding the same number; note that if early_stop is not None, then the property on test_size will not necessarily hold anymore</p>
+</dd>
+<dt>metric<span class="classifier">str</span></dt><dd><p>metric to consider to perform hierarchical clustering on the dataset. Should belong to [‘cityblock’, ‘cosine’, ‘euclidean’, ‘l1’, ‘l2’, ‘manhattan’, ‘braycurtis’, ‘canberra’, ‘chebyshev’, ‘correlation’, ‘dice’, ‘hamming’, ‘jaccard’, ‘kulsinski’, ‘mahalanobis’, ‘minkowski’, ‘rogerstanimoto’, ‘russellrao’, ‘seuclidean’, ‘sokalmichener’, ‘sokalsneath’, ‘sqeuclidean’, ‘yule’]</p>
+</dd>
+<dt>random_state<span class="classifier">int</span></dt><dd><p>random seed</p>
+</dd>
+<dt>niter<span class="classifier">int</span></dt><dd><p>maximum number of iterations of the clustering loop</p>
+</dd>
+<dt>verbose<span class="classifier">bool</span></dt><dd><p>prints out information</p>
+</dd>
+</dl>
+</section>
+<section id="id10">
+<h2>Returns<a class="headerlink" href="#id10" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>train_folds, test_folds<span class="classifier">COO-array of shape (n_items, n_users)</span></dt><dd><p>an array which contains values in {0, 1} describing the unavailable and available user-item matchings in the training (resp. testing) set</p>
+</dd>
+<dt>dist_train_test, dist_train, dist_test<span class="classifier">float</span></dt><dd><p>minimum nonzero distance between an element in the training and in the testing sets, resp. inside the training set, resp. inside the testing set</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="preprocessing.html" class="btn btn-neutral float-left" title="Preprocessing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="validation.html" class="btn btn-neutral float-right" title="Validation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Clémence Réda.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

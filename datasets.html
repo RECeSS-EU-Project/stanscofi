@@ -1,0 +1,343 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Datasets &mdash; stanscofi v2.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=d2262ce8"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Models" href="models.html" />
+    <link rel="prev" title="Documentation in stanscofi" href="stanscofi_modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            stanscofi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="stanscofi_install.html">Installation of <em>stanscofi</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="stanscofi_content.html">Getting started with <em>stanscofi</em></a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="stanscofi_modules.html">Documentation in <em>stanscofi</em></a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Datasets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.datasets.Dataset"><code class="docutils literal notranslate"><span class="pre">Dataset</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#stanscofi.datasets.Dataset.subset"><code class="docutils literal notranslate"><span class="pre">Dataset.subset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stanscofi.datasets.Dataset.summary"><code class="docutils literal notranslate"><span class="pre">Dataset.summary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stanscofi.datasets.Dataset.visualize"><code class="docutils literal notranslate"><span class="pre">Dataset.visualize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.datasets.generate_dummy_dataset"><code class="docutils literal notranslate"><span class="pre">generate_dummy_dataset()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing.html">Preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trainingtesting.html">Training/Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="validation.html">Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="benchscofi_install.html">Installation of <em>benchscofi</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchscofi_content.html">Getting started with <em>benchscofi</em></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">stanscofi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="stanscofi_modules.html">Documentation in <em>stanscofi</em></a></li>
+      <li class="breadcrumb-item active">Datasets</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/datasets.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-stanscofi.datasets">
+<span id="datasets"></span><h1>Datasets<a class="headerlink" href="#module-stanscofi.datasets" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="stanscofi.datasets.Dataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stanscofi.datasets.</span></span><span class="sig-name descname"><span class="pre">Dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ratings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">users</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_item_user_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dataset'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.datasets.Dataset" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class used to encode a drug repurposing dataset (items are drugs, users are diseases)</p>
+<p>…</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>ratings<span class="classifier">array-like of shape (n_items, n_users)</span></dt><dd><p>an array which contains values in {-1, 0, 1, np.nan} describing the negative, unlabelled, positive, unavailable user-item matchings</p>
+</dd>
+<dt>items<span class="classifier">array-like of shape (n_item_features, n_items)</span></dt><dd><p>an array which contains the item feature vectors</p>
+</dd>
+<dt>users<span class="classifier">array-like of shape (n_user_features, n_users)</span></dt><dd><p>an array which contains the user feature vectors</p>
+</dd>
+<dt>same_item_user_features<span class="classifier">bool (default: False)</span></dt><dd><p>whether the item and user features are the same (optional)</p>
+</dd>
+<dt>name<span class="classifier">str</span></dt><dd><p>name of the dataset (optional)</p>
+</dd>
+</dl>
+</section>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>name<span class="classifier">str</span></dt><dd><p>name of the dataset</p>
+</dd>
+<dt>ratings<span class="classifier">COO-array of shape (n_items, n_users)</span></dt><dd><p>an array which contains values in {-1, 0, 1} describing the negative, unlabelled/unavailable, positive user-item matchings</p>
+</dd>
+<dt>folds<span class="classifier">COO-array of shape (n_items, n_users)</span></dt><dd><p>an array which contains values in {0, 1} describing the unavailable and available user-item matchings in ratings</p>
+</dd>
+<dt>items<span class="classifier">COO-array of shape (n_item_features, n_items)</span></dt><dd><p>an array which contains the user feature vectors (NaN for missing features)</p>
+</dd>
+<dt>users<span class="classifier">COO-array of shape (n_user_features, n_users)</span></dt><dd><p>an array which contains the item feature vectors (NaN for missing features)</p>
+</dd>
+<dt>item_list<span class="classifier">list of str</span></dt><dd><p>a list of the item names in the order of row indices in ratings_mat</p>
+</dd>
+<dt>user_list<span class="classifier">list of str</span></dt><dd><p>a list of the user names in the order of column indices in ratings_mat</p>
+</dd>
+<dt>item_features<span class="classifier">list of str</span></dt><dd><p>a list of the item feature names in the order of column indices in ratings_mat</p>
+</dd>
+<dt>user_features<span class="classifier">list of str</span></dt><dd><p>a list of the user feature names in the order of column indices in ratings_mat</p>
+</dd>
+<dt>same_item_user_features<span class="classifier">bool</span></dt><dd><p>whether the item and user features are the same</p>
+</dd>
+<dt>nusers<span class="classifier">int</span></dt><dd><p>number of users</p>
+</dd>
+<dt>nitems<span class="classifier">int</span></dt><dd><p>number of items</p>
+</dd>
+<dt>nuser_features<span class="classifier">int</span></dt><dd><p>number of user features</p>
+</dd>
+<dt>nitem_features<span class="classifier">int</span></dt><dd><p>number of item features</p>
+</dd>
+</dl>
+</section>
+<section id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>__init__(ratings=None, users=None, items=None, same_item_user_features=False, name=”dataset”)</dt><dd><p>Initialize the Dataset object and creates all attributes</p>
+</dd>
+<dt>summary(sep=”-”<a href="#id1"><span class="problematic" id="id2">*</span></a>70)</dt><dd><p>Prints out the characteristics of the drug repurposing dataset</p>
+</dd>
+<dt>visualize(withzeros=False, X=None, y=None, figsize=(5,5), fontsize=20, dimred_args={}, predictions=None, use_ratings=False, random_state=1234, show_errors=False, verbose=False)</dt><dd><p>Plots datapoints in the dataset annotated by the ground truth or predicted ratings</p>
+</dd>
+<dt>subset(folds, subset_name=”subset”)</dt><dd><p>Creates a subset of the dataset based on the folds given as input</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="stanscofi.datasets.Dataset.subset">
+<span class="sig-name descname"><span class="pre">subset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subset_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'subset'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.datasets.Dataset.subset" title="Permalink to this definition"></a></dt>
+<dd><p>Obtains a subset of a stanscofi.Dataset based on a set of user and item indices</p>
+<p>…</p>
+<section id="id3">
+<h3>Parameters<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>folds<span class="classifier">COO-array of shape (n_items, n_users)</span></dt><dd><p>an array which contains values in {0, 1} describing the unavailable and available user-item matchings in ratings</p>
+</dd>
+<dt>subset_name<span class="classifier">str</span></dt><dd><p>name of the newly created stanscofi.Dataset</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>subset<span class="classifier">stanscofi.Dataset</span></dt><dd><p>dataset corresponding to the folds in input</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stanscofi.datasets.Dataset.summary">
+<span class="sig-name descname"><span class="pre">summary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'----------------------------------------------------------------------'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.datasets.Dataset.summary" title="Permalink to this definition"></a></dt>
+<dd><p>Prints out a summary of the contents of a stanscofi.Dataset: the number of items, users, the number of positive, negative, unlabeled, unavailable matchings, the sparsity number, and the shape and percentage of missing values in the item and user feature matrices</p>
+<p>…</p>
+<section id="id4">
+<h3>Parameters<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>sep<span class="classifier">str</span></dt><dd><p>separator for pretty printing</p>
+</dd>
+</dl>
+<p>…</p>
+</section>
+<section id="id5">
+<h3>Returns<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>ndrugs<span class="classifier">int</span></dt><dd><p>number of drugs</p>
+</dd>
+<dt>ndiseases<span class="classifier">int</span></dt><dd><p>number of diseases</p>
+</dd>
+<dt>ndrugs_known<span class="classifier">int</span></dt><dd><p>number of drugs with at least one known (positive or negative) rating</p>
+</dd>
+<dt>ndiseases_known<span class="classifier">int</span></dt><dd><p>number of diseases with at least one known (positive or negative) rating</p>
+</dd>
+<dt>npositive<span class="classifier">int</span></dt><dd><p>number of positive ratings</p>
+</dd>
+<dt>nnegative<span class="classifier">int</span></dt><dd><p>number of negative ratings</p>
+</dd>
+<dt>nunlabeled_unavailable<span class="classifier">int</span></dt><dd><p>number of unlabeled or unavailable ratings</p>
+</dd>
+<dt>nunavailable<span class="classifier">int</span></dt><dd><p>number of unavailable ratings</p>
+</dd>
+<dt>sparsity<span class="classifier">float</span></dt><dd><p>percentage of known ratings</p>
+</dd>
+<dt>sparsity_known<span class="classifier">float</span></dt><dd><p>percentage of known ratings among drugs and diseases with at least one known rating</p>
+</dd>
+<dt>ndrug_features<span class="classifier">int</span></dt><dd><p>number of drug features</p>
+</dd>
+<dt>missing_drug_features<span class="classifier">float</span></dt><dd><p>percentage of missing drug feature values</p>
+</dd>
+<dt>ndisease_features<span class="classifier">int</span></dt><dd><p>number of disease features</p>
+</dd>
+<dt>missing_disease_features<span class="classifier">float</span></dt><dd><p>percentage of missing disease feature values</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stanscofi.datasets.Dataset.visualize">
+<span class="sig-name descname"><span class="pre">visualize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">withzeros</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'euclidean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(5,</span> <span class="pre">5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fontsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimred_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_ratings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1234</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_errors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.datasets.Dataset.visualize" title="Permalink to this definition"></a></dt>
+<dd><p>Plots a representation of the datapoints in a stanscofi.Dataset which is annotated either by the ground truth labels or the predicted labels. The representation is the plot of the datapoints according to the first two Principal Components, or the first two dimensions in UMAP, if the feature matrices can be converted into a (n_ratings, n_features) shaped matrix where n_features&gt;1, else it plots a heatmap with the values in the matrix for each rating pair.</p>
+<p>In the legend, ground truth labels are denoted with brackets: e.g., [0] (unknown), [1] (positive) and [-1] (negative); predicted ratings are denoted by “pos” (positive) and “neg” (negative); correct (resp., incorrect) predictions are denoted by “correct”, resp. “error”</p>
+<p>…</p>
+<section id="id6">
+<h3>Parameters<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>withzeros<span class="classifier">bool</span></dt><dd><p>boolean to assess whether (user, item) unknown matchings should also be plotted; if withzeros=False, then only (item, user) pairs associated with known matchings will be plotted (but the unknown matching datapoints will still be used to compute the dimensionality reduction); otherwise, all pairs will be plotted</p>
+</dd>
+<dt>X<span class="classifier">array-like of shape (n_ratings, n_features) or None</span></dt><dd><p>(item, user) pair feature matrix</p>
+</dd>
+<dt>y<span class="classifier">array-like of shape (n_ratings, ) or None</span></dt><dd><p>response vector for each (item, user) pair in X; necessarily X should not be None if y is not None, and vice versa; setting X and y automatically overrides the other behaviors of this function</p>
+</dd>
+<dt>metric<span class="classifier">str</span></dt><dd><p>metric to consider to perform hierarchical clustering on the dataset. Should belong to [‘cityblock’, ‘cosine’, ‘euclidean’, ‘l1’, ‘l2’, ‘manhattan’, ‘braycurtis’, ‘canberra’, ‘chebyshev’, ‘correlation’, ‘dice’, ‘hamming’, ‘jaccard’, ‘kulsinski’, ‘mahalanobis’, ‘minkowski’, ‘rogerstanimoto’, ‘russellrao’, ‘seuclidean’, ‘sokalmichener’, ‘sokalsneath’, ‘sqeuclidean’, ‘yule’]</p>
+</dd>
+<dt>figsize<span class="classifier">tuple of size 2</span></dt><dd><p>width and height of the figure</p>
+</dd>
+<dt>fontsize<span class="classifier">int</span></dt><dd><p>size of the legend, title and labels of the figure</p>
+</dd>
+<dt>dimred_args<span class="classifier">dict</span></dt><dd><p>dictionary which lists the parameters to the dimensionality reduction method (either PCA, by default, or UMAP, if parameter “n_neighbors” is provided)</p>
+</dd>
+<dt>predictions<span class="classifier">array-like of shape (n_ratings, 3) or None</span></dt><dd><p>a matrix which contains the user indices (column 1), the item indices (column 2) and the class for the corresponding (user, item) pair (value in {-1, 0, 1} in column 3); if predictions=None, then the ground truth ratings will be used to color datapoints, otherwise, the predicted ratings will be used</p>
+</dd>
+<dt>use_ratings<span class="classifier">bool</span></dt><dd><p>if set to True, use the ratings in the dataset as predictions (for debugging purposes)</p>
+</dd>
+<dt>random_state<span class="classifier">int</span></dt><dd><p>random seed</p>
+</dd>
+<dt>show_errors<span class="classifier">bool</span></dt><dd><p>boolean to assess whether to color according to the error in class prediction; if show_errors=False, then either the ground truth or the predicted class labels will be used to color the datapoints; otherwise, the points will be restricted to the set of known matchings (even if withzeros=True) and colored according to the identity between the ground truth and the predicted labels for each (user, item) pair</p>
+</dd>
+<dt>verbose<span class="classifier">bool</span></dt><dd><p>prints out information at each step</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.datasets.generate_dummy_dataset">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.datasets.</span></span><span class="sig-name descname"><span class="pre">generate_dummy_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">npositive</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nnegative</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nfeatures</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12454</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.datasets.generate_dummy_dataset" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a dummy dataset where the positive and negative (item, user) pairs are arbitrarily similar.</p>
+<p>Each of the nfeatures features for (item, user) pair feature vectors associated with positive ratings are drawn from a Gaussian distribution of mean mean and standard deviation std, whereas those for negative ratings are drawn from from a Gaussian distribution of mean -mean and standard deviation std. User and item feature matrices of shape (nfeatures//2, npositive+nnegative) are generated, which are the concatenation of npositive positive and nnegative negative pair feature vectors generated from Gaussian distributions. Thus there are npositive^2 positive ratings (each “positive” user with a “positive” item), nnegative^2 negative ratings (idem), and the remainder is unknown (that is, (npositive+nnegative)^2-npositive^2-nnegative^2 ratings).</p>
+<p>…</p>
+<section id="id7">
+<h2>Parameters<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>npositive<span class="classifier">int</span></dt><dd><p>number of positive items/users</p>
+</dd>
+<dt>nnegative<span class="classifier">int</span></dt><dd><p>number of negative items/users</p>
+</dd>
+<dt>nfeatures<span class="classifier">int</span></dt><dd><p>number of item/user features</p>
+</dd>
+<dt>mean<span class="classifier">float</span></dt><dd><p>mean of generating Gaussian distributions</p>
+</dd>
+<dt>std<span class="classifier">float</span></dt><dd><p>standard deviation of generating Gaussian distributions</p>
+</dd>
+</dl>
+</section>
+<section id="id8">
+<h2>Returns<a class="headerlink" href="#id8" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>ratings<span class="classifier">array-like of shape (n_items, n_users)</span></dt><dd><p>a matrix which contains values in {-1, 0, 1} describing the known and unknown user-item matchings</p>
+</dd>
+<dt>users<span class="classifier">array-like of shape (n_item_features, n_items)</span></dt><dd><p>a list of the item feature names in the order of column indices in ratings_mat</p>
+</dd>
+<dt>items<span class="classifier">array-like of shape (n_user_features, n_users)</span></dt><dd><p>a list of the item feature names in the order of column indices in ratings_mat</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="stanscofi_modules.html" class="btn btn-neutral float-left" title="Documentation in stanscofi" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="models.html" class="btn btn-neutral float-right" title="Models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Clémence Réda.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

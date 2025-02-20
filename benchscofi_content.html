@@ -1,0 +1,659 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Getting started with benchscofi &mdash; stanscofi v2.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=d2262ce8"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Installation of benchscofi" href="benchscofi_install.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            stanscofi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="stanscofi_install.html">Installation of <em>stanscofi</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="stanscofi_content.html">Getting started with <em>stanscofi</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="stanscofi_modules.html">Documentation in <em>stanscofi</em></a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="benchscofi_install.html">Installation of <em>benchscofi</em></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting started with <em>benchscofi</em></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#benchmark-pipeline">Benchmark pipeline</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#parameters-and-reproducibility">Parameters (and reproducibility)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#training-and-testing-a-single-model-on-a-single-dataset">Training and testing a single model on a single dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#application-of-the-pipeline">Application of the pipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#algorithms">Algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#row-wise-performance-metrics">Row-wise performance metrics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#negative-sampling-auc-ns-auc">Negative Sampling AUC (NS-AUC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#class-density-estimation-methods">Class density estimation methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#assumptions-on-datasets">Assumptions on datasets</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#censoring-setting">Censoring setting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#case-control-setting">Case-Control setting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#methods-relying-on-a-pretrained-classifier">Methods relying on a pretrained classifier</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#training-a-classifier">Training a classifier</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#estimators-for-censoring-datasets">Estimators for Censoring datasets</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bayes-regret-approach-for-case-control-datasets">Bayes regret approach for Case-Control datasets</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#penalized-divergences-for-case-control-datasets">Penalized divergences for Case-Control datasets</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#l1-penalized-divergence">L1-penalized divergence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pearson-penalized-divergence">Pearson-penalized divergence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tests">Tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">stanscofi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Getting started with <em>benchscofi</em></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/benchscofi_content.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <a class="reference internal image-reference" href="_images/header+EU_rescale.jpg"><img alt="RECeSS project" src="_images/header%2BEU_rescale.jpg" style="width: 700px;" /></a>
+<section id="getting-started-with-benchscofi">
+<h1>Getting started with <em>benchscofi</em><a class="headerlink" href="#getting-started-with-benchscofi" title="Permalink to this heading"></a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
+<p>The following section is an introduction to the functionalities of <em>benchscofi</em>. It is also available as interactive <a class="reference external" href="https://github.com/RECeSS-EU-Project/benchscofi/blob/master/docs/">notebooks</a>. In addition to the Python package <em>stanscofi</em>, which proposes standard procedures to train, and to validate drug repurposing classifiers, <em>benchscofi</em> implements several algorithms from the state-of-the-art and allows to assess their performance through adequate and quantitative metrics tailored to the problem of drug repurposing across a large set of publicly available drug repurposing datasets. It also implements algorithms for class density estimation, which permits the use of positive-unlabeled methods (see <a class="reference external" href="https://recess-eu-project.github.io/flash%20lecture/collaborative-filtering-for-drug-repurposing/">this post</a> for an introduction to this type of algorithms).</p>
+<p>Let’s create the folder containing the datasets:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mkdir -p datasets/
+</pre></div>
+</div>
+<p>and import base librairies and off we go:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">stanscofi.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">stanscofi.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">stanscofi.training_testing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cv_training</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">stanscofi.training_testing</span><span class="w"> </span><span class="kn">import</span> <span class="n">weakly_correlated_split</span><span class="p">,</span> <span class="n">random_simple_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">stanscofi.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_metrics</span><span class="p">,</span> <span class="n">plot_metrics</span><span class="p">,</span> <span class="n">metrics_list</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">stanscofi.validation</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">benchscofi</span>
+</pre></div>
+</div>
+<p><strong>Note 1:</strong> As a general rule, functions are documented, so one can check out the inputs and outputs of a function func by typing:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Note 2:</strong> To mesure your environmental impact when using this package (in terms of carbon emissions), please run the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ codecarbon init
+</pre></div>
+</div>
+<p>to initialize the CodeCarbon config. For more information about using CodeCarbon, please refer to the <a class="reference external" href="https://github.com/mlco2/codecarbon">official repository</a>.</p>
+</section>
+<section id="benchmark-pipeline">
+<h2>Benchmark pipeline<a class="headerlink" href="#benchmark-pipeline" title="Permalink to this heading"></a></h2>
+<p>Let’s build a very simple pipeline for testing algorithms in <em>benschcofi</em>.</p>
+<section id="parameters-and-reproducibility">
+<h3>Parameters (and reproducibility)<a class="headerlink" href="#parameters-and-reproducibility" title="Permalink to this heading"></a></h3>
+<p>Let’s fix the random seed and the decision threshold (to convert prediction scores to labels in {-1,0,+1}):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">random_state</span> <span class="o">=</span> <span class="mi">1234</span>
+<span class="n">decision_threshold</span><span class="o">=</span><span class="mi">0</span>
+</pre></div>
+</div>
+<p>Let’s select the dataset to run our pipeline on. We will consider the TRANSCRIPT dataset, which will be randomly split into a training dataset (80% of ratings) and a testing dataset (20% of ratings). If parameter <code class="docutils literal notranslate"><span class="pre">split_randomly</span></code> is set to False, the dataset will be split using the <code class="docutils literal notranslate"><span class="pre">weakly_correlated</span></code> approach, running a hierarchical clustering on drug features using the <code class="docutils literal notranslate"><span class="pre">cosine</span></code> metric:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dataset_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;TRANSCRIPT&quot;</span><span class="p">]</span>
+<span class="n">split_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;metric&quot;</span><span class="p">:</span> <span class="s2">&quot;cosine&quot;</span><span class="p">,</span> <span class="s2">&quot;test_size&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span> <span class="s2">&quot;split_randomly&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>We will store the parameters for each algorithm which is going to be tested in the following dictionary. Here, we will only consider the <code class="docutils literal notranslate"><span class="pre">PMF</span></code> algorithms (see in the next section all currently implemented algorithms):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo_params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;PMF&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;reg&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+        <span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="s1">&#39;n_iters&#39;</span><span class="p">:</span> <span class="mi">160</span><span class="p">,</span>
+        <span class="s1">&#39;n_factors&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="s1">&#39;batch_size&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="training-and-testing-a-single-model-on-a-single-dataset">
+<h3>Training and testing a single model on a single dataset<a class="headerlink" href="#training-and-testing-a-single-model-on-a-single-dataset" title="Permalink to this heading"></a></h3>
+<p>The following function splits the dataset in input, performs a 5-fold cross validation on the training set with the input algorithm, outputs predictions for the testing dataset, plots the validation figures and returns the validation metrics in a data frame:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nsplits</span><span class="o">=</span><span class="mi">5</span>
+<span class="n">njobs</span><span class="o">=</span><span class="n">nsplits</span><span class="o">-</span><span class="mi">1</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">training_testing</span><span class="p">(</span>
+      <span class="n">dataset_name</span><span class="p">,</span>       <span class="c1">## dataset name</span>
+      <span class="n">split_params</span><span class="p">,</span>       <span class="c1">## split params</span>
+      <span class="n">algo</span><span class="p">,</span>               <span class="c1">## algorithm name</span>
+      <span class="n">params</span><span class="p">,</span>             <span class="c1">## algorithm params</span>
+      <span class="n">random_state</span><span class="p">,</span>       <span class="c1">## seed</span>
+      <span class="n">decision_threshold</span><span class="p">,</span> <span class="c1">## predictions</span>
+      <span class="n">k</span><span class="p">,</span> <span class="n">beta</span> <span class="c1">## for validation measures</span>
+    <span class="p">):</span>
+    <span class="c1">#############</span>
+    <span class="c1">## Dataset ##</span>
+    <span class="c1">#############</span>
+    <span class="n">dataset_di</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">dataset_folder</span><span class="p">)</span>
+    <span class="n">dataset_di</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;same_item_user_features&quot;</span><span class="p">,</span> <span class="n">dataset_name</span><span class="o">==</span><span class="s2">&quot;TRANSCRIPT&quot;</span><span class="p">)</span>
+    <span class="n">dataset_di</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">)</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="o">**</span><span class="n">dataset_di</span><span class="p">)</span>
+
+    <span class="c1">############################</span>
+    <span class="c1">## Weakly correlated sets ##</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">split_params</span><span class="p">[</span><span class="s2">&quot;split_randomly&quot;</span><span class="p">]):</span>
+        <span class="p">(</span><span class="n">train_folds</span><span class="p">,</span> <span class="n">test_folds</span><span class="p">),</span> <span class="n">_</span> <span class="o">=</span> <span class="n">weakly_correlated_split</span><span class="p">(</span>
+            <span class="n">dataset</span><span class="p">,</span> <span class="n">split_params</span><span class="p">[</span><span class="s2">&quot;test_size&quot;</span><span class="p">],</span> <span class="n">early_stop</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">metric</span><span class="o">=</span><span class="n">split_params</span><span class="p">[</span><span class="s2">&quot;metric&quot;</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+    <span class="c1">######################</span>
+    <span class="c1">## Random splitting ##</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="p">(</span><span class="n">train_folds</span><span class="p">,</span> <span class="n">test_folds</span><span class="p">),</span> <span class="n">_</span> <span class="o">=</span> <span class="n">random_simple_split</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span>
+           <span class="n">split_params</span><span class="p">[</span><span class="s2">&quot;test_size&quot;</span><span class="p">],</span> <span class="n">metric</span><span class="o">=</span><span class="n">split_params</span><span class="p">[</span><span class="s2">&quot;metric&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="n">train_dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">train_folds</span><span class="p">,</span> <span class="n">subset_name</span><span class="o">=</span><span class="s2">&quot;Train_&quot;</span><span class="o">+</span><span class="n">dataset_name</span><span class="p">)</span>
+    <span class="n">test_dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">test_folds</span><span class="p">,</span> <span class="n">subset_name</span><span class="o">=</span><span class="s2">&quot;Test_&quot;</span><span class="o">+</span><span class="n">dataset_name</span><span class="p">)</span>
+
+    <span class="n">train_dataset</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+    <span class="n">test_dataset</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+
+    <span class="c1">###############</span>
+    <span class="c1">## Algorithm ##</span>
+    <span class="c1">###############</span>
+    <span class="nb">__import__</span><span class="p">(</span><span class="s2">&quot;benchscofi.&quot;</span><span class="o">+</span><span class="n">algo</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="s2">&quot;benchscofi.&quot;</span><span class="o">+</span><span class="n">algo</span><span class="o">+</span><span class="s2">&quot;.&quot;</span><span class="o">+</span><span class="n">algo</span><span class="p">)(</span><span class="n">algo_params</span><span class="p">[</span><span class="n">algo</span><span class="p">])</span>
+
+    <span class="c1">###############</span>
+    <span class="c1">## Training  ##</span>
+    <span class="c1">###############</span>
+    <span class="c1">#model.fit(train_dataset, random_state)</span>
+    <span class="c1">######################</span>
+    <span class="c1">## Cross-validation ##</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">cv_training</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="s2">&quot;benchscofi.&quot;</span><span class="o">+</span><span class="n">algo</span><span class="o">+</span><span class="s2">&quot;.&quot;</span><span class="o">+</span><span class="n">algo</span><span class="p">),</span> <span class="n">params</span><span class="p">,</span> <span class="n">train_dataset</span><span class="p">,</span>
+        <span class="n">threshold</span><span class="o">=</span><span class="n">decision_threshold</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;AUC&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="n">beta</span><span class="p">,</span> <span class="n">njobs</span><span class="o">=</span><span class="n">njobs</span><span class="p">,</span>
+        <span class="n">nsplits</span><span class="o">=</span><span class="n">nsplits</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span> <span class="n">show_plots</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">cv_type</span><span class="o">=</span><span class="s2">&quot;random&quot;</span> <span class="k">if</span> <span class="p">(</span><span class="n">split_params</span><span class="p">[</span><span class="s2">&quot;split_randomly&quot;</span><span class="p">])</span> <span class="k">else</span> <span class="s2">&quot;weakly_correlated&quot;</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;models&quot;</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;test_metric&quot;</span><span class="p">])]</span>
+
+    <span class="c1">#################</span>
+    <span class="c1">## Predictions ##</span>
+    <span class="c1">#################</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">test_dataset</span><span class="p">)</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="n">decision_threshold</span><span class="p">)</span>
+
+    <span class="n">model</span><span class="o">.</span><span class="n">print_scores</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">print_classification</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+
+    <span class="c1">#################</span>
+    <span class="c1">## Validation  ##</span>
+    <span class="c1">#################</span>
+
+    <span class="c1">## disease-wise metrics</span>
+    <span class="n">metrics</span><span class="p">,</span> <span class="n">plot_args</span> <span class="o">=</span> <span class="n">compute_metrics</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">test_dataset</span><span class="p">,</span>
+         <span class="n">metrics</span><span class="o">=</span><span class="n">metrics_list</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span><span class="n">beta</span><span class="o">=</span><span class="n">beta</span><span class="p">,</span><span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1">## run all metrics</span>
+    <span class="n">plot_args</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;PMF&quot;</span><span class="p">,</span> <span class="s2">&quot;figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">)})</span>
+    <span class="n">plot_metrics</span><span class="p">(</span><span class="o">**</span><span class="n">plot_args</span><span class="p">)</span>
+
+    <span class="c1">## dataset-wide metrics</span>
+    <span class="n">y_test</span> <span class="o">=</span> <span class="p">(</span><span class="n">test_dataset</span><span class="o">.</span><span class="n">folds</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span><span class="o">*</span><span class="n">test_dataset</span><span class="o">.</span><span class="n">ratings</span><span class="o">.</span><span class="n">toarray</span><span class="p">())</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">y_test</span><span class="p">[</span><span class="n">y_test</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">whole_metrics</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">eval</span><span class="p">(</span><span class="s2">&quot;stanscofi.validation.&quot;</span><span class="o">+</span><span class="n">metric</span><span class="p">)(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">scores</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">k</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metrics_list</span> <span class="k">if</span> <span class="p">(</span><span class="n">metric</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Fscore&quot;</span><span class="p">,</span> <span class="s2">&quot;TAU&quot;</span><span class="p">])</span>
+    <span class="p">]</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+      <span class="p">(</span>
+      <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">whole_metrics</span><span class="p">],</span>
+            <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Value&quot;</span><span class="p">],</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">metrics_list</span> <span class="k">if</span> <span class="p">(</span><span class="n">m</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Fscore&quot;</span><span class="p">,</span><span class="s2">&quot;TAU&quot;</span><span class="p">])]</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+       <span class="n">metrics</span>
+      <span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">results</span>
+</pre></div>
+</div>
+</section>
+<section id="application-of-the-pipeline">
+<h3>Application of the pipeline<a class="headerlink" href="#application-of-the-pipeline" title="Permalink to this heading"></a></h3>
+<p>Let’s apply this pipeline on dataset TRANSCRIPT with algorithm <code class="docutils literal notranslate"><span class="pre">PMF</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">training_testing</span><span class="p">(</span>
+   <span class="n">dataset_names</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+   <span class="n">split_params</span><span class="p">,</span>
+   <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">algo_params</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+   <span class="n">algo_params</span><span class="p">[[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">algo_params</span><span class="p">][</span><span class="mi">0</span><span class="p">]],</span>
+   <span class="n">random_state</span><span class="p">,</span>
+   <span class="n">decision_threshold</span><span class="p">,</span>
+   <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/pipeline_validation.png"><img alt="Validation plots for PMF on TRANSCRIPT trained using the pipeline" src="_images/pipeline_validation.png" style="width: 700px;" /></a>
+</section>
+</section>
+<section id="algorithms">
+<h2>Algorithms<a class="headerlink" href="#algorithms" title="Permalink to this heading"></a></h2>
+<p>Each algorithm <code class="docutils literal notranslate"><span class="pre">algo</span></code> with parameters contained in a dictionary <code class="docutils literal notranslate"><span class="pre">params</span></code> is accessible by the following code line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">benchscofi</span><span class="o">.</span><span class="n">algo</span><span class="o">.</span><span class="n">algo</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+<span class="c1">## which can be called using model.fit(...), model.predict(...)</span>
+</pre></div>
+</div>
+<p>The dictionary of default parameter values is available by typing:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">default_parameters</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Contributions for new algorithms are open (see the <a class="reference external" href="https://github.com/RECeSS-EU-Project/benchscofi/blob/master/README.md">README</a>). Tags are associated with each method.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">featureless</span></code> means that the algorithm does not leverage the input of drug/disease features.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">matrix_input</span></code> means that the algorithm considers as input a matrix of ratings (plus possibly matrices of drug/disease features), instead of considering as input (drug, disease) pairs.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">PMF</span></code> Probabilistic Matrix Factorization (using Bayesian Pairwise Ranking) implemented at <a class="reference external" href="https://ethen8181.github.io/machine-learning/recsys/4_bpr.html">this page</a>. <code class="docutils literal notranslate"><span class="pre">featureless</span></code> <code class="docutils literal notranslate"><span class="pre">matrix_input</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">PulearnWrapper</span></code> Elkan and Noto’s classifier based on SVMs (package <a class="reference external" href="https://pulearn.github.io/pulearn/">pulearn</a> and <a class="reference external" href="https://cseweb.ucsd.edu/~elkan/posonly.pdf">paper</a>). <code class="docutils literal notranslate"><span class="pre">featureless</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">ALSWR</span></code> Alternating Least Square Matrix Factorization algorithm implemented at <a class="reference external" href="https://ethen8181.github.io/machine-learning/recsys/2_implicit.html#Implementation">this page</a>. <code class="docutils literal notranslate"><span class="pre">featureless</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">FastaiCollabWrapper</span></code> Collaborative filtering approach <em>collab_learner</em> implemented by package <a class="reference external" href="https://docs.fast.ai/collab.html">fast.ai</a>. <code class="docutils literal notranslate"><span class="pre">featureless</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">SimplePULearning</span></code> Customizable neural network architecture with positive-unlabeled risk.</p>
+<p><code class="docutils literal notranslate"><span class="pre">SimpleBinaryClassifier</span></code> Customizable neural network architecture for positive-negative learning.</p>
+<p><code class="docutils literal notranslate"><span class="pre">NIMCGCN</span></code> Jin Li, Sai Zhang, Tao Liu, Chenxi Ning, Zhuoxuan Zhang and Wei Zhou. Neural inductive matrix completion with graph convolutional networks for miRNA-disease association prediction. Bioinformatics, Volume 36, Issue 8, 15 April 2020, Pages 2538–2546. doi: 10.1093/bioinformatics/btz965. (<a class="reference external" href="https://github.com/ljatynu/NIMCGCN">implementation</a>).</p>
+<p><code class="docutils literal notranslate"><span class="pre">FFMWrapper</span></code> Field-aware Factorization Machine (package <a class="reference external" href="https://pypi.org/project/pyFFM/">pyFFM</a>).</p>
+<p><code class="docutils literal notranslate"><span class="pre">VariationalWrapper</span></code> Vie, J. J., Rigaux, T., &amp; Kashima, H. (2022, December). Variational Factorization Machines for Preference Elicitation in Large-Scale Recommender Systems. In 2022 IEEE International Conference on Big Data (Big Data) (pp. 5607-5614). IEEE. (<a class="reference external" href="https://github.com/jilljenn/vae">pytorch implementation</a>). <code class="docutils literal notranslate"><span class="pre">featureless</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">DRRS</span></code> Luo, H., Li, M., Wang, S., Liu, Q., Li, Y., &amp; Wang, J. (2018). Computational drug repositioning using low-rank matrix approximation and randomized algorithms. Bioinformatics, 34(11), 1904-1912. (<a class="reference external" href="http://bioinformatics.csu.edu.cn/resources/softs/DrugRepositioning/DRRS/index.html">download</a>). <code class="docutils literal notranslate"><span class="pre">matrix_input</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">SCPMF</span></code> Meng, Y., Jin, M., Tang, X., &amp; Xu, J. (2021). Drug repositioning based on similarity constrained probabilistic matrix factorization: COVID-19 as a case study. Applied soft computing, 103, 107135. (<a class="reference external" href="https://github.com/luckymengmeng/SCPMF">implementation</a>). <code class="docutils literal notranslate"><span class="pre">matrix_input</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">BNNR</span></code> Yang, M., Luo, H., Li, Y., &amp; Wang, J. (2019). Drug repositioning based on bounded nuclear norm regularization. Bioinformatics, 35(14), i455-i463. (<a class="reference external" href="https://github.com/BioinformaticsCSU/BNNR">implementation</a>). <code class="docutils literal notranslate"><span class="pre">matrix_input</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">LRSSL</span></code> Liang, X., Zhang, P., Yan, L., Fu, Y., Peng, F., Qu, L., … &amp; Chen, Z. (2017). LRSSL: predict and interpret drug–disease associations based on data integration using sparse subspace learning. Bioinformatics, 33(8), 1187-1196. (<a class="reference external" href="https://github.com/LiangXujun/LRSSL">implementation</a>). <code class="docutils literal notranslate"><span class="pre">matrix_input</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">MBiRW</span></code> Luo, H., Wang, J., Li, M., Luo, J., Peng, X., Wu, F. X., &amp; Pan, Y. (2016). Drug repositioning based on comprehensive similarity measures and bi-random walk algorithm. Bioinformatics, 32(17), 2664-2671. (<a class="reference external" href="https://github.com/bioinfomaticsCSU/MBiRW">implementation</a>). <code class="docutils literal notranslate"><span class="pre">matrix_input</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">LibMFWrapper</span></code> W.-S. Chin, B.-W. Yuan, M.-Y. Yang, Y. Zhuang, Y.-C. Juan, and C.-J. Lin. LIBMF: A Library for Parallel Matrix Factorization in Shared-memory Systems. JMLR, 2015. (<a class="reference external" href="https://github.com/cjlin1/libmf">implementation</a>). <code class="docutils literal notranslate"><span class="pre">featureless</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">LogisticMF</span></code> Johnson, C. C. (2014). Logistic matrix factorization for implicit feedback data. Advances in Neural Information Processing Systems, 27(78), 1-9. (<a class="reference external" href="https://github.com/MrChrisJohnson/logistic-mf">implementation</a>). <code class="docutils literal notranslate"><span class="pre">featureless</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">PSGCN</span></code> Sun, X., Wang, B., Zhang, J., &amp; Li, M. (2022). Partner-Specific Drug Repositioning Approach Based on Graph Convolutional Network. IEEE Journal of Biomedical and Health Informatics, 26(11), 5757-5765. (<a class="reference external" href="https://github.com/bbjy/PSGCN">implementation</a>). <code class="docutils literal notranslate"><span class="pre">featureless</span></code> <code class="docutils literal notranslate"><span class="pre">matrix_input</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">DDA_SKF</span></code> Gao, C. Q., Zhou, Y. K., Xin, X. H., Min, H., &amp; Du, P. F. (2022). DDA-SKF: Predicting Drug–Disease Associations Using Similarity Kernel Fusion. Frontiers in Pharmacology, 12, 784171. (<a class="reference external" href="https://github.com/GCQ2119216031/DDA-SKF">implementation</a>). <code class="docutils literal notranslate"><span class="pre">matrix_input</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">HAN</span></code> GWang, Xiao, et al. “Heterogeneous graph attention network.” The world wide web conference. 2019. (<a class="reference external" href="https://github.com/gu-yaowen/MilGNet">implementation</a>).</p>
+<p><code class="docutils literal notranslate"><span class="pre">PUextraTrees</span></code> Wilton, Jonathan, et al. “Positive-Unlabeled Learning using Random Forests via Recursive Greedy Risk Minimization.” Advances in Neural Information Processing Systems 35 (2022): 24060-24071. (<a class="reference external" href="https://github.com/jonathanwilton/PUExtraTrees">implementation</a>).</p>
+<p><code class="docutils literal notranslate"><span class="pre">XGBoost</span></code> Chen, Tianqi, and Carlos Guestrin. “Xgboost: A scalable tree boosting system.” Proceedings of the 22nd acm sigkdd international conference on knowledge discovery and data mining. 2016. (<a class="reference external" href="https://github.com/dmlc/xgboost">implementation</a>).</p>
+</section>
+<section id="row-wise-performance-metrics">
+<h2>Row-wise performance metrics<a class="headerlink" href="#row-wise-performance-metrics" title="Permalink to this heading"></a></h2>
+<p>An additional performance measure has been added compared to <em>stanscofi</em>.</p>
+<section id="negative-sampling-auc-ns-auc">
+<h3>Negative Sampling AUC (NS-AUC)<a class="headerlink" href="#negative-sampling-auc-ns-auc" title="Permalink to this heading"></a></h3>
+<p>The row-wise (ie, disease-wise) AUC score comes from <a class="reference external" href="https://www.csie.ntu.edu.tw/~cjlin/papers/one-class-mf/biased-mf-sdm-with-supp.pdf">this paper</a> and allows to quantify how much the initial order of drug-disease pairs (as given by the true labels <code class="docutils literal notranslate"><span class="pre">t</span></code>) is preserved in the ranking induced by the prediction scores <code class="docutils literal notranslate"><span class="pre">p</span></code>.</p>
+<p>If <span class="math notranslate nohighlight">\(\Omega^{*}_\text{di}(t) \triangleq \{\text{drug} \mid t[\text{drug},\text{di}] = *\}\)</span>, compute for each disease <code class="docutils literal notranslate"><span class="pre">di</span></code> the following score, which is the average number of times a positive pair (+1) is scored higher than a negative (-1) or unknown (0) pair:</p>
+<div class="math notranslate nohighlight">
+\[\texttt{NSAUC}_\text{di}(p, t) \triangleq \frac{|\{ (\textcolor{red}{\text{dr}},\textcolor{blue}{\text{dr'}}) \mid p[\textcolor{red}{\text{dr}},\text{di}] \geq p[\textcolor{blue}{\text{dr'}},\text{di}] \}|}{|\textcolor{red}{\Omega^{1}_\text{di}}(t)|\times |\textcolor{blue}{\Omega^{-1,0}_\text{di}}(t)|}\]</div>
+<p>Finally, the averaged NS-AUC score is:</p>
+<div class="math notranslate nohighlight">
+\[\texttt{NSAUC}(p, t) \triangleq \frac{1}{\#\text{diseases}} \sum_{\text{di disease}} \texttt{NSAUC}_\text{di}(p, t)\]</div>
+<p>In code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">benchscofi.utils.rowwise_metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">calc_auc</span>
+<span class="n">calc_auc</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When <code class="docutils literal notranslate"><span class="pre">transpose</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, the score is computed drug-wise instead of disease-wise.</p>
+</section>
+</section>
+<section id="class-density-estimation-methods">
+<h2>Class density estimation methods<a class="headerlink" href="#class-density-estimation-methods" title="Permalink to this heading"></a></h2>
+<p>Cost-sensitive approaches and positive-unlabeled learning (see <a class="reference external" href="https://recess-eu-project.github.io/flash%20lecture/collaborative-filtering-for-drug-repurposing/">this post</a> for an introduction to this type of algorithms) crucially rely on the knowledge of outcome prior <span class="math notranslate nohighlight">\(\pi\)</span>, which might have a large impact on the quality of the recommendations. <span class="math notranslate nohighlight">\(y \in \{−1, 0, 1\}\)</span> are the accessible labels. Let us denote <span class="math notranslate nohighlight">\(s \in \{−1, 1\}\)</span> the true labels, and <span class="math notranslate nohighlight">\(v\)</span> is the feature vector. Under the usual assumptions made in Positive-Unlabeled (PU) learning:</p>
+<div class="math notranslate nohighlight">
+\[\pi := \mathbb{P}(s = 1)\;.\]</div>
+<p><em>benchscofi</em> provides implementations of several class prior estimation methods, shown below. We will test their performance on randomly generated datasets:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">stanscofi.datasets</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">stanscofi.utils</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">stanscofi.training_testing</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">benchscofi</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">benchscofi.utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">benchscofi.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">prior_estimation</span>
+</pre></div>
+</div>
+<section id="assumptions-on-datasets">
+<h3>Assumptions on datasets<a class="headerlink" href="#assumptions-on-datasets" title="Permalink to this heading"></a></h3>
+<p>As well as the drug repurposing dataset TRANSCRIPT, we will also consider synthetic datasets where the true value <span class="math notranslate nohighlight">\(\pi\)</span> is known in advance, so as to test the class density estimation approaches. The following functions prints naive estimators and the true values (when available) of datasets:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">print_naive_estimators</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">labels_mat</span><span class="p">,</span> <span class="n">true_args</span><span class="p">):</span>
+    <span class="n">pos</span><span class="p">,</span> <span class="n">neg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">ratings</span><span class="o">.</span><span class="n">data</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">ratings</span><span class="o">.</span><span class="n">data</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">known</span><span class="p">,</span> <span class="n">total</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">ratings</span><span class="o">.</span><span class="n">data</span><span class="o">!=</span><span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">ratings</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">pos_known</span> <span class="o">=</span> <span class="n">pos</span><span class="o">/</span><span class="n">known</span>
+    <span class="n">pos_total</span> <span class="o">=</span> <span class="n">pos</span><span class="o">/</span><span class="n">total</span>
+    <span class="n">known_total</span> <span class="o">=</span> <span class="n">known</span><span class="o">/</span><span class="n">total</span>
+    <span class="n">pos_unk</span> <span class="o">=</span> <span class="n">pos</span><span class="o">/</span><span class="p">(</span><span class="n">total</span><span class="o">-</span><span class="n">known</span><span class="p">)</span>
+    <span class="n">neg_pos</span> <span class="o">=</span> <span class="n">neg</span><span class="o">/</span><span class="n">pos</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">labels_mat</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span> <span class="c1">## no access to true values</span>
+        <span class="n">pos_known_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pos_known_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">labels_mat</span><span class="o">.</span><span class="n">values</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">labels_mat</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="p">[</span><span class="n">true_args</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">true_args</span><span class="p">]</span>
+            <span class="o">+</span><span class="p">[</span><span class="n">pos_known</span><span class="p">,</span> <span class="n">known_total</span><span class="p">,</span> <span class="n">pos_unk</span><span class="p">,</span> <span class="n">pos_known_true</span><span class="p">,</span>
+              <span class="n">pos_total</span><span class="o">/</span><span class="n">true_args</span><span class="p">[</span><span class="s2">&quot;pi&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;pi&quot;</span> <span class="ow">in</span> <span class="n">true_args</span><span class="p">)</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+              <span class="n">pos_total</span><span class="o">/</span><span class="n">pos_known_true</span> <span class="k">if</span> <span class="p">(</span><span class="n">labels_mat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+              <span class="n">neg_pos</span><span class="p">]</span>
+        <span class="p">],</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">true_args</span><span class="p">]</span><span class="o">+</span><span class="p">[</span>
+                <span class="s2">&quot;#Pos/#Known&quot;</span><span class="p">,</span>               <span class="c1">## ratio b/w positive and accessible pairs</span>
+                <span class="s2">&quot;#Known/#Total~sparsity&quot;</span><span class="p">,</span>    <span class="c1">## ratio b/w known and 1-sparsity number</span>
+                <span class="s2">&quot;#Pos/#Unk&quot;</span><span class="p">,</span>                 <span class="c1">## ratio b/w positive and unknown pairs</span>
+                <span class="s2">&quot;#Pos/#Known(true)~pi&quot;</span><span class="p">,</span>      <span class="c1">## ratio b/w positive and all pairs</span>
+                <span class="s2">&quot;#Pos/(#Total*pi)~c&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;(#Pos/#Total)/(#Pos/#Known(true))~c&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;#Neg/#Pos&quot;</span><span class="p">],</span>
+        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Value&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>We will generate several synthetic datasets with <span class="math notranslate nohighlight">\(10,000\)</span> datapoints, <span class="math notranslate nohighlight">\(100\)</span> features, with the same random seed:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">synthetic_params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;N&quot;</span><span class="p">:</span><span class="mi">10000</span><span class="p">,</span> <span class="s2">&quot;nfeatures&quot;</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;std&quot;</span><span class="p">:</span><span class="mf">0.1</span><span class="p">,</span> <span class="s2">&quot;exact&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;random_state&quot;</span><span class="p">:</span> <span class="mi">1234</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="censoring-setting">
+<h4>Censoring setting<a class="headerlink" href="#censoring-setting" title="Permalink to this heading"></a></h4>
+<p>Assume that <span class="math notranslate nohighlight">\(s \in \{-1,1\}\)</span> are the true labels, <span class="math notranslate nohighlight">\(y \in \{0,1\}\)</span> are the accessible labels (note that accessible negative samples are missing), and <span class="math notranslate nohighlight">\(v \in \mathbb{R}^d\)</span> are the feature vectors. Samples <span class="math notranslate nohighlight">\((v,s) \sim p(v,s)\)</span>, and then are made accessible as follows <span class="math notranslate nohighlight">\(y \sim p(\cdot \mid v, s=1)\)</span> and <span class="math notranslate nohighlight">\(\mathbb{P}(y \neq 0 \mid v, s=-1) = p(y=-1 \mid v, s=1) = 0\)</span>. This setting relies on the SCAR assumption <strong>[ref]</strong>:</p>
+<div class="math notranslate nohighlight">
+\[c := \mathbb{P}(y \neq 0 | s=1) = \mathbb{P}(y \neq 0 | v, s=1) = \text{cst}\;.\]</div>
+<p>Note that</p>
+<div class="math notranslate nohighlight">
+\[c \pi = \mathbb{P}(y=1 \mid s=1)\mathbb{P}(s=1) = \mathbb{P}(y=1)-\underbrace{\mathbb{P}(y=1 \mid s=-1)}_{=0}\mathbb{P}(s=-1)\;.\]</div>
+<p><strong>[ref]</strong> Elkan, Charles, and Keith Noto. “Learning classifiers from only positive and unlabeled data.” Proceedings of the 14th ACM SIGKDD international conference on Knowledge discovery and data mining. 2008.</p>
+<p>The following lines generate a synthetic dataset which matches the specifications of the censoring setting. In that setting, there are only positive (<span class="math notranslate nohighlight">\(y=1\)</span>) and unlabeled (<span class="math notranslate nohighlight">\(y=0\)</span>) samples (i.e., all negative samples are unlabeled).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">benchscofi.utils.prior_estimation</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_Censoring_dataset</span>
+
+<span class="n">true_args_censoring</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;pi&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">:</span><span class="mf">0.2</span><span class="p">}</span>
+<span class="n">censoring_params</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">censoring_params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">true_args_censoring</span><span class="p">)</span>
+<span class="n">censoring_params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">synthetic_params</span><span class="p">)</span>
+
+<span class="n">censoring_di</span><span class="p">,</span> <span class="n">censoring_labels_mat</span> <span class="o">=</span> <span class="n">generate_Censoring_dataset</span><span class="p">(</span><span class="o">**</span><span class="n">censoring_params</span><span class="p">)</span>
+<span class="n">censoring_dt</span> <span class="o">=</span> <span class="n">stanscofi</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="o">**</span><span class="n">censoring_di</span><span class="p">)</span>
+<span class="n">censoring_dt</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">withzeros</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">dimred_args</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;n_neighbors&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+
+<span class="n">censoring_dt</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+
+<span class="n">print_naive_estimators</span><span class="p">(</span><span class="n">censoring_dt</span><span class="p">,</span> <span class="n">censoring_labels_mat</span><span class="p">,</span> <span class="n">true_args_censoring</span><span class="p">)</span>
+<span class="c1">## pi ~ #pos/#total in the true labels matrix which is OK</span>
+<span class="c1">## c ~ (#pos/#total)/pi in the ratings matrix which is OK</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/censoring_dataset.png"><img alt="Visualization of the randomly generated Censoring dataset" src="_images/censoring_dataset.png" style="width: 700px;" /></a>
+</section>
+<section id="case-control-setting">
+<h4>Case-Control setting<a class="headerlink" href="#case-control-setting" title="Permalink to this heading"></a></h4>
+<p>Assume that <span class="math notranslate nohighlight">\(s \in \{-1,1\}\)</span> are the true labels, <span class="math notranslate nohighlight">\(y \in \{-1,0,1\}\)</span> are the accessible labels, and <span class="math notranslate nohighlight">\(v \in \mathbb{R}^d\)</span> are the feature vectors. Positive pairs <span class="math notranslate nohighlight">\(v \sim p_+ = p(\cdot | y=+1)$\)</span>, negative pairs <span class="math notranslate nohighlight">\(v \sim p_- = p(\cdot | y=-1)\)</span>, and unlabeled pairs <span class="math notranslate nohighlight">\(v \sim p_u = \pi p_+ + (1-\pi)p_-\)</span> (where <span class="math notranslate nohighlight">\(\pi := \mathbb{P}(s = 1) \in (0,1)\)</span> is the class-prior probability). This setting relies on the Invariance of Order assumption <strong>[ref]</strong>:</p>
+<div class="math notranslate nohighlight">
+\[\forall v, v' \in \mathbb{R}^d, \ \mathbb{P}(s = 1 \mid v) \leq \mathbb{P}(s = 1 \mid v') \Leftrightarrow \mathbb{P}(y= 1 \mid v) \leq \mathbb{P}(y=1 \mid v')\;.\]</div>
+<p><strong>[ref]</strong> Kato, Masahiro, Takeshi Teshima, and Junya Honda. “Learning from positive and unlabeled data with a selection bias.” International conference on learning representations. 2018.</p>
+<p>Generating a case-control dataset:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">benchscofi.utils.prior_estimation</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_CaseControl_dataset</span>
+
+<span class="n">true_args_casecontrol</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;pi&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span> <span class="s2">&quot;imbalance&quot;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span> <span class="s2">&quot;sparsity&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">}</span>
+<span class="n">casecontrol_params</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">casecontrol_params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">true_args_casecontrol</span><span class="p">)</span>
+<span class="n">casecontrol_params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">synthetic_params</span><span class="p">)</span>
+
+<span class="n">casecontrol_di</span><span class="p">,</span> <span class="n">casecontrol_labels_mat</span> <span class="o">=</span> <span class="n">generate_CaseControl_dataset</span><span class="p">(</span><span class="o">**</span><span class="n">casecontrol_params</span><span class="p">)</span>
+<span class="n">casecontrol_di</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;casecontrol&quot;</span><span class="p">})</span>
+<span class="n">casecontrol_dt</span> <span class="o">=</span> <span class="n">stanscofi</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="o">**</span><span class="n">casecontrol_di</span><span class="p">)</span>
+<span class="n">casecontrol_dt</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">withzeros</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">dimred_args</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;n_neighbors&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+
+<span class="n">casecontrol_dt</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+
+<span class="n">print_naive_estimators</span><span class="p">(</span><span class="n">casecontrol_dt</span><span class="p">,</span> <span class="n">casecontrol_labels_mat</span><span class="p">,</span> <span class="n">true_args_casecontrol</span><span class="p">)</span>
+<span class="c1">## pi ~ #pos/#total in the true labels matrix which is OK</span>
+<span class="c1">## sparsity ~ #known/#total in the ratings matrix which is OK</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/case_control_dataset.png"><img alt="Visualization of the randomly generated Case-Control dataset" src="_images/case_control_dataset.png" style="width: 700px;" /></a>
+</section>
+</section>
+<section id="methods-relying-on-a-pretrained-classifier">
+<h3>Methods relying on a pretrained classifier<a class="headerlink" href="#methods-relying-on-a-pretrained-classifier" title="Permalink to this heading"></a></h3>
+<section id="training-a-classifier">
+<h4>Training a classifier<a class="headerlink" href="#training-a-classifier" title="Permalink to this heading"></a></h4>
+<p>We also generate a validation dataset which is produced in the same fashion as the training dataset. We first consider the synthetic Censoring dataset.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">traintest_folds</span><span class="p">,</span> <span class="n">val_folds</span><span class="p">),</span> <span class="n">_</span> <span class="o">=</span> <span class="n">stanscofi</span><span class="o">.</span><span class="n">training_testing</span><span class="o">.</span><span class="n">random_simple_split</span><span class="p">(</span><span class="n">censoring_dt</span><span class="p">,</span>
+      <span class="mf">0.2</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;euclidean&quot;</span><span class="p">)</span>
+<span class="n">traintest_dataset</span> <span class="o">=</span> <span class="n">censoring_dt</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">traintest_folds</span><span class="p">,</span> <span class="n">subset_name</span><span class="o">=</span><span class="s2">&quot;Train Test&quot;</span><span class="p">)</span>
+<span class="n">val_dataset</span> <span class="o">=</span> <span class="n">censoring_dt</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">val_folds</span><span class="p">,</span> <span class="n">subset_name</span><span class="o">=</span><span class="s2">&quot;Validation&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We train a Positive-Unlabeled classifier called PUlearn <strong>[ref]</strong> on the training subset, and keep the validation subset to compute estimators of the class prior.</p>
+<p><strong>[ref]</strong> Charles Elkan and Keith Noto. Learning classifiers from only positive and unlabeled data. In Proceedings of the 14th ACM SIGKDD international conference on Knowledge discovery and data mining, pages 213–220, 2008.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">benchscofi.PulearnWrapper</span><span class="w"> </span><span class="kn">import</span> <span class="n">PulearnWrapper</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">stanscofi</span><span class="o">.</span><span class="n">training_testing</span><span class="o">.</span><span class="n">cv_training</span><span class="p">(</span><span class="n">PulearnWrapper</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">traintest_dataset</span><span class="p">,</span>
+      <span class="n">threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;AUC&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">njobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nsplits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rseed</span><span class="p">,</span>
+      <span class="n">cv_type</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span> <span class="n">show_plots</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="estimators-for-censoring-datasets">
+<h4>Estimators for Censoring datasets<a class="headerlink" href="#estimators-for-censoring-datasets" title="Permalink to this heading"></a></h4>
+<p><strong>In the censoring setting</strong>: Three estimators <span class="math notranslate nohighlight">\(e_1\)</span>, <span class="math notranslate nohighlight">\(e_2\)</span> and <span class="math notranslate nohighlight">\(e_3\)</span> of <span class="math notranslate nohighlight">\(c := \mathbb{P}(s=1 \mid y \neq 0)\)</span> proposed by <strong>[ref]</strong>. Given a trained classifier <span class="math notranslate nohighlight">\(\widehat{\theta}\)</span>, and a validation set <span class="math notranslate nohighlight">\(\mathcal{V} := \{ (v,y) \mid y \in \{-1,0,1\}, v \in \mathbb{R}^d \}\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[e_1 := \frac{1}{|\{v \mid (v,+1) \in \mathcal{V}\}|}\sum_{(v,+1) \in \mathcal{V}} (f_{\widehat{\theta}}(v))_+\;;  e_2 := \frac{\sum_{(v',+1) \in \mathcal{V}} (f_{\widehat{\theta}}(v'))_+}{\sum_{(v,y) \in \mathcal{V}} (f_{\widehat{\theta}}(v))_+}\;; e_3 := \max_{(v,y) \in \mathcal{V}} (f_{\widehat{\theta}}(v))_+\;.\]</div>
+<p>If <span class="math notranslate nohighlight">\(f_{\widehat{\theta}}(v)=\mathbb{P}(s=1 | v)\)</span> for any <span class="math notranslate nohighlight">\(v\)</span>, then <span class="math notranslate nohighlight">\(e_1=c\)</span>. It is assumed that <span class="math notranslate nohighlight">\(e_3 \leq c\)</span>. Authors recommend using <span class="math notranslate nohighlight">\(e_1\)</span>. But that approach requires having access to a supplementary validation dataset with labelled samples. One can retrieve an approximation of <span class="math notranslate nohighlight">\(\pi:=\mathbb{P}(s=1)\)</span> by using <span class="math notranslate nohighlight">\(c\pi = \mathbb{P}(y=1) \approx \sum_{(v',+1) \in \mathcal{V}} (f_{\widehat{\theta}}(v'))_+\)</span></p>
+<div class="math notranslate nohighlight">
+\[\hat{\pi}_i := \frac{e_i^{-1}}{|\mathcal{V}|}\sum_{(v,+1) \in \mathcal{V}} (f_{\widehat{\theta}}(v))_+\;.\]</div>
+<p><strong>[ref]</strong> Charles Elkan and Keith Noto. Learning classifiers from only positive and unlabeled data. In Proceedings of the 14th ACM SIGKDD international conference on Knowledge discovery and data mining, pages 213–220, 2008. Assume that there are no unlabeled (all 0’s are negative). Then we expect the estimators to determine that $c=1$, as no unlabeled are assumed.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">trained_classifier</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;models&quot;</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">aucs_whole</span><span class="p">)]</span>
+<span class="n">scores_test</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">val_dataset</span><span class="p">)</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="p">(</span><span class="n">val_dataset</span><span class="o">.</span><span class="n">folds</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span><span class="o">*</span><span class="n">val_dataset</span><span class="o">.</span><span class="n">ratings</span><span class="o">.</span><span class="n">toarray</span><span class="p">())</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="n">y_test_</span> <span class="o">=</span> <span class="n">y_test</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">pred_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">scores_test</span><span class="p">])</span>
+
+<span class="p">[</span><span class="n">e1</span><span class="p">,</span><span class="n">pi1</span><span class="p">],</span> <span class="p">[</span><span class="n">e2</span><span class="p">,</span><span class="n">pi2</span><span class="p">],</span> <span class="p">[</span><span class="n">e3</span><span class="p">,</span><span class="n">pi3</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+   <span class="n">prior_estimation</span><span class="o">.</span><span class="n">data_aided_estimation</span><span class="p">(</span><span class="n">pred_scores</span><span class="p">,</span> <span class="n">y_test_</span><span class="p">,</span> <span class="n">estimator_type</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
+   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="p">]</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+   <span class="p">[</span>
+       <span class="p">[</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">,</span> <span class="n">e3</span><span class="p">,</span> <span class="n">pi1</span><span class="p">,</span> <span class="n">pi2</span><span class="p">,</span> <span class="n">pi3</span><span class="p">],</span>
+       <span class="p">[</span><span class="n">true_args_censoring</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">]]</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="p">[</span><span class="n">true_args_censoring</span><span class="p">[</span><span class="s2">&quot;pi&quot;</span><span class="p">]]</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span>
+   <span class="p">]</span>
+<span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Estimated&quot;</span><span class="p">,</span> <span class="s2">&quot;True&quot;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;e1&quot;</span><span class="p">,</span> <span class="s2">&quot;e2&quot;</span><span class="p">,</span> <span class="s2">&quot;e3&quot;</span><span class="p">,</span> <span class="s2">&quot;pi1&quot;</span><span class="p">,</span> <span class="s2">&quot;pi2&quot;</span><span class="p">,</span> <span class="s2">&quot;pi3&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/results_estimator1.png"><img alt="Results of the estimators" src="_images/results_estimator1.png" style="width: 700px;" /></a>
+</section>
+<section id="bayes-regret-approach-for-case-control-datasets">
+<h4>Bayes regret approach for Case-Control datasets<a class="headerlink" href="#bayes-regret-approach-for-case-control-datasets" title="Permalink to this heading"></a></h4>
+<p><strong>In the case-control setting:</strong>  <strong>[ref1, Theorem 4]</strong> shows that if the supports for <span class="math notranslate nohighlight">\(p_+\)</span> and <span class="math notranslate nohighlight">\(p_-\)</span> are different</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\hat{\pi} = -\lim_{\substack{\alpha \rightarrow 1\\ \alpha &lt; 1}}\frac{\partial}{\partial \alpha}\inf_{\theta \in \Theta} \left\{  \underbrace{\mathcal{R}_\text{0-1}(\theta)}_\text{Bayes regret} \mid \mathbb{E}_{v \sim p_-}\ell_{0-1}(C_\theta(v),-1) \leq \alpha \right\}(\alpha)\;.\end{split}\]</div>
+<p>The issue is that the equation shown above can’t be computed exactly in practice. As mentioned in <strong>[ref2]</strong>, a possible approach to approximate <span class="math notranslate nohighlight">\(\hat{\pi}\)</span> is to regress a specific model (given in <strong>[ref2]</strong>) on the points of the corresponding ROC curve, and use the fitted model to extract the slope at the right-hand side of the curve, which is <span class="math notranslate nohighlight">\(\hat{\pi}\)</span>.</p>
+<p><strong>[ref1]</strong> Scott, Clayton, and Gilles Blanchard. “Novelty detection: Unlabeled data definitely help.” Artificial intelligence and statistics. PMLR, 2009.</p>
+<p><strong>[ref2]</strong> Sanderson, Tyler, and Clayton Scott. “Class proportion estimation with application to multiclass anomaly rejection.” Artificial Intelligence and Statistics. PMLR, 2014.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">traintest_folds</span><span class="p">,</span> <span class="n">val_folds</span><span class="p">),</span> <span class="n">_</span> <span class="o">=</span> <span class="n">stanscofi</span><span class="o">.</span><span class="n">training_testing</span><span class="o">.</span><span class="n">random_simple_split</span><span class="p">(</span>
+    <span class="n">casecontrol_dt</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;euclidean&quot;</span><span class="p">)</span>
+<span class="n">traintest_dataset</span> <span class="o">=</span> <span class="n">casecontrol_dt</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">traintest_folds</span><span class="p">,</span> <span class="n">subset_name</span><span class="o">=</span><span class="s2">&quot;Train Test&quot;</span><span class="p">)</span>
+<span class="n">val_dataset</span> <span class="o">=</span> <span class="n">casecontrol_dt</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">val_folds</span><span class="p">,</span> <span class="n">subset_name</span><span class="o">=</span><span class="s2">&quot;Validation&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training/testing set&quot;</span><span class="p">)</span>
+<span class="n">traintest_dataset</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Validation set&quot;</span><span class="p">)</span>
+<span class="n">val_dataset</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">stanscofi</span><span class="o">.</span><span class="n">training_testing</span><span class="o">.</span><span class="n">cv_training</span><span class="p">(</span><span class="n">PulearnWrapper</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
+     <span class="n">traintest_dataset</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;AUC&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">njobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+     <span class="n">nsplits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rseed</span><span class="p">,</span> <span class="n">cv_type</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span> <span class="n">show_plots</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+     <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">pi_star1</span><span class="p">,</span> <span class="n">pi_star2</span> <span class="o">=</span> <span class="p">[</span>
+   <span class="n">prior_estimation</span><span class="o">.</span><span class="n">roc_aided_estimation</span><span class="p">(</span><span class="n">scores_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">regression_type</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                         <span class="n">show_plot</span><span class="o">=</span><span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+<span class="p">]</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+   <span class="p">[</span>
+       <span class="p">[</span><span class="n">pi_star1</span><span class="p">,</span> <span class="n">pi_star2</span><span class="p">],</span>
+       <span class="p">[</span><span class="n">true_args_censoring</span><span class="p">[</span><span class="s2">&quot;pi&quot;</span><span class="p">]]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span>
+   <span class="p">]</span>
+<span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Estimated&quot;</span><span class="p">,</span> <span class="s2">&quot;True&quot;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;pi*1&quot;</span><span class="p">,</span> <span class="s2">&quot;pi*2&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/results_estimator2.png"><img alt="Results of the estimators (Bayes regret)" src="_images/results_estimator2.png" style="width: 200px;" /></a>
+</section>
+</section>
+<section id="penalized-divergences-for-case-control-datasets">
+<h3>Penalized divergences for Case-Control datasets<a class="headerlink" href="#penalized-divergences-for-case-control-datasets" title="Permalink to this heading"></a></h3>
+<p>Contrary to the last two approaches, these methods do not use a pretrained classifier. <span class="math notranslate nohighlight">\(\lambda\)</span> and <span class="math notranslate nohighlight">\(\sigma\)</span> are regularization parameters, and <span class="math notranslate nohighlight">\(p\)</span> (resp., <span class="math notranslate nohighlight">\(u\)</span>) is the total number of positive (resp., unlabeled) samples).</p>
+<section id="l1-penalized-divergence">
+<h4>L1-penalized divergence<a class="headerlink" href="#l1-penalized-divergence" title="Permalink to this heading"></a></h4>
+<p>Using L1-distance penalized divergence <strong>[ref]</strong> amounts to minimizing the following scalar function:</p>
+<div class="math notranslate nohighlight">
+\[\hat{\pi}_\text{L1} := \arg\min_{\pi \in (0,1)} \frac{1}{\lambda}\sum_{l \leq p+u} ((\beta_l(\pi))_+)^2-\pi+1\]</div>
+<div class="math notranslate nohighlight">
+\[\text{ and } \beta_l(\pi) := \frac{\pi}{u}\sum_{i \leq u} \mathcal{N}(x_l, \sigma^2 \text{Id})(x_i)-\frac{1}{p}\sum_{j \leq p} \mathcal{N}(x_l, \sigma^2 \text{Id})(x_j)\;.\]</div>
+<p><strong>[ref]</strong> Christoffel, Marthinus, Gang Niu, and Masashi Sugiyama. “Class-prior estimation for learning from positive and unlabeled data.” Asian Conference on Machine Learning. PMLR, 2016.</p>
+</section>
+<section id="pearson-penalized-divergence">
+<h4>Pearson-penalized divergence<a class="headerlink" href="#pearson-penalized-divergence" title="Permalink to this heading"></a></h4>
+<p>Using the Pearson penalized divergence <strong>[ref]</strong> amounts to minimizing the following scalar function:</p>
+<div class="math notranslate nohighlight">
+\[\hat{\pi}_\text{Pearson} := \arg\min_{\pi \in (0,1)} -\frac{1}{2}\left[^{1-\pi}_{\pi}\right] H^\top(G + \lambda R)^{-1}G(G+\lambda R)^{-1}H\left[^{1-\pi}_{\pi}\right]^\top\]</div>
+<div class="math notranslate nohighlight">
+\[+\left[^{1-\pi}_{\pi}\right] H^\top (G+\lambda R)^{-1} H\left[^{1-\pi}_{\pi}\right]^\top-\frac{1}{2}\]</div>
+<p><span class="math notranslate nohighlight">\(\text{ and } H := \left[\frac{1}{u}\sum_{j \leq u}\left(\mathcal{N}(x_l, \sigma^2 \text{Id})(x_j)\right)_{0 \leq l \leq u+p}, \frac{1}{p}\sum_{i \leq p}\left(\mathcal{N}(x_l, \sigma^2 \text{Id})(x_i)\right)_{0 \leq l \leq u+p} \right] \in \mathbb{R}^{(u+p+1) \times 2} \;,\)</span></p>
+<p><span class="math notranslate nohighlight">\(R := \left[^{0}_{(0)_{(u+p) \times 1}} ,^{(0)_{1 \times (u+p)}}_{Id_{(u+p) \times (u+p)}}\right] \in \mathbb{R}^{(u+p+1) \times (u+p+1)} \;,\)</span></p>
+<p><span class="math notranslate nohighlight">\(G := \frac{1}{u+p} \sum_{i \leq u+p} \left(\mathcal{N}(x_l, \sigma^2 \text{Id})(x_i)\right)_{0 \leq l \leq u+p}^\top\left(\mathcal{N}(x_l, \sigma^2 \text{Id})(x_i)\right)_{0 \leq l \leq u+p} \in \mathbb{R}^{(u+p+1) \times (u+p+1)}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\text{where } \forall x \ , \ \mathcal{N}(x_0, \sigma^2 \text{Id})(x)=1\)</span>.</p>
+<p><strong>[ref]</strong> Du Plessis, Marthinus Christoffel, and Masashi Sugiyama. “Semi-supervised learning of class balance under class-prior change by distribution matching.” Neural Networks 50 (2014): 110-119.</p>
+</section>
+<section id="tests">
+<h4>Tests<a class="headerlink" href="#tests" title="Permalink to this heading"></a></h4>
+<p>Let’s now compare the different penalized divergence-based approaches:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">r2_score</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">benchscofi.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">prior_estimation</span>
+
+<span class="c1">## One could also have more precise estimates by iterating on several random seeds</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_estimator</span><span class="p">(</span><span class="n">pi_true</span><span class="p">):</span>
+   <span class="n">pi_hats</span><span class="p">,</span> <span class="n">pi_hats2</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+   <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pi_t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pi_true</span><span class="p">):</span>
+       <span class="n">true_args_casecontrol</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;pi&quot;</span><span class="p">:</span> <span class="n">pi_t</span><span class="p">,</span> <span class="s2">&quot;imbalance&quot;</span><span class="p">:</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="s2">&quot;sparsity&quot;</span><span class="p">:</span> <span class="mf">0.9999</span><span class="p">}</span>
+       <span class="n">casecontrol_params</span> <span class="o">=</span> <span class="p">{}</span>
+       <span class="n">casecontrol_params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">true_args_casecontrol</span><span class="p">)</span>
+       <span class="n">casecontrol_params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">synthetic_params</span><span class="p">)</span>
+       <span class="n">casecontrol_params</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="mi">250</span><span class="p">})</span>
+       <span class="n">casecontrol_di</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">generate_CaseControl_dataset</span><span class="p">(</span><span class="o">**</span><span class="n">casecontrol_params</span><span class="p">)</span>
+       <span class="n">casecontrol_dt_pi</span> <span class="o">=</span> <span class="n">stanscofi</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="o">**</span><span class="n">casecontrol_di</span><span class="p">)</span>
+       <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">stanscofi</span><span class="o">.</span><span class="n">preprocessing</span><span class="o">.</span><span class="n">meanimputation_standardize</span><span class="p">(</span><span class="n">casecontrol_dt_pi</span><span class="p">)</span>
+       <span class="n">pi_hat</span> <span class="o">=</span> <span class="n">prior_estimation</span><span class="o">.</span><span class="n">divergence_aided_estimation</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">lmb</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">.01</span><span class="p">,</span>
+             <span class="n">divergence_type</span><span class="o">=</span><span class="s2">&quot;L1-distance&quot;</span><span class="p">)</span>
+       <span class="n">pi_hat2</span> <span class="o">=</span> <span class="n">prior_estimation</span><span class="o">.</span><span class="n">divergence_aided_estimation</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">lmb</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">.01</span><span class="p">,</span>
+             <span class="n">divergence_type</span><span class="o">=</span><span class="s2">&quot;Pearson&quot;</span><span class="p">)</span>
+       <span class="n">pi_hats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pi_hat</span><span class="p">)</span>
+       <span class="n">pi_hats2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pi_hat2</span><span class="p">)</span>
+       <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test </span><span class="si">%d</span><span class="s2">, pi=</span><span class="si">%f</span><span class="s2">, pi(L1)=</span><span class="si">%f</span><span class="s2"> pi(pearson)=</span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">pi_t</span><span class="p">,</span> <span class="n">pi_hat</span><span class="p">,</span> <span class="n">pi_hat2</span><span class="p">))</span>
+   <span class="n">R</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">pi_true</span><span class="p">,</span> <span class="n">pi_hats</span><span class="p">)</span>
+   <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pi_true</span><span class="p">,</span> <span class="n">pi_hats</span><span class="p">,</span> <span class="s2">&quot;b-&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;pi(L1) (R^2=</span><span class="si">%f</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">R</span><span class="p">)</span>
+   <span class="n">R2</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">pi_true</span><span class="p">,</span> <span class="n">pi_hats2</span><span class="p">)</span>
+   <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pi_true</span><span class="p">,</span> <span class="n">pi_hats2</span><span class="p">,</span> <span class="s2">&quot;r-&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;pi(pearson) (R^2=</span><span class="si">%f</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">R2</span><span class="p">)</span>
+   <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pi_true</span><span class="p">,</span> <span class="n">pi_true</span><span class="p">,</span> <span class="s2">&quot;g--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;target pi&quot;</span><span class="p">)</span>
+   <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\pi$&quot;</span><span class="p">)</span>
+   <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\hat{\pi}$&quot;</span><span class="p">)</span>
+   <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+   <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">test_estimator</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.7</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.9</span><span class="p">])</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/results_estimator3.png"><img alt="Results of the estimators (penalized divergence)" src="_images/results_estimator3.png" style="width: 700px;" /></a>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="benchscofi_install.html" class="btn btn-neutral float-left" title="Installation of benchscofi" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Clémence Réda.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

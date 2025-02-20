@@ -1,0 +1,302 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validation &mdash; stanscofi v2.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=d2262ce8"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Utils" href="utils.html" />
+    <link rel="prev" title="Training/Testing" href="trainingtesting.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            stanscofi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="stanscofi_install.html">Installation of <em>stanscofi</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="stanscofi_content.html">Getting started with <em>stanscofi</em></a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="stanscofi_modules.html">Documentation in <em>stanscofi</em></a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="datasets.html">Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing.html">Preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trainingtesting.html">Training/Testing</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Validation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.validation.AP"><code class="docutils literal notranslate"><span class="pre">AP()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.validation.AUC"><code class="docutils literal notranslate"><span class="pre">AUC()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.validation.DCGk"><code class="docutils literal notranslate"><span class="pre">DCGk()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.validation.ERR"><code class="docutils literal notranslate"><span class="pre">ERR()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.validation.F1K"><code class="docutils literal notranslate"><span class="pre">F1K()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.validation.Fscore"><code class="docutils literal notranslate"><span class="pre">Fscore()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.validation.HRk"><code class="docutils literal notranslate"><span class="pre">HRk()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.validation.MAP"><code class="docutils literal notranslate"><span class="pre">MAP()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.validation.MRR"><code class="docutils literal notranslate"><span class="pre">MRR()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.validation.MeanRank"><code class="docutils literal notranslate"><span class="pre">MeanRank()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.validation.NDCGk"><code class="docutils literal notranslate"><span class="pre">NDCGk()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.validation.PrecisionK"><code class="docutils literal notranslate"><span class="pre">PrecisionK()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.validation.RP"><code class="docutils literal notranslate"><span class="pre">RP()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.validation.RecallK"><code class="docutils literal notranslate"><span class="pre">RecallK()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.validation.Rscore"><code class="docutils literal notranslate"><span class="pre">Rscore()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.validation.TAU"><code class="docutils literal notranslate"><span class="pre">TAU()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.validation.compute_metrics"><code class="docutils literal notranslate"><span class="pre">compute_metrics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.validation.plot_metrics"><code class="docutils literal notranslate"><span class="pre">plot_metrics()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="benchscofi_install.html">Installation of <em>benchscofi</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchscofi_content.html">Getting started with <em>benchscofi</em></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">stanscofi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="stanscofi_modules.html">Documentation in <em>stanscofi</em></a></li>
+      <li class="breadcrumb-item active">Validation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/validation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-stanscofi.validation">
+<span id="validation"></span><h1>Validation<a class="headerlink" href="#module-stanscofi.validation" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.validation.AP">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.validation.</span></span><span class="sig-name descname"><span class="pre">AP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.validation.AP" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.validation.AUC">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.validation.</span></span><span class="sig-name descname"><span class="pre">AUC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.validation.AUC" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.validation.DCGk">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.validation.</span></span><span class="sig-name descname"><span class="pre">DCGk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.validation.DCGk" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.validation.ERR">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.validation.</span></span><span class="sig-name descname"><span class="pre">ERR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_grade</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.validation.ERR" title="Permalink to this definition"></a></dt>
+<dd><p>source: <a class="reference external" href="https://raw.githubusercontent.com/skondo/evaluation_measures/master/evaluations_measures.py">https://raw.githubusercontent.com/skondo/evaluation_measures/master/evaluations_measures.py</a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.validation.F1K">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.validation.</span></span><span class="sig-name descname"><span class="pre">F1K</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.validation.F1K" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.validation.Fscore">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.validation.</span></span><span class="sig-name descname"><span class="pre">Fscore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.validation.Fscore" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.validation.HRk">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.validation.</span></span><span class="sig-name descname"><span class="pre">HRk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.validation.HRk" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.validation.MAP">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.validation.</span></span><span class="sig-name descname"><span class="pre">MAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.validation.MAP" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.validation.MRR">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.validation.</span></span><span class="sig-name descname"><span class="pre">MRR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.validation.MRR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.validation.MeanRank">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.validation.</span></span><span class="sig-name descname"><span class="pre">MeanRank</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.validation.MeanRank" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.validation.NDCGk">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.validation.</span></span><span class="sig-name descname"><span class="pre">NDCGk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.validation.NDCGk" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.validation.PrecisionK">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.validation.</span></span><span class="sig-name descname"><span class="pre">PrecisionK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.validation.PrecisionK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.validation.RP">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.validation.</span></span><span class="sig-name descname"><span class="pre">RP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.validation.RP" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.validation.RecallK">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.validation.</span></span><span class="sig-name descname"><span class="pre">RecallK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.validation.RecallK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.validation.Rscore">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.validation.</span></span><span class="sig-name descname"><span class="pre">Rscore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.validation.Rscore" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.validation.TAU">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.validation.</span></span><span class="sig-name descname"><span class="pre">TAU</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.validation.TAU" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.validation.compute_metrics">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.validation.</span></span><span class="sig-name descname"><span class="pre">compute_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.validation.compute_metrics" title="Permalink to this definition"></a></dt>
+<dd><p>Computes <em>user-wise</em> validation metrics for a given set of scores and predictions w.r.t. a dataset</p>
+<p>…</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>scores<span class="classifier">COO-array of shape (n_items, n_users)</span></dt><dd><p>sparse matrix in COOrdinate format</p>
+</dd>
+<dt>predictions<span class="classifier">COO-array of shape (n_items, n_users)</span></dt><dd><p>sparse matrix in COOrdinate format with values in {-1,1}</p>
+</dd>
+<dt>dataset<span class="classifier">stanscofi.Dataset</span></dt><dd><p>dataset on which the metrics should be computed</p>
+</dd>
+<dt>metrics<span class="classifier">lst of str</span></dt><dd><p>list of metrics which should be computed</p>
+</dd>
+<dt>k<span class="classifier">int (default: 1)</span></dt><dd><p>Argument of the metric to optimize. Implemented metrics are in validation.py</p>
+</dd>
+<dt>beta<span class="classifier">float (default: 1)</span></dt><dd><p>Argument of the metric to optimize. Implemented metrics are in validation.py</p>
+</dd>
+<dt>verbose<span class="classifier">bool</span></dt><dd><p>prints out information about ignored users for the computation of validation metrics, that is, users which pairs are only associated to a single class (i.e., all pairs with this users are either assigned 0, -1 or 1)</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h2>Returns<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>metrics<span class="classifier">pandas.DataFrame of shape (len(metrics), 2)</span></dt><dd><p>table of metrics: metrics in rows, average and standard deviation across users in columns</p>
+</dd>
+<dt>plots_args<span class="classifier">dict</span></dt><dd><p>dictionary of arguments to feed to the plot_metrics function to plot the Precision-Recall and the Receiver Operating Chracteristic (ROC) curves</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.validation.plot_metrics">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.validation.</span></span><span class="sig-name descname"><span class="pre">plot_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scores</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ground_truth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aucs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fscores</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tprs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(16,</span> <span class="pre">5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Model'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.validation.plot_metrics" title="Permalink to this definition"></a></dt>
+<dd><p>Plots the ROC curve, the Precision-Recall curve, the boxplot of predicted scores and the piechart of classes associated to the predictions y_pred in input w.r.t. ground truth y_true</p>
+<p>…</p>
+<section id="id1">
+<h2>Parameters<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>y_true<span class="classifier">array-like of shape (n_ratings,)</span></dt><dd><p>an array which contains the binary ground truth labels in {0,1}</p>
+</dd>
+<dt>y_pred<span class="classifier">array-like of shape (n_ratings,)</span></dt><dd><p>an array which contains the binary predicted labels in {0,1}</p>
+</dd>
+<dt>scores<span class="classifier">array-like of shape (n_ratings,)</span></dt><dd><p>an array which contains the predicted scores</p>
+</dd>
+<dt>ground_truth<span class="classifier">array-like of shape (n_ratings,)</span></dt><dd><p>an array which contains the ground truth labels in {-1,0,1}</p>
+</dd>
+<dt>predictions<span class="classifier">array-like of shape (n_ratings,)</span></dt><dd><p>an array which contains the predicted labels in {-1,0,1}</p>
+</dd>
+<dt>aucs<span class="classifier">list</span></dt><dd><p>list of AUCs per user</p>
+</dd>
+<dt>fscores<span class="classifier">list</span></dt><dd><p>list of F-scores per user</p>
+</dd>
+<dt>tprs<span class="classifier">array-like of shape (n_thresholds,)</span></dt><dd><p>Increasing true positive rates such that element i is the true positive rate of predictions with score &gt;= thresholds[i], where thresholds was given as input to sklearn.metrics.roc_curve</p>
+</dd>
+<dt>recs<span class="classifier">array-like of shape (n_thresholds,)</span></dt><dd><p>Decreasing recall values such that element i is the recall of predictions with score &gt;= thresholds[i] and the last element is 0, where thresholds was given as input to sklearn.metrics.precision_recall_curve</p>
+</dd>
+<dt>figsize<span class="classifier">tuple of size 2</span></dt><dd><p>width and height of the figure</p>
+</dd>
+<dt>model_name<span class="classifier">str</span></dt><dd><p>model which predicted the ratings</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h2>Returns<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>metrics<span class="classifier">pandas.DataFrame of shape (2, 2)</span></dt><dd><p>table of metrics: AUC, F_beta score in rows, average and standard deviation across users in columns</p>
+</dd>
+<dt>plots_args<span class="classifier">dict</span></dt><dd><p>dictionary of arguments to feed to the plot_metrics function</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="trainingtesting.html" class="btn btn-neutral float-left" title="Training/Testing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="utils.html" class="btn btn-neutral float-right" title="Utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Clémence Réda.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

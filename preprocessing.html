@@ -1,0 +1,355 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Preprocessing &mdash; stanscofi v2.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=d2262ce8"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Training/Testing" href="trainingtesting.html" />
+    <link rel="prev" title="Models" href="models.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            stanscofi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="stanscofi_install.html">Installation of <em>stanscofi</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="stanscofi_content.html">Getting started with <em>stanscofi</em></a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="stanscofi_modules.html">Documentation in <em>stanscofi</em></a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="datasets.html">Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Preprocessing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.preprocessing.CustomScaler"><code class="docutils literal notranslate"><span class="pre">CustomScaler</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#stanscofi.preprocessing.CustomScaler.fit_transform"><code class="docutils literal notranslate"><span class="pre">CustomScaler.fit_transform()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.preprocessing.Perlman_procedure"><code class="docutils literal notranslate"><span class="pre">Perlman_procedure()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.preprocessing.cartesian_product_transpose"><code class="docutils literal notranslate"><span class="pre">cartesian_product_transpose()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.preprocessing.meanimputation_standardize"><code class="docutils literal notranslate"><span class="pre">meanimputation_standardize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.preprocessing.preprocessing_XY"><code class="docutils literal notranslate"><span class="pre">preprocessing_XY()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.preprocessing.same_feature_preprocessing"><code class="docutils literal notranslate"><span class="pre">same_feature_preprocessing()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="trainingtesting.html">Training/Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="validation.html">Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="benchscofi_install.html">Installation of <em>benchscofi</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchscofi_content.html">Getting started with <em>benchscofi</em></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">stanscofi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="stanscofi_modules.html">Documentation in <em>stanscofi</em></a></li>
+      <li class="breadcrumb-item active">Preprocessing</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/preprocessing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-stanscofi.preprocessing">
+<span id="preprocessing"></span><h1>Preprocessing<a class="headerlink" href="#module-stanscofi.preprocessing" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="stanscofi.preprocessing.CustomScaler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stanscofi.preprocessing.</span></span><span class="sig-name descname"><span class="pre">CustomScaler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">posinf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neginf</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.preprocessing.CustomScaler" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class used to encode a simple preprocessing pipeline for feature matrices. Does mean imputation for features, feature filtering, correction of infinity errors and standardization</p>
+<p>…</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>posinf<span class="classifier">int</span></dt><dd><p>Value to replace infinity (positive) values</p>
+</dd>
+<dt>neginf<span class="classifier">int</span></dt><dd><p>Value to replace infinity (negative) values</p>
+</dd>
+</dl>
+</section>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>imputer<span class="classifier">None or sklearn.impute.SimpleImputer instance</span></dt><dd><p>Class for imputation of values</p>
+</dd>
+<dt>scaler<span class="classifier">None or sklearn.preprocessing.StandardScaler</span></dt><dd><p>Class for standardization of values</p>
+</dd>
+<dt>filter<span class="classifier">None or list</span></dt><dd><p>List of selected features (Top-N in terms of variance)</p>
+</dd>
+</dl>
+</section>
+<section id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>__init__(params)</dt><dd><p>Initialize the scaler (with unfitted attributes)</p>
+</dd>
+<dt>fit_transform(mat, subset=None, verbose=False)</dt><dd><p>Fits classes and transforms a matrix</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="stanscofi.preprocessing.CustomScaler.fit_transform">
+<span class="sig-name descname"><span class="pre">fit_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.preprocessing.CustomScaler.fit_transform" title="Permalink to this definition"></a></dt>
+<dd><p>Fits each attribute of the scaler and transform a feature matrix. Does mean imputation for features, feature filtering, correction of infinity errors and standardization</p>
+<p>…</p>
+<section id="id1">
+<h3>Parameters<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>mat<span class="classifier">array-like of shape (n_samples, n_features)</span></dt><dd><p>matrix which should be preprocessed</p>
+</dd>
+<dt>subset<span class="classifier">None or int</span></dt><dd><p>number of features to keep in feature matrix (Top-N in variance); if it is None, attribute filter is either initialized (if it is equal to None) or used to filter features</p>
+</dd>
+<dt>verbose<span class="classifier">bool</span></dt><dd><p>prints out information</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>mat_nan<span class="classifier">array-like of shape (n_samples, n_features)</span></dt><dd><p>Preprocessed matrix</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.preprocessing.Perlman_procedure">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.preprocessing.</span></span><span class="sig-name descname"><span class="pre">Perlman_procedure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">njobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep_feature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">missing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-666</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.preprocessing.Perlman_procedure" title="Permalink to this definition"></a></dt>
+<dd><p>Method for combining (several) item and user similarity matrices (reference DOI: 10.1089/cmb.2010.0213). Instead of concatenating item and user features for a given pair, resulting in a vector of size (n_items x n_item_matrices)+(n_users x n_user_matrices), compute a single score per pair of (item_matrix, user_matrix) for each (item, user) pair, resulting in a vector of size (n_item_matrices) x (n_user_matrices).</p>
+<p>The score for any item i, user u, item-item similarity fi and user-user similarity fu is
+score_{fi,fu}(i,u) = max { sqrt(fi(dr, dr’) x fu(di’, di))  | (i’,u’)!=(i,u), fi(dr, dr’)!=NaN, fu(di’, di)!=NaN, rating(i’,u’)!=0 }</p>
+<p>Then the final feature matrix is X = (X_{i,j})_{i,j} for i a (item, user) pair and j a (item similarity, user similarity) pair</p>
+<p>…</p>
+<section id="id2">
+<h2>Parameters<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h2>
+<dl>
+<dt>dataset<span class="classifier">stanscofi.Dataset</span></dt><dd><dl class="simple">
+<dt>dataset which should be transformed, with n_items items (with n_item_features features) and n_users users (with n_user_features features) with the following attributes</dt><dd><dl class="simple">
+<dt>ratings<span class="classifier">COO-array of shape (n_items, n_users)</span></dt><dd><p>an array which contains values in {-1, 0, 1} describing the negative, unlabelled/unavailable, positive user-item matchings</p>
+</dd>
+<dt>items<span class="classifier">COO-array of shape (n_item_features, n_items)</span></dt><dd><p>concatenation of n_drug_features drug similarity matrices of shape (n_drugs, n_drugs), where values in item_features are denoted by “&lt;feature&gt;&lt;sep_feature&gt;&lt;drug&gt;” and missing values are denoted by numpy.nan; if the prefix in “&lt;feature&gt;&lt;sep_feature&gt;” is missing, it is assumed that items is a single similarity matrix (n_item_matrices=1)</p>
+</dd>
+<dt>users<span class="classifier">COO-array of shape (n_user_features, n_users)</span></dt><dd><p>concatenation of n_disease_features drug similarity matrices of shape (n_diseases, n_diseases), where values in user_features are denoted by “&lt;feature&gt;&lt;sep_feature&gt;&lt;disease&gt;” and missing values are denoted by numpy.nan; if the prefix in “&lt;feature&gt;&lt;sep_feature&gt;” is missing, it is assumed that users is a single similarity matrix (n_user_matrices=1)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>NaN values are replaced by 0, whereas infinite values are replaced by inf (parameter below).</p>
+</dd>
+<dt>njobs<span class="classifier">int</span></dt><dd><p>number of jobs to run in parallel</p>
+</dd>
+<dt>sep_feature<span class="classifier">str or None</span></dt><dd><p>separator between feature type and element in the feature matrices in dataset. None if there is one single feature type expected</p>
+</dd>
+<dt>missing<span class="classifier">int</span></dt><dd><p>placeholder value that should be different from any feature name</p>
+</dd>
+<dt>inf<span class="classifier">int</span></dt><dd><p>Value that replaces infinite values in the dataset (inf for +infinity, -inf for -infinity)</p>
+</dd>
+<dt>verbose<span class="classifier">bool</span></dt><dd><p>prints out information</p>
+</dd>
+</dl>
+</section>
+<section id="id3">
+<h2>Returns<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>X<span class="classifier">array-like of shape (n_items x n_users, n_item_features x n_user_features)</span></dt><dd><p>the feature matrix</p>
+</dd>
+<dt>y<span class="classifier">array-like of shape (n_items x n_users, )</span></dt><dd><p>the response/outcome vector</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.preprocessing.cartesian_product_transpose">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.preprocessing.</span></span><span class="sig-name descname"><span class="pre">cartesian_product_transpose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">arrays</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.preprocessing.cartesian_product_transpose" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.preprocessing.meanimputation_standardize">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.preprocessing.</span></span><span class="sig-name descname"><span class="pre">meanimputation_standardize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalerS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalerP</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.preprocessing.meanimputation_standardize" title="Permalink to this definition"></a></dt>
+<dd><p>Computes a single feature matrix and response vector from a drug repurposing dataset, by imputation by the average value of a feature for missing values and by centering and standardizing user and item feature matrices and concatenating them</p>
+<p>…</p>
+<section id="id4">
+<h2>Parameters<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>dataset<span class="classifier">stanscofi.Dataset</span></dt><dd><p>dataset which should be transformed, with n_items items (with n_item_features features) and n_users users (with n_user_features features) where missing values are denoted by numpy.nan</p>
+</dd>
+<dt>subset<span class="classifier">None or int</span></dt><dd><p>number of features to keep in item feature matrix, and in user feature matrix (selecting the ones with highest variance)</p>
+</dd>
+<dt>scalerS<span class="classifier">None or sklearn.preprocessing.StandardScaler instance</span></dt><dd><p>scaler for items</p>
+</dd>
+<dt>scalerP<span class="classifier">None or sklearn.preprocessing.StandardScaler instance</span></dt><dd><p>scaler for users</p>
+</dd>
+<dt>verbose<span class="classifier">bool</span></dt><dd><p>prints out information</p>
+</dd>
+</dl>
+</section>
+<section id="id5">
+<h2>Returns<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>X<span class="classifier">array-like of shape (n_folds, n_item_features+n_user_features)</span></dt><dd><p>the feature matrix</p>
+</dd>
+<dt>y<span class="classifier">array-like of shape (n_folds, )</span></dt><dd><p>the response/outcome vector</p>
+</dd>
+<dt>scalerS<span class="classifier">None or stanscofi.models.CustomScaler instance</span></dt><dd><p>scaler for items; if the input value was None, returns the scaler fitted on item feature vectors</p>
+</dd>
+<dt>scalerP<span class="classifier">None or stanscofi.models.CustomScaler instance</span></dt><dd><p>scaler for users; if the input value was None, returns the scaler fitted on user feature vectors</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.preprocessing.preprocessing_XY">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.preprocessing.</span></span><span class="sig-name descname"><span class="pre">preprocessing_XY</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocessing_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'*'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep_feature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subset_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalerS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalerP</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">njobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.preprocessing.preprocessing_XY" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a score vector or a score value into a list of scores</p>
+<p>…</p>
+<section id="id6">
+<h2>Parameters<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>dataset<span class="classifier">stanscofi.datasets.Dataset</span></dt><dd><p>dataset to preprocess</p>
+</dd>
+<dt>preprocessing_str<span class="classifier">str</span></dt><dd><p>type of preprocessing: in [“Perlman_procedure”,”meanimputation_standardize”,”same_feature_preprocessing”].</p>
+</dd>
+<dt><a href="#id12"><span class="problematic" id="id13">subset_</span></a><span class="classifier">None or int</span></dt><dd><p>Number of features to restrict the dataset to (<a href="#id14"><span class="problematic" id="id15">Top-subset_</span></a> features in terms of cross-sample variance) /!across user and item features if preprocessing_str!=”meanimputation_standardize” otherwise 2*subset_ features are preserved (<a href="#id16"><span class="problematic" id="id17">subset_</span></a> for item features, <a href="#id18"><span class="problematic" id="id19">subset_</span></a> for user features)</p>
+</dd>
+<dt>operator<span class="classifier">None or str</span></dt><dd><p>arithmetric operation to apply, ex. “+”, “*”</p>
+</dd>
+<dt>sep_feature<span class="classifier">str</span></dt><dd><p>separator between feature type and element in the feature matrices in dataset</p>
+</dd>
+<dt><a href="#id20"><span class="problematic" id="id21">filter_</span></a><span class="classifier">None or list</span></dt><dd><p>list of feature indices to keep (of length <a href="#id22"><span class="problematic" id="id23">subset_</span></a>) (overrides the <a href="#id24"><span class="problematic" id="id25">subset_</span></a> parameter if both are fed)</p>
+</dd>
+<dt>scalerS<span class="classifier">None or stanscofi.models.CustomScaler instance</span></dt><dd><p>scaler for items; the scaler fitted on item feature vectors</p>
+</dd>
+<dt>scalerP<span class="classifier">None or stanscofi.models.CustomScaler instance</span></dt><dd><p>scaler for users; the scaler fitted on user feature vectors</p>
+</dd>
+<dt>inf<span class="classifier">float or int</span></dt><dd><p>placeholder value for infinity values (positive : +inf, negative : -inf)</p>
+</dd>
+<dt>njobs<span class="classifier">int</span></dt><dd><p>number of jobs to run in parallel (njobs &gt; 0) for the Perlman procedure</p>
+</dd>
+</dl>
+</section>
+<section id="id7">
+<h2>Returns<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>X<span class="classifier">array-like of shape (n_folds, n_features)</span></dt><dd><p>the feature matrix</p>
+</dd>
+<dt>y<span class="classifier">array-like of shape (n_folds, )</span></dt><dd><p>the response/outcome vector</p>
+</dd>
+<dt>scalerS<span class="classifier">None or stanscofi.models.CustomScaler instance</span></dt><dd><p>scaler for items; if the input value was None, returns the scaler fitted on item feature vectors</p>
+</dd>
+<dt>scalerP<span class="classifier">None or stanscofi.models.CustomScaler instance</span></dt><dd><p>scaler for users; if the input value was None, returns the scaler fitted on user feature vectors</p>
+</dd>
+<dt><a href="#id26"><span class="problematic" id="id27">filter_</span></a><span class="classifier">None or list</span></dt><dd><p>list of feature indices to keep (of length <a href="#id28"><span class="problematic" id="id29">subset_</span></a>)</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stanscofi.preprocessing.same_feature_preprocessing">
+<span class="sig-prename descclassname"><span class="pre">stanscofi.preprocessing.</span></span><span class="sig-name descname"><span class="pre">same_feature_preprocessing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.preprocessing.same_feature_preprocessing" title="Permalink to this definition"></a></dt>
+<dd><p>If the users and items have the same features in the dataset, then a simple way to combine the user and item feature matrices is to apply an element-wise arithmetic operator (<a href="#id8"><span class="problematic" id="id9">*</span></a>, +, etc.) to the feature vectors coefficient per coefficient.</p>
+<p>…</p>
+<section id="id10">
+<h2>Parameters<a class="headerlink" href="#id10" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>dataset<span class="classifier">stanscofi.Dataset</span></dt><dd><p>dataset which should be transformed, where n_item_features==n_user_features and dataset.same_item_user_features==True</p>
+</dd>
+<dt>operator<span class="classifier">str</span></dt><dd><p>arithmetric operation to apply, ex. “+”, “*”</p>
+</dd>
+</dl>
+</section>
+<section id="id11">
+<h2>Returns<a class="headerlink" href="#id11" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>X<span class="classifier">array-like of shape (n_folds, n_features)</span></dt><dd><p>the feature matrix</p>
+</dd>
+<dt>y<span class="classifier">array-like of shape (n_folds, )</span></dt><dd><p>the response/outcome vector</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="models.html" class="btn btn-neutral float-left" title="Models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="trainingtesting.html" class="btn btn-neutral float-right" title="Training/Testing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Clémence Réda.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

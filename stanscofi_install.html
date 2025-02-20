@@ -1,0 +1,160 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installation of stanscofi &mdash; stanscofi v2.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=d2262ce8"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Getting started with stanscofi" href="stanscofi_content.html" />
+    <link rel="prev" title="Welcome to the documentation of packages stanscofi and benchscofi" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            stanscofi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation of <em>stanscofi</em></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-docker-image">Running the Docker image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#python-package-managers-pip-or-conda">Python package managers (Pip or Conda)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#manual-installation-not-recommended">Manual installation (not recommended)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="stanscofi_content.html">Getting started with <em>stanscofi</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="stanscofi_modules.html">Documentation in <em>stanscofi</em></a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="benchscofi_install.html">Installation of <em>benchscofi</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchscofi_content.html">Getting started with <em>benchscofi</em></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">stanscofi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Installation of <em>stanscofi</em></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/stanscofi_install.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="installation-of-stanscofi">
+<h1>Installation of <em>stanscofi</em><a class="headerlink" href="#installation-of-stanscofi" title="Permalink to this heading"></a></h1>
+<p>The complete list of dependencies for <em>stanscofi</em> can be found at <a class="reference external" href="https://raw.githubusercontent.com/RECeSS-EU-Project/stanscofi/master/pip/requirements.txt">requirements.txt</a> (Pip) or <a class="reference external" href="https://raw.githubusercontent.com/RECeSS-EU-Project/stanscofi/master/conda/meta.yaml">meta.yaml</a> (Conda). This package is compatible with Python 3.8 and 3.9, and should at least run on Linux.</p>
+<section id="running-the-docker-image">
+<h2>Running the Docker image<a class="headerlink" href="#running-the-docker-image" title="Permalink to this heading"></a></h2>
+<p>You can download the Docker image hosted on DockerHub and start a container on this image:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ docker push recessproject/stanscofi:&lt;release-version&gt;
+$ docker run -it recessproject/stanscofi:&lt;release-version&gt;
+</pre></div>
+</div>
+<p>To build the image locally and run the notebooks, please use the following commands at the root folder (Credits to <a class="reference external" href="https://github.com/abhishektiwari/">Abhishek Tiwari</a> for the Dockerfile, instructions and comments):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ #Build Docker image
+$ docker build -t stanscofi .
+$ #Run Docker image built in previous step and drop into SSH
+$ docker run -it --expose 3000  -p 3000:3000 stanscofi
+$ #Run notebook
+$ #The notebook is available at http://127.0.0.1:3000/tree.
+$ cd docs &amp;&amp; jupyter notebook --ip 0.0.0.0 --no-browser --allow-root --port 3000
+</pre></div>
+</div>
+</section>
+<section id="python-package-managers-pip-or-conda">
+<h2>Python package managers (Pip or Conda)<a class="headerlink" href="#python-package-managers-pip-or-conda" title="Permalink to this heading"></a></h2>
+<p>It is recommended to use a virtual environment (here, we give an example using Conda):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ conda create -n stanscofi_env python=3.8.5 -y
+$ conda activate stanscofi_env
+$ python3 -m pip install stanscofi ## if using pip
+$ conda install -c recess stanscofi ## if using conda
+$ ## useful if you want to run the Jupyter notebooks in the docs/ folder
+$ python3 -m pip install notebook&gt;=6.5.4 markupsafe==2.0.1
+$ conda deactivate &amp;&amp; conda activate stanscofi_env
+</pre></div>
+</div>
+</section>
+<section id="manual-installation-not-recommended">
+<h2>Manual installation (not recommended)<a class="headerlink" href="#manual-installation-not-recommended" title="Permalink to this heading"></a></h2>
+<p>Download the <a class="reference external" href="https://pypi.python.org/pypi/stanscofi/">tar.gz file from PyPI</a> and extract it. It is recommended to use a virtual environment. The library consists of a directory named <cite>stanscofi</cite> containing several Python modules. Then execute the following commands at the root folder:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python3 -m pip install --upgrade pip wheel
+$ python3 -m pip install -r pip/requirements.txt
+$ python3 -m pip install .
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to the documentation of packages stanscofi and benchscofi" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="stanscofi_content.html" class="btn btn-neutral float-right" title="Getting started with stanscofi" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Clémence Réda.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

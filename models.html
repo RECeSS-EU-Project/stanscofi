@@ -1,0 +1,563 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Models &mdash; stanscofi v2.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=d2262ce8"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Preprocessing" href="preprocessing.html" />
+    <link rel="prev" title="Datasets" href="datasets.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            stanscofi
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="stanscofi_install.html">Installation of <em>stanscofi</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="stanscofi_content.html">Getting started with <em>stanscofi</em></a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="stanscofi_modules.html">Documentation in <em>stanscofi</em></a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="datasets.html">Datasets</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.models.BasicModel"><code class="docutils literal notranslate"><span class="pre">BasicModel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#stanscofi.models.BasicModel.fit"><code class="docutils literal notranslate"><span class="pre">BasicModel.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stanscofi.models.BasicModel.model_fit"><code class="docutils literal notranslate"><span class="pre">BasicModel.model_fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stanscofi.models.BasicModel.model_predict_proba"><code class="docutils literal notranslate"><span class="pre">BasicModel.model_predict_proba()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stanscofi.models.BasicModel.predict"><code class="docutils literal notranslate"><span class="pre">BasicModel.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stanscofi.models.BasicModel.predict_proba"><code class="docutils literal notranslate"><span class="pre">BasicModel.predict_proba()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stanscofi.models.BasicModel.preprocessing"><code class="docutils literal notranslate"><span class="pre">BasicModel.preprocessing()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stanscofi.models.BasicModel.print_classification"><code class="docutils literal notranslate"><span class="pre">BasicModel.print_classification()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stanscofi.models.BasicModel.print_scores"><code class="docutils literal notranslate"><span class="pre">BasicModel.print_scores()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stanscofi.models.BasicModel.recommend_k_pairs"><code class="docutils literal notranslate"><span class="pre">BasicModel.recommend_k_pairs()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.models.LogisticRegression"><code class="docutils literal notranslate"><span class="pre">LogisticRegression</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#stanscofi.models.LogisticRegression.model_fit"><code class="docutils literal notranslate"><span class="pre">LogisticRegression.model_fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stanscofi.models.LogisticRegression.model_predict_proba"><code class="docutils literal notranslate"><span class="pre">LogisticRegression.model_predict_proba()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stanscofi.models.LogisticRegression.preprocessing"><code class="docutils literal notranslate"><span class="pre">LogisticRegression.preprocessing()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#stanscofi.models.NMF"><code class="docutils literal notranslate"><span class="pre">NMF</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#stanscofi.models.NMF.model_fit"><code class="docutils literal notranslate"><span class="pre">NMF.model_fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stanscofi.models.NMF.model_predict_proba"><code class="docutils literal notranslate"><span class="pre">NMF.model_predict_proba()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stanscofi.models.NMF.preprocessing"><code class="docutils literal notranslate"><span class="pre">NMF.preprocessing()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing.html">Preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trainingtesting.html">Training/Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="validation.html">Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="benchscofi_install.html">Installation of <em>benchscofi</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchscofi_content.html">Getting started with <em>benchscofi</em></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">stanscofi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="stanscofi_modules.html">Documentation in <em>stanscofi</em></a></li>
+      <li class="breadcrumb-item active">Models</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/models.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-stanscofi.models">
+<span id="models"></span><h1>Models<a class="headerlink" href="#module-stanscofi.models" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="stanscofi.models.BasicModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stanscofi.models.</span></span><span class="sig-name descname"><span class="pre">BasicModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.models.BasicModel" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class used to encode a drug repurposing model</p>
+<p>…</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>params<span class="classifier">dict</span></dt><dd><p>dictionary which contains method-wise parameters</p>
+</dd>
+</dl>
+</section>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>name<span class="classifier">str</span></dt><dd><p>the name of the model</p>
+</dd>
+<dt>model<span class="classifier">depends on the implemented method</span></dt><dd><p>may contain an instance of a class of sklearn classifiers</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>…</dt><dd><p>other attributes might be present depending on the type of model</p>
+</dd>
+</dl>
+</section>
+<section id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>__init__(params)</dt><dd><p>Initializes the model with preselected parameters</p>
+</dd>
+<dt>fit(train_dataset, seed=1234)</dt><dd><p>Preprocesses and fits the model</p>
+</dd>
+<dt>predict_proba(test_dataset)</dt><dd><p>Outputs properly formatted predictions of the fitted model on test_dataset</p>
+</dd>
+<dt>predict(scores)</dt><dd><p>Applies the following decision rule: if score&lt;threshold, then return the negative label, otherwise return the positive label</p>
+</dd>
+<dt>recommend_k_pairs(dataset, k=1, threshold=None)</dt><dd><p>Outputs the top-k (item, user) candidates (or candidates which score is higher than a threshold) in the input dataset</p>
+</dd>
+<dt>print_scores(scores)</dt><dd><p>Prints out information about scores</p>
+</dd>
+<dt>print_classification(predictions)</dt><dd><p>Prints out information about predicted labels</p>
+</dd>
+<dt>preprocessing(train_dataset) [not implemented in BasicModel]</dt><dd><p>Preprocess the input dataset into something that is an input to the self.model_fit if it exists</p>
+</dd>
+<dt>model_fit(train_dataset) [not implemented in BasicModel]</dt><dd><p>Fits the model on train_dataset</p>
+</dd>
+<dt>model_predict_proba(test_dataset) [not implemented in BasicModel]</dt><dd><p>Outputs predictions of the fitted model on test_dataset</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="stanscofi.models.BasicModel.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1234</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.models.BasicModel.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fitting the model on the training dataset.</p>
+<p>Not implemented in the BasicModel class.</p>
+<p>…</p>
+<section id="id1">
+<h3>Parameters<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>train_dataset<span class="classifier">stanscofi.Dataset</span></dt><dd><p>training dataset on which the model should fit</p>
+</dd>
+<dt>seed<span class="classifier">int (default: 1234)</span></dt><dd><p>random seed</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stanscofi.models.BasicModel.model_fit">
+<span class="sig-name descname"><span class="pre">model_fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.models.BasicModel.model_fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fitting the model on the training dataset.</p>
+<p>&lt;Not implemented in the BasicModel class.&gt;</p>
+<p>…</p>
+<section id="id2">
+<h3>Parameters<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>…<span class="classifier">…</span></dt><dd><p>appropriate inputs to the classifier (vary across algorithms)</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stanscofi.models.BasicModel.model_predict_proba">
+<span class="sig-name descname"><span class="pre">model_predict_proba</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.models.BasicModel.model_predict_proba" title="Permalink to this definition"></a></dt>
+<dd><p>Making predictions using the model on the testing dataset.</p>
+<p>&lt;Not implemented in the BasicModel class.&gt;</p>
+<p>…</p>
+<section id="id3">
+<h3>Parameters<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>…<span class="classifier">…</span></dt><dd><p>appropriate inputs to the classifier (vary across algorithms)</p>
+</dd>
+</dl>
+<p>…</p>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>scores<span class="classifier">array_like of shape (n_items, n_users)</span></dt><dd><p>prediction values by the model</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stanscofi.models.BasicModel.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.models.BasicModel.predict" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Outputs class labels based on the scores, using the following formula</dt><dd><p>prediction = -1 if (score&lt;threshold) else 1</p>
+</dd>
+</dl>
+<p>…</p>
+<section id="id4">
+<h3>Parameters<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>scores<span class="classifier">COO-array of shape (n_items, n_users)</span></dt><dd><p>sparse matrix in COOrdinate format</p>
+</dd>
+<dt>threshold<span class="classifier">float</span></dt><dd><p>the threshold of classification into the positive class</p>
+</dd>
+</dl>
+</section>
+<section id="id5">
+<h3>Returns<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>predictions<span class="classifier">COO-array of shape (n_items, n_users)</span></dt><dd><p>sparse matrix in COOrdinate format with values in {-1,1}</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stanscofi.models.BasicModel.predict_proba">
+<span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_zero_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-31</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.models.BasicModel.predict_proba" title="Permalink to this definition"></a></dt>
+<dd><p>Outputs properly formatted scores (not necessarily in [0,1]!) from the fitted model on test_dataset. Internally calls model_predict() then reformats the scores</p>
+<p>…</p>
+<section id="id6">
+<h3>Parameters<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>test_dataset<span class="classifier">stanscofi.Dataset</span></dt><dd><p>dataset on which predictions should be made</p>
+</dd>
+</dl>
+</section>
+<section id="id7">
+<h3>Returns<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>scores<span class="classifier">COO-array of shape (n_items, n_users)</span></dt><dd><p>sparse matrix in COOrdinate format, with nonzero values corresponding to predictions on available pairs in the dataset</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stanscofi.models.BasicModel.preprocessing">
+<span class="sig-name descname"><span class="pre">preprocessing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.models.BasicModel.preprocessing" title="Permalink to this definition"></a></dt>
+<dd><p>Preprocessing step, which converts elements of a dataset (ratings matrix, user feature matrix, item feature matrix) into appropriate inputs to the classifier (e.g., X feature matrix for each (user, item) pair, y response vector).</p>
+<p>&lt;Not implemented in the BasicModel class.&gt;</p>
+<p>…</p>
+<section id="id8">
+<h3>Parameters<a class="headerlink" href="#id8" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>dataset<span class="classifier">stanscofi.Dataset</span></dt><dd><p>dataset to convert</p>
+</dd>
+<dt>is_training<span class="classifier">bool</span></dt><dd><p>is the preprocessing prior to training (true) or testing (false)?</p>
+</dd>
+</dl>
+</section>
+<section id="id9">
+<h3>Returns<a class="headerlink" href="#id9" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>…<span class="classifier">…</span></dt><dd><p>appropriate inputs to the classifier (vary across algorithms)</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stanscofi.models.BasicModel.print_classification">
+<span class="sig-name descname"><span class="pre">print_classification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predictions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.models.BasicModel.print_classification" title="Permalink to this definition"></a></dt>
+<dd><p>Prints out information about the predicted classes</p>
+<p>…</p>
+<section id="id10">
+<h3>Parameters<a class="headerlink" href="#id10" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>predictions<span class="classifier">COO-array</span></dt><dd><p>sparse matrix in COOrdinate format</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stanscofi.models.BasicModel.print_scores">
+<span class="sig-name descname"><span class="pre">print_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scores</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.models.BasicModel.print_scores" title="Permalink to this definition"></a></dt>
+<dd><p>Prints out information about the scores</p>
+<p>…</p>
+<section id="id11">
+<h3>Parameters<a class="headerlink" href="#id11" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>scores<span class="classifier">COO-array</span></dt><dd><p>sparse matrix in COOrdinate format</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stanscofi.models.BasicModel.recommend_k_pairs">
+<span class="sig-name descname"><span class="pre">recommend_k_pairs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.models.BasicModel.recommend_k_pairs" title="Permalink to this definition"></a></dt>
+<dd><p>Outputs the top-k (item, user) candidates (or candidates which score is higher than a threshold) in the input dataset</p>
+<p>…</p>
+<section id="id12">
+<h3>Parameters<a class="headerlink" href="#id12" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>dataset<span class="classifier">stanscofi.Dataset</span></dt><dd><p>dataset on which predictions should be made</p>
+</dd>
+<dt>k<span class="classifier">int or None (default: 1)</span></dt><dd><p>number of pair candidates to return (with ties)</p>
+</dd>
+<dt>threshold<span class="classifier">float or None (default: 0)</span></dt><dd><p>threshold on candidate scores. If k is not None, k best candidates are returned independently of the value of threshold</p>
+</dd>
+</dl>
+<p>…</p>
+</section>
+<section id="id13">
+<h3>Parameters<a class="headerlink" href="#id13" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>candidates<span class="classifier">list of tuples of size 3</span></dt><dd><p>list of (item, user, score) candidates (by name as present in the dataset)</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="stanscofi.models.LogisticRegression">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stanscofi.models.</span></span><span class="sig-name descname"><span class="pre">LogisticRegression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.models.LogisticRegression" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="stanscofi.html#stanscofi.models.BasicModel" title="stanscofi.models.BasicModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasicModel</span></code></a></p>
+<p>Logistic Regression (calls sklearn.linear_model.LogisticRegression internally). It uses the very same parameters as sklearn.linear_model.LogisticRegression, so please refer to help(sklearn.linear_model.LogisticRegression).</p>
+<p>…</p>
+<section id="id14">
+<h2>Parameters<a class="headerlink" href="#id14" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>params<span class="classifier">dict</span></dt><dd><p>dictionary which contains sklearn.linear_model.LogisticRegression parameters, plus a key called “preprocessing” which determines which preprocessing function (in stanscofi.preprocessing) should be applied to data, plus a key called “subset” which gives the maximum number of features to consider in the model (those features will be the Top-subset in terms of variance across samples)</p>
+</dd>
+</dl>
+</section>
+<section id="id15">
+<h2>Attributes<a class="headerlink" href="#id15" title="Permalink to this heading"></a></h2>
+<p>Same as BasicModel class</p>
+</section>
+<section id="id16">
+<h2>Methods<a class="headerlink" href="#id16" title="Permalink to this heading"></a></h2>
+<p>Same as BasicModel class
+preprocessing(train_dataset)</p>
+<blockquote>
+<div><p>Preprocesses the input dataset into something that is an input to fit</p>
+</div></blockquote>
+<dl class="simple">
+<dt>model_fit(train_dataset)</dt><dd><p>Preprocesses and fits the model</p>
+</dd>
+<dt>model_predict_proba(test_dataset)</dt><dd><p>Outputs predictions of the fitted model on test_dataset</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="stanscofi.models.LogisticRegression.model_fit">
+<span class="sig-name descname"><span class="pre">model_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.models.LogisticRegression.model_fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fitting the Logistic Regression model on the training dataset.</p>
+<p>…</p>
+<section id="id17">
+<h3>Parameters<a class="headerlink" href="#id17" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>X<span class="classifier">array-like of shape (n_ratings, n_pair_features)</span></dt><dd><p>(user, item) feature matrix (the actual contents of the matrix depends on parameters “preprocessing” and “subset” given as input</p>
+</dd>
+<dt>y<span class="classifier">array-like of shape (n_ratings, )</span></dt><dd><p>response vector for each (user, item) pair</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stanscofi.models.LogisticRegression.model_predict_proba">
+<span class="sig-name descname"><span class="pre">model_predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.models.LogisticRegression.model_predict_proba" title="Permalink to this definition"></a></dt>
+<dd><p>Making predictions using the Logistic Regression model on the testing dataset.</p>
+<p>…</p>
+<section id="id18">
+<h3>Parameters<a class="headerlink" href="#id18" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>X<span class="classifier">array-like of shape (n_ratings, n_pair_features)</span></dt><dd><p>(user, item) feature matrix (the actual contents of the matrix depends on parameters “preprocessing” and “subset” given as input</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stanscofi.models.LogisticRegression.preprocessing">
+<span class="sig-name descname"><span class="pre">preprocessing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.models.LogisticRegression.preprocessing" title="Permalink to this definition"></a></dt>
+<dd><p>Preprocessing step, which converts elements of a dataset (ratings matrix, user feature matrix, item feature matrix) into appropriate inputs to the Logistic Regression classifier.</p>
+<p>…</p>
+<section id="id19">
+<h3>Parameters<a class="headerlink" href="#id19" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>dataset<span class="classifier">stanscofi.Dataset</span></dt><dd><p>dataset to convert</p>
+</dd>
+<dt>is_training<span class="classifier">bool</span></dt><dd><p>is the preprocessing prior to training (true) or testing (false)?</p>
+</dd>
+</dl>
+</section>
+<section id="id20">
+<h3>Returns<a class="headerlink" href="#id20" title="Permalink to this heading"></a></h3>
+<p>args : contains
+X : array-like of shape (n_ratings, n_pair_features)</p>
+<blockquote>
+<div><p>(user, item) feature matrix (the actual contents of the matrix depends on parameters “preprocessing” and “subset” given as input</p>
+</div></blockquote>
+<dl class="simple">
+<dt>y<span class="classifier">array-like of shape (n_ratings, )</span></dt><dd><p>response vector for each (user, item) pair</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="stanscofi.models.NMF">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stanscofi.models.</span></span><span class="sig-name descname"><span class="pre">NMF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.models.NMF" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="stanscofi.html#stanscofi.models.BasicModel" title="stanscofi.models.BasicModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasicModel</span></code></a></p>
+<p>Non-negative Matrix Factorization (calls sklearn.decomposition.NMF internally). It uses the very same parameters as sklearn.decomposition.NMF, so please refer to help(sklearn.decomposition.NMF).</p>
+<p>…</p>
+<section id="id21">
+<h2>Parameters<a class="headerlink" href="#id21" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>params<span class="classifier">dict</span></dt><dd><p>dictionary which contains sklearn.decomposition.NMF parameters</p>
+</dd>
+</dl>
+</section>
+<section id="id22">
+<h2>Attributes<a class="headerlink" href="#id22" title="Permalink to this heading"></a></h2>
+<p>Same as BasicModel class</p>
+</section>
+<section id="id23">
+<h2>Methods<a class="headerlink" href="#id23" title="Permalink to this heading"></a></h2>
+<p>Same as BasicModel class
+preprocessing(train_dataset)</p>
+<blockquote>
+<div><p>Preprocesses the input dataset into something that is an input to fit</p>
+</div></blockquote>
+<dl class="simple">
+<dt>model_fit(train_dataset)</dt><dd><p>Preprocesses and fits the model</p>
+</dd>
+<dt>model_predict_proba(test_dataset)</dt><dd><p>Outputs predictions of the fitted model on test_dataset</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="stanscofi.models.NMF.model_fit">
+<span class="sig-name descname"><span class="pre">model_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.models.NMF.model_fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fitting the NMF model on the preprocessed training dataset.</p>
+<p>…</p>
+<section id="id24">
+<h3>Parameters<a class="headerlink" href="#id24" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>input<span class="classifier">array-like of shape (n_samples,n_features)</span></dt><dd><p>training data</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stanscofi.models.NMF.model_predict_proba">
+<span class="sig-name descname"><span class="pre">model_predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.models.NMF.model_predict_proba" title="Permalink to this definition"></a></dt>
+<dd><p>Making predictions using the NMF model on the testing dataset.</p>
+<p>…</p>
+<section id="id25">
+<h3>Parameters<a class="headerlink" href="#id25" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>input<span class="classifier">array-like of shape (n_samples,n_features)</span></dt><dd><p>testing data</p>
+</dd>
+</dl>
+<p>…</p>
+</section>
+<section id="id26">
+<h3>Returns<a class="headerlink" href="#id26" title="Permalink to this heading"></a></h3>
+<p>result : array-like of shape (n_samples,n_features)</p>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="stanscofi.models.NMF.preprocessing">
+<span class="sig-name descname"><span class="pre">preprocessing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stanscofi.models.NMF.preprocessing" title="Permalink to this definition"></a></dt>
+<dd><p>Preprocessing step, which converts elements of a dataset (ratings matrix, user feature matrix, item feature matrix) into appropriate inputs to the NMF classifier.</p>
+<p>…</p>
+<section id="id27">
+<h3>Parameters<a class="headerlink" href="#id27" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>dataset<span class="classifier">stanscofi.Dataset</span></dt><dd><p>dataset to convert</p>
+</dd>
+<dt>is_training<span class="classifier">bool</span></dt><dd><p>is the preprocessing prior to training (true) or testing (false)?</p>
+</dd>
+</dl>
+</section>
+<section id="id28">
+<h3>Returns<a class="headerlink" href="#id28" title="Permalink to this heading"></a></h3>
+<p>args : contains
+A : array-like of shape (n_users, n_items)</p>
+<blockquote>
+<div><p>contains the transposed translated association matrix so that all its values are non-negative</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="datasets.html" class="btn btn-neutral float-left" title="Datasets" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="preprocessing.html" class="btn btn-neutral float-right" title="Preprocessing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Clémence Réda.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
